@@ -1,0 +1,20 @@
+<!--pages/home/home.wxml-->
+<view class="container">
+  <view class="welcome-panel">
+    <text class="welcome-title">欢迎使用管理系统</text>
+    <text class="welcome-desc">点击下方按钮管理个人信息</text>
+  </view>
+  
+  <view class="nav-buttons">
+    <navigator url="/pages/user/list/userList" class="nav-button">
+      <!-- <image src="" mode="aspectFit" class="button-icon" /> -->
+      <text class="button-text">个人信息管理</text>
+    </navigator>
+    
+    <!-- 可以添加更多导航按钮 -->
+    <navigator url="/pages/other/otherPage" class="nav-button">
+      <!-- <image src="" mode="aspectFit" class="button-icon" /> -->
+      <text class="button-text">其他功能</text>
+    </navigator>
+  </view>
+</view>

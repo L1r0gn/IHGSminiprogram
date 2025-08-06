@@ -1,0 +1,76 @@
+<!--pages/user/mine/mine.wxml-->
+<view class="page-container">
+  <!-- 顶部头像与昵称区域 -->
+  <view class="user-header">
+    <image 
+      class="avatar" 
+      src="{{userInfo.wx_avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
+      mode="widthFix"
+    ></image>
+    <view class="user-name">{{userInfo.wx_nickName || '未设置昵称'}}</view>
+    <navigator url="/pages/userEdit/userEdit?id={{userInfo.id}}" class="edit-btn">
+      编辑资料
+    </navigator>
+  </view>
+
+  <!-- 基本信息卡片 -->
+  <view class="info-card">
+    <view class="card-title">基本信息</view>
+    <view class="info-list">
+      <!-- 手机号 -->
+      <view class="info-item">
+        <view class="info-label">手机号</view>
+        <view class="info-value">{{userInfo.phone || '未绑定'}}</view>
+      </view>
+      
+      <!-- 性别 -->
+      <view class="info-item">
+        <view class="info-label">性别</view>
+        <view class="info-value">
+          <block wx:if="{{userInfo.gender === 1}}">男</block>
+          <block wx:elif="{{userInfo.gender === 2}}">女</block>
+          <block wx:else>未设置</block>
+        </view>
+      </view>
+      
+      <!-- 用户属性（学生/教师） -->
+      <view class="info-item">
+        <view class="info-label">身份</view>
+        <view class="info-value">
+          <block wx:if="{{userInfo.user_attribute === 1}}">student</block>
+          <block wx:elif="{{userInfo.user_attribute === 2}}">teacher</block>
+          <block wx:else>未设置</block>
+        </view>
+      </view>
+      
+      <!-- 所属班级 -->
+      <view class="info-item">
+        <view class="info-label">所属班级</view>
+        <view class="info-value">
+          {{userInfo.class_in && userInfo.class_in.name ? userInfo.class_in.name : '未关联班级'}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 微信关联信息卡片 -->
+  <view class="info-card">
+    <view class="card-title">微信关联信息</view>
+    <view class="info-list">
+      <!-- 地区信息 -->
+      <view class="info-item">
+        <view class="info-label">地区</view>
+        <view class="info-value">
+          {{userInfo.wx_country || ''}}{{userInfo.wx_province ? '·' + userInfo.wx_province : ''}}{{userInfo.wx_city ? '·' + userInfo.wx_city : ''}}
+          <block wx:if="{{!userInfo.wx_country && !userInfo.wx_province && !userInfo.wx_city}}">未获取</block>
+        </view>
+      </view>
+      
+      <!-- 最后登录时间 -->
+      <view class="info-item">
+        <view class="info-label">最后登录</view>
+        <view class="info-value">{{userInfo.last_login_time ? formatTime(userInfo.last_login_time) : '未记录'}}</view>
+      </view>
+    </view>
+  </view>
+</view>
