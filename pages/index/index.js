@@ -135,6 +135,63 @@ Page({
       },
     })
   },
+  uploadToServer(userInfo){
+    console.log(userInfo)
+    console.log(userInfo.nickName)
+    console.log(userInfo.avatarUrl)
+    wx.login({
+      success: (loginRes) => {
+        wx.showLoading({
+          title: '登陆中……',
+          mask: true
+        })
+        wx.request({
+          url: 'http://127.0.0.1:8000/user/wx/login',
+          method: 'POST',
+          data: {
+            nickName: userInfo.nickName,
+            avatarUrl: userInfo.avatarUrl,
+            code : loginRes.code,
+          },
+          success: (res) => {
+            wx.hideLoading();
+            if (res.data.code === 200) {
+              wx.showToast({
+                title: '登录成功',
+                icon: 'success'
+              })
+              wx.setStorageSync('token', res.data.token);
+              wx.setStorageSync('isLoggedIn', true);
+              wx.setStorageSync('userId', res.data.user_id);
+              setTimeout(() =>{
+                wx.redirectTo({
+                  url: '/pages/user/list/userList',
+                });
+              },1000)
+            } else {
+              this.setData({
+                loginFailed:true
+              });
+              wx.showToast({
+                title: res.data.message || '登录失败，请重试',
+                icon : 'none'
+              });
+            }
+          },
+          fail:(err)=>{
+            wx.hideLoading();
+            this.setData({
+              loginFailed : true
+            });
+            wx.showToast({
+              title: '网络错误，请重试',
+            });
+            console.error('登录失败请重试',err);
+          }
+        });
+      },
+    })
+  },
   autoLogin(){
     const userInfo = wx.getStorageSync('userInfo');
     if(userInfo){

@@ -11,8 +11,11 @@ Page({
       this.getUserDetail(userId);
     } else {
       console.log('暂无用户数据，正在跳转到登录页面')
-      wx.redirectTo({
+      wx.navigateTo({
         url: '/pages/index/index',
+        success:()=>{
+          console.log("跳转登录页面成功");
+        }
       })
     }
   },
