@@ -1,0 +1,46 @@
+<!--pages/question/show/show.wxml-->
+<view class="question-container">
+  <!-- 题目标题 -->
+  <view class="question-title">
+    <text class="title">选择题</text>
+  </view>
+
+  <!-- 题目内容 -->
+  <view class="question-content">
+    <text>{{questionContent}}</text>
+  </view>
+
+  <!-- 选择题答案 -->
+  <view class="options-container">
+    <radio-group class="options">
+      <!-- 答案 A -->
+      <label class="option">
+        <radio value="A" checked="{{selectedAnswer === 'A'}}" bindchange="onAnswerChange"></radio>
+        <text>A. {{optionA}}</text>
+      </label>
+
+      <!-- 答案 B -->
+      <label class="option">
+        <radio value="B" checked="{{selectedAnswer === 'B'}}" bindchange="onAnswerChange"></radio>
+        <text>B. {{optionB}}</text>
+      </label>
+
+      <!-- 答案 C -->
+      <label class="option">
+        <radio value="C" checked="{{selectedAnswer === 'C'}}" bindchange="onAnswerChange"></radio>
+        <text>C. {{optionC}}</text>
+      </label>
+
+      <!-- 答案 D -->
+      <label class="option">
+        <radio value="D" checked="{{selectedAnswer === 'D'}}" bindchange="onAnswerChange"></radio>
+        <text>D. {{optionD}}</text>
+      </label>
+    </radio-group>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-container">
+    <button class="submit-btn" bindtap="submitAnswer">提交答案</button>
+  </view>
+</view>

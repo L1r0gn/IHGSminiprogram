@@ -1,4 +1,4 @@
-<!--index.wxml-->
+<!--login.wxml-->
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
     <view class="userinfo">
@@ -12,12 +12,12 @@
           <text class="nickname-label">昵称</text>
           <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
         </view>
-        <button bindtap="uploadToServer" disabled="true">点击此处以登录</button>
+        <button bindtap="loginToServer" disabled="true">点击此处以登录</button>
       </block>
       <block wx:else>
         <image bindtap="getUserProfile" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
         <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-        <button bindtap="uploadToServer" >点击此处以登录</button>
+        <button bindtap="loginToServer" >点击此处以登录</button>
       </block>
     </view>
   </view>

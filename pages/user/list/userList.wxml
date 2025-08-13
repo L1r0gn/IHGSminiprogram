@@ -1,14 +1,14 @@
-<!--pages/user/mine/mine.wxml-->
+<!-- pages/user/mine/mine.wxml -->
 <view class="page-container">
   <!-- 顶部头像与昵称区域 -->
   <view class="user-header">
     <image 
       class="avatar" 
-      src="{{userInfo.wx_avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
+      src="{{userInfo.avatarUrl || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
       mode="widthFix"
     ></image>
-    <view class="user-name">{{userInfo.wx_nickName || '未设置昵称'}}</view>
-    <navigator url="/pages/userEdit/userEdit?id={{userInfo.id}}" class="edit-btn">
+    <view class="user-name">{{userInfo.nickName || '未设置昵称'}}</view>
+    <navigator url="/pages/user/edit/edit" class="edit-btn">
       编辑资料
     </navigator>
   </view>
@@ -37,8 +37,8 @@
       <view class="info-item">
         <view class="info-label">身份</view>
         <view class="info-value">
-          <block wx:if="{{userInfo.user_attribute === 1}}">student</block>
-          <block wx:elif="{{userInfo.user_attribute === 2}}">teacher</block>
+          <block wx:if="{{userInfo.user_attribute === 1}}">学生</block>
+          <block wx:elif="{{userInfo.user_attribute === 2}}">教师</block>
           <block wx:else>未设置</block>
         </view>
       </view>

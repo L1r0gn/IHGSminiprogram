@@ -1,9 +1,11 @@
 {
   "pages": [
     "pages/home/home",
-    "pages/index/index",
+    "pages/login/login",
+    "pages/logs/logs",
     "pages/user/list/userList",
-    "pages/logs/logs"
+    "pages/user/edit/edit",
+    "pages/question/show/show"
   ],
   "window": {
     "navigationBarTextStyle": "black",

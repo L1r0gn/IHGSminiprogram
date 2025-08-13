@@ -12,9 +12,9 @@
     </navigator>
     
     <!-- 可以添加更多导航按钮 -->
-    <navigator url="/pages/other/otherPage" class="nav-button">
+    <navigator url="/pages/question/show/show" class="nav-button">
       <!-- <image src="" mode="aspectFit" class="button-icon" /> -->
-      <text class="button-text">其他功能</text>
+      <text class="button-text">前往做题</text>
     </navigator>
   </view>
 </view>
