@@ -9,8 +9,12 @@
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
-    "navigationBarBackgroundColor": "#ffffff"
+    "navigationBarTitleText": "智能批改作业系统",
+    "navigationBarBackgroundColor": "#ffffff",
+    "enablePullDownRefresh": true,
+    "backgroundColor": "#efefef",
+    "backgroundTextStyle": "dark"
+
   },
   "style": "v2",
   "componentFramework": "glass-easel",
