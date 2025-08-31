@@ -1,5 +1,22 @@
 /* pages/question/show/show.wxss */
 
+/* Katex 公式样式 */
+.katex {
+  font-size: 1.1em;
+}
+
+.katex-display {
+  display: block;
+  text-align: center;
+  margin: 20rpx 0;
+  overflow-x: auto;
+}
+
+.katex-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 /* 题目样式 */
 .question-container {
   padding: 20px;
@@ -11,15 +28,28 @@
   font-size: 18px;
   font-weight: bold;
 }
-
+/* 选项容器样式 */
+.options-container {
+  display: flex;
+  gap: 10px;  /* Add space between options */
+  padding: 0 20px;  /* Add padding to the left and right */
+  justify-content: space-around; /* 均匀分布 */
+  display: flex;
+  flex-direction: row; /* 改为水平排列 */
+  padding: 0 20px;
+  flex-wrap: wrap; /* 允许换行，如果选项太多 */
+}
 /* 选项样式 */
 .option-item {
+  width: 30px;
+  height: 30px;
   padding: 15px;
   margin-bottom: 12px;
   border: 1px solid #e0e0e0;
-  border-radius: 6px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .option-selected {
   background-color: #ebf5ff;
@@ -28,16 +58,34 @@
 .option-id {
   font-weight: bold;
   color: #1890ff;
-  margin-right: 10px;
+  font-size: larger;
 }
-
 /* 提交按钮样式 */
 .submit-button {
-  margin-top: 30px;
+  position: fixed;
+  bottom: 30px;
+  left: 20px;
+  right: 20px;
   background: #1890ff;
   color: white;
   border-radius: 6px;
+  padding: 15px 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
-.submit-button[disabled] {
-  background: #d9d9d9;
+
+/* 禁用状态 */
+.submit-button.disabled {
+  background: #ccc;
+  color: #999;
+}
+
+/* 点击效果 */
+.submit-button:active {
+  background: #096dd9;
+  transform: scale(0.98);
 }

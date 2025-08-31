@@ -1,7 +1,7 @@
 Page({
   data: {
-    userInfo: {},
-    userDetail: {},
+    userInfo: {}, // 本地缓存user
+    userDetail: {}, // 服务器内user
     classList: [],
     genderOptions: ['男', '女'],  // 性别选项
     genderIndex: 2,  // 默认性别索引
@@ -15,7 +15,6 @@ Page({
     const userId = wx.getStorageSync('userId');
     const userInfo = wx.getStorageSync('userInfo');
     if (userInfo) { this.setData({ userInfo: userInfo }); }
-    
     // GET信息
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,
@@ -50,7 +49,7 @@ Page({
     console.log("请求的数据：", requestData);  // 打印数据，方便调试
     // 发起 POST 请求，将数据提交到服务器
     wx.request({
-      url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,  // 服务器接口
+      url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,  
       method: 'POST',
       data: requestData,  // 发送的数据
       success: (res) => {
@@ -71,7 +70,7 @@ Page({
         }
       },
       fail: (err) => {
-        console.error('请求失败', err);
+        console.error('该用户信息请求请求失败', err);
         wx.showToast({
           title: '请求失败',
           icon: 'none',
@@ -80,32 +79,30 @@ Page({
       }
     });
   },
-  // 性别选择变化
   onGenderChange(e) {
-    const selectedGenderIndex = e.detail.value;  // 获取选择的性别索引
-    const selectedGender = this.data.genderOptions[selectedGenderIndex];  // 获取选择的性别
+    // 获取选择的性别索引 && 性别
+    const selectedGenderIndex = e.detail.value;  
+    const selectedGender = this.data.genderOptions[selectedGenderIndex];  
     this.setData({
       genderIndex: selectedGenderIndex,  // 更新性别索引
       'userInfo.gender': selectedGender  // 更新 userInfo 中的性别信息
     });
     console.log(this.data.userInfo.gender);  // 打印选中的性别
   },
-
-  // 用户身份选择变化（学生或教师）
   onUserAttributeChange(e) {
-    const selectedAttributeIndex = e.detail.value;  // 获取选择的身份索引
-    const selectedAttribute = this.data.userAttributeOptions[selectedAttributeIndex];  // 获取选择的身份
+    // 获取选择的身份索引 && 身份
+    const selectedAttributeIndex = e.detail.value;  
+    const selectedAttribute = this.data.userAttributeOptions[selectedAttributeIndex];
     this.setData({
       userAttributeIndex: selectedAttributeIndex,  // 更新身份索引
       'userInfo.attribute': selectedAttribute  // 更新 userInfo 中的身份信息
     });
     console.log(this.data.userInfo.attribute);  // 打印选中的身份
   },
-
-  // 班级选择变化
   onClassChange(e) {
-    const selectedClassIndex = e.detail.value;  // 获取选择的班级索引
-    const selectedClass = this.data.classList[selectedClassIndex];  // 获取选择的班级对象
+    // 获取选择的班级索引 && 班级
+    const selectedClassIndex = e.detail.value;  
+    const selectedClass = this.data.classList[selectedClassIndex];
     this.setData({
       classIndex: selectedClassIndex,  // 更新班级索引
       'userInfo.class_in': selectedClass  // 更新 userInfo 中的班级信息

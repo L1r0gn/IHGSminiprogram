@@ -1,7 +1,7 @@
 <!--pages/question/show/show.wxml-->
 <!-- 题目展示区域 -->
 <view class="question-container">
-  <text class="question-text">{{questionContent}}</text>
+  <rich-text nodes="{{resolvedQuestionContent}}"></rich-text>
 </view>
 
   <!-- 选项列表 -->
@@ -12,8 +12,8 @@
       bindtap="selectAnswer"
       data-id="{{item.id}}"
     >
-      <text class="option-id">{{item.id}}.</text>
-      <text class="option-text">{{item.content}}</text>
+      <text class="option-id">{{item.id}}</text>
+      <!-- <text class="option-text">{{item.content}}</text> -->
     </view>
   </block>
 </view>
@@ -25,4 +25,10 @@
   disabled="{{!selectedAnswer}}"
 >
   提交答案
+</button>
+
+<button 
+  class="submit-button" 
+>
+  换一题
 </button>
