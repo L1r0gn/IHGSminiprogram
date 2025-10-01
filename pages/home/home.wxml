@@ -1,20 +1,58 @@
-<!--pages/home/home.wxml-->
-<view class="container">
-  <view class="welcome-panel">
-    <text class="welcome-title">欢迎使用管理系统</text>
-    <text class="welcome-desc">点击下方按钮管理个人信息</text>
-  </view>
+<view class="page-container">
+  <view class="header-bg"></view>
   
-  <view class="nav-buttons">
-    <navigator url="/pages/user/list/userList" class="nav-button">
-      <!-- <image src="" mode="aspectFit" class="button-icon" /> -->
-      <text class="button-text">个人信息管理</text>
-    </navigator>
-    
-    <!-- 可以添加更多导航按钮 -->
-    <navigator url="/pages/question/show/show" class="nav-button">
-      <!-- <image src="" mode="aspectFit" class="button-icon" /> -->
-      <text class="button-text">前往做题</text>
-    </navigator>
+  <view class="content-wrapper">
+    <view class="user-profile">
+      <image class="avatar" bindtap="handleUserProfile" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="user-info">
+        <text class="greeting">下午好, {{userInfo.nickName || '朋友'}}!</text>
+        <text class="sub-greeting">开始您今天的学习吧</text>
+      </view>
+    </view>
+
+    <view class="action-section">
+      <view class="section-title">快捷功能</view>
+      <view class="action-grid">
+        <navigator url="/pages/user/list/userList" class="action-card">
+          <!-- <view class="icon-wrapper" style="background-color: #eaf2ff;">
+            <image src="/images/icon-user.png" class="card-icon" mode="aspectFit" />
+          </view> -->
+          <view class="card-content">
+            <text class="card-title">信息管理</text>
+            <text class="card-desc">管理您的个人信息</text>
+          </view>
+        </navigator>
+
+        <navigator url="/pages/question/show/show" class="action-card">
+          <!-- <view class="icon-wrapper" style="background-color: #fff0e9;">
+            <image src="/images/icon-question.png" class="card-icon" mode="aspectFit" />
+          </view> -->
+          <view class="card-content">
+            <text class="card-title">开始做题</text>
+            <text class="card-desc">挑战今日份的题目</text>
+          </view>
+        </navigator>
+
+        <view class="action-card">
+          <!-- <view class="icon-wrapper" style="background-color: #e9fbf0;">
+            <image src="/images/icon-stats.png" class="card-icon" mode="aspectFit" />
+          </view> -->
+          <view class="card-content">
+            <text class="card-title">学习统计</text>
+            <text class="card-desc">查看您的学习报告</text>
+          </view>
+        </view>
+        
+        <view class="action-card">
+          <!-- <view class="icon-wrapper" style="background-color: #f6edff;">
+            <image src="/images/icon-settings.png" class="card-icon" mode="aspectFit" />
+          </view> -->
+          <view class="card-content">
+            <text class="card-title">系统设置</text>
+            <text class="card-desc">个性化您的系统</text>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
 </view>

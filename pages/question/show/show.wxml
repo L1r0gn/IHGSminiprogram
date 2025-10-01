@@ -1,34 +1,45 @@
-<!--pages/question/show/show.wxml-->
-<!-- 题目展示区域 -->
 <view class="question-container">
   <rich-text nodes="{{resolvedQuestionContent}}"></rich-text>
 </view>
 
-  <!-- 选项列表 -->
-<view class="options-container">
-  <block wx:for="{{options}}" wx:key="id">
-    <view 
-      class="option-item {{item.selected ? 'option-selected' : ''}}"
-      bindtap="selectAnswer"
-      data-id="{{item.id}}"
-    >
-      <text class="option-id">{{item.id}}</text>
-      <!-- <text class="option-text">{{item.content}}</text> -->
+<block wx:if="{{problem_type === '选择'}}">
+  <view class="options-container">
+    <block wx:for="{{options}}" wx:key="id">
+      <view 
+        class="option-item {{item.selected ? 'option-selected' : ''}}"
+        bindtap="selectAnswer" 
+        data-id="{{item.id}}"
+      >
+        <text class="option-id">{{item.id}}</text>
+      </view>
+    </block>
+  </view>
+</block>
+
+<block wx:else>
+  <view class="subjective-container">
+    <view class="image-preview-container" wx:if="{{submitted_image_path}}">
+      <image class="image-preview" src="{{submitted_image_path}}" mode="aspectFit"></image>
     </view>
-  </block>
+
+    <button class="upload-button" bindtap="uploadImage">
+      {{ submitted_image_path ? '重新上传' : '拍照 / 选择图片上传' }}
+    </button>
+    <view class="upload-tip">请将手写答案拍照上传</view>
+  </view>
+</block>
+
+
+<view class="submit-container">
+  <button 
+    class="submit-button" 
+    bindtap="submitAnswer" 
+    disabled="{{(problem_type === '选择' && !selectedAnswer) || (problem_type !== '选择' && !submitted_image_path)}}"
+  >
+    提交答案
+  </button>
+  
+  <button class="submit-button" bindtap='getRandomQuestion'>
+    换一题
+  </button>
 </view>
-
-<!-- 提交按钮 -->
-<button 
-  class="submit-button" 
-  bindtap="submitAnswer"
-  disabled="{{!selectedAnswer}}"
->
-  提交答案
-</button>
-
-<button 
-  class="submit-button" 
->
-  换一题
-</button>

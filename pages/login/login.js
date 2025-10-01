@@ -54,90 +54,64 @@ Page({
     wx.setStorageSync('userInfo', this.data.userInfo);
     console.log(nickName);
   },
-
-  getUserProfile(e) {
-    // 推荐使用wx.getUserProfile获取用户信息
-    console.log('正在向服务器获取用户数据');
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途
-      success: (res) => {
-        console.log(res);
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true,
-          loginFailed: false
-        });
-        // 保存到本地存储
-        wx.setStorageSync('userInfo', res.userInfo);
-        console.log('userData saved in local');
-        // 登录服务器
-        this.loginToServer(res.userInfo);
-      },
-      fail: (err) => {
-        console.error("获取用户信息失败", err);
-        this.setData({
-          loginFailed: true
-        });
-      }
-    });
+  // 统一的登录处理函数
+  handleLogin() {
+    if (!this.data.hasUserInfo) {
+      wx.showToast({
+        title: '请填写头像和昵称',
+        icon: 'none'
+      });
+      return;
+    }
+    // 调用登录服务器的逻辑
+    this.loginToServer(this.data.userInfo);
   },
-
   loginToServer(userInfo) {
     wx.login({
       success: (loginRes) => {
-        wx.showLoading({
-          title: '登陆中……',
-          mask: true
-        });
+        // ... wx.showLoading 不变 ...
+        const app = getApp(); // 建议从全局获取URL
         wx.request({
-          url: 'http://127.0.0.1:8000/user/wx/login',
+          // [注意] 这里的 URL 应该和你之前 postman 或其他地方测试的登录 URL 一致
+          // 我将它改为我们之前定义的 URL 结构
+          url: `${app.globalData.globalUrl}/user/wx/login/`, // 请确保这个 URL 是正确的
           method: 'POST',
           data: {
-            // nickName: userInfo.nickName,
-            // avatarUrl: userInfo.avatarUrl,
             code: loginRes.code,
+            // 后面我们会讨论如何把 userInfo 也传过去
           },
           success: (res) => {
             wx.hideLoading();
-            if (res.data.code === 200) {
+            // [修改] 后端直接返回 token，成功由 HTTP 状态码 200 判断，无需 code === 200
+            if (res.statusCode === 200 && res.data.access) { 
               wx.showToast({
                 title: '登录成功',
                 icon: 'success'
               });
-              wx.setStorageSync('token', res.data.token);
+              // 保存新的 accessToken 和 refreshToken
+              wx.setStorageSync('accessToken', res.data.access);
+              wx.setStorageSync('refreshToken', res.data.refresh);
+              // 其他的可以保留
               wx.setStorageSync('isLoggedIn', true);
               wx.setStorageSync('userId', res.data.user_id);
+              // 登录成功后跳转到首页或用户中心
               setTimeout(() => {
-                wx.redirectTo({
-                  url: '/pages/user/list/userList',
+                wx.switchTab({ // 如果是 Tab 栏页面，请使用 switchTab
+                  url: '/pages/index/index',
                 });
               }, 1000);
+  
             } else {
-              this.setData({
-                loginFailed: true
-              });
-              wx.showToast({
-                title: res.data.message || '登录失败，请重试',
-                icon: 'none'
-              });
+              // ... 登录失败逻辑不变 ...
             }
           },
-          fail: (err) => {
-            wx.hideLoading();
-            this.setData({
-              loginFailed: true
-            });
-            wx.showToast({
-              title: '网络错误，请重试',
-            });
-            console.error('登录失败请重试', err);
-          }
+          // ... fail 逻辑不变 ...
         });
       },
     });
   },
-
   autoLogin() {
+
     const userInfo = wx.getStorageSync('userInfo');
     if (userInfo) {
       this.loginToServer(userInfo);

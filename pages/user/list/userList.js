@@ -23,13 +23,25 @@ Page({
     }
   },
   getUserDetail(userId) {
+    const token = wx.getStorageSync('accessToken');
     wx.request({
       url: `http://127.0.0.1:8000/user/wx/list/${userId}/`,  // 接口路径需与后端路由对应
       method: 'GET',
       header: {
-        'token': wx.getStorageSync('token')  // 携带登录凭证（如果接口需要认证）
+        'Authorization': `Bearer ${token}`
       },
       success: (res) => {
+        if (res.statusCode === 401) {
+          wx.showToast({
+            title: '登录已过期，请重新登录',
+            icon: 'none'
+          });
+          wx.removeStorageSync('accessToken');
+          wx.navigateTo({
+            url: '/pages/login/login'
+          });
+          return;
+        }
       },
       fail: () => {
         wx.showToast({ title: '网络错误', icon: 'none' });

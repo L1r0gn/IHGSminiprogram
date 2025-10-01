@@ -14,12 +14,25 @@ Page({
     const app = getApp();
     const userId = wx.getStorageSync('userId');
     const userInfo = wx.getStorageSync('userInfo');
+    const token = wx.getStorageSync('accessToken');
     if (userInfo) { this.setData({ userInfo: userInfo }); }
     // GET信息
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,
       method: 'GET',
+      header: {
+        'Authorization': `Bearer ${token}`
+      },
       success: (res) => {
+        if (res.statusCode === 401) {
+          wx.showToast({
+            title: '登录已过期，请重新登录',
+            icon: 'none'
+          });
+          wx.removeStorageSync('accessToken');
+          wx.navigateTo({ url: '/pages/login/login' });
+          return;
+        }
         console.log(res);
         this.setData({
           classList: res.data.classNameList,
@@ -37,22 +50,35 @@ Page({
   saveToServer() {
     const app = getApp();
     const userId = wx.getStorageSync('userId');
+    const token = wx.getStorageSync('accessToken');
     const { userInfo } = this.data;
     const requestData = {
       gender: userInfo.gender,  // 用户选择的性别
       attribute: userInfo.attribute,  // 用户选择的身份
-      class_in: userInfo.class_in && userInfo.class_in.id,  // 用户选择的班级ID
+      class_in_id:userInfo.class_in_id,
       phone: userInfo.phone,  // 用户修改后的手机号
       nickName: userInfo.nickName,  // 用户修改后的昵称
       avatarUrl: userInfo.avatarUrl  // 用户修改后的头像URL
     };
-    console.log("请求的数据：", requestData);  // 打印数据，方便调试
+    console.log("发送的数据：", requestData);  // 打印数据，方便调试
     // 发起 POST 请求，将数据提交到服务器
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,  
       method: 'POST',
+      header: {
+        'Authorization': `Bearer ${token}`
+      },
       data: requestData,  // 发送的数据
       success: (res) => {
+        if (res.statusCode === 401) {
+          wx.showToast({
+            title: '登录已过期，请重新登录',
+            icon: 'none'
+          });
+          wx.removeStorageSync('accessToken');
+          wx.navigateTo({ url: '/pages/login/login' });
+          return;
+        }
         if (res.data.code === 200) {
           wx.showToast({
             title: '保存成功',

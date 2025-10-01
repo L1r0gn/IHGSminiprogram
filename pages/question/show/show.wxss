@@ -1,91 +1,139 @@
 /* pages/question/show/show.wxss */
 
+page {
+  padding-bottom: 120px; /* 为底部的固定按钮留出空间 */
+}
+
 /* Katex 公式样式 */
 .katex {
   font-size: 1.1em;
 }
-
 .katex-display {
   display: block;
   text-align: center;
   margin: 20rpx 0;
   overflow-x: auto;
 }
-
 .katex-inline {
   display: inline-block;
   vertical-align: middle;
 }
 
-/* 题目样式 */
+/* 题目容器样式 */
 .question-container {
   padding: 20px;
   background: #f9f9f9;
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin: 15px;
+  min-height: 100px;
+  line-height: 1.6;
 }
-.question-text {
-  font-size: 18px;
-  font-weight: bold;
-}
-/* 选项容器样式 */
+
+/* --- 选择题样式 --- */
 .options-container {
   display: flex;
-  gap: 10px;  /* Add space between options */
-  padding: 0 20px;  /* Add padding to the left and right */
-  justify-content: space-around; /* 均匀分布 */
-  display: flex;
-  flex-direction: row; /* 改为水平排列 */
   padding: 0 20px;
-  flex-wrap: wrap; /* 允许换行，如果选项太多 */
+  margin-top: 20px;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
-/* 选项样式 */
 .option-item {
-  width: 30px;
-  height: 30px;
-  padding: 15px;
+  width: 40px;
+  height: 40px;
   margin-bottom: 12px;
   border: 1px solid #e0e0e0;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
 }
 .option-selected {
   background-color: #ebf5ff;
   border-color: #1890ff;
+  transform: scale(1.05);
 }
 .option-id {
   font-weight: bold;
   color: #1890ff;
-  font-size: larger;
+  font-size: 20px;
 }
-/* 提交按钮样式 */
-.submit-button {
+
+/* --- 主观题（图片上传）样式 --- */
+.subjective-container {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+.image-preview-container {
+  width: 100%;
+  min-height: 150px;
+  border: 2rpx dashed #d9d9d9;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  padding: 10px;
+}
+.image-preview {
+  max-width: 100%;
+  max-height: 400px;
+  border-radius: 4px;
+}
+.upload-button {
+  background-color: #ffffff;
+  color: #1890ff;
+  border: 1px solid #1890ff !important;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 16px;
+  width: 80%;
+}
+.upload-button:active {
+  background-color: #f0f8ff;
+}
+.upload-tip {
+  font-size: 12px;
+  color: #999;
+  margin-top: 10px;
+}
+
+/* --- 底部固定按钮样式 --- */
+.submit-container {
   position: fixed;
-  bottom: 30px;
-  left: 20px;
-  right: 20px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  background-color: #ffffff;
+  border-top: 1px solid #f0f0f0;
+  padding-bottom: max(15px, env(safe-area-inset-bottom)); /* 适配 iPhone X 等全面屏底部安全区域 */
+  z-index: 100;
+}
+.submit-button {
+  flex: 1; /* 让两个按钮平分宽度 */
   background: #1890ff;
   color: white;
   border-radius: 6px;
-  padding: 15px 0;
+  padding: 12px 0;
   text-align: center;
   font-size: 16px;
   font-weight: bold;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 }
-
-/* 禁用状态 */
-.submit-button.disabled {
+.submit-button[disabled] {
   background: #ccc;
   color: #999;
+  box-shadow: none;
 }
-
-/* 点击效果 */
-.submit-button:active {
+.submit-button:active:not([disabled]) {
   background: #096dd9;
   transform: scale(0.98);
 }
