@@ -1,5 +1,6 @@
 // login.js
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
+const defaultAvatarUrl =
+'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 
 Page({
   data: {
@@ -19,7 +20,9 @@ Page({
       console.log('用户有本地保存数据，可自动登录');
       this.setData({
         userInfo: savedUserInfo,
-        hasUserInfo: true
+        hasUserInfo: savedUserInfo.nickName && 
+                     savedUserInfo.avatarUrl && 
+                     savedUserInfo.avatarUrl !== defaultAvatarUrl
       });
       this.autoLogin(); // 自动登录（可选）
     } else {
@@ -29,32 +32,46 @@ Page({
 
   onChooseAvatar(e) {
     const { avatarUrl } = e.detail;
-    const { nickName } = this.data.userInfo;
-    // 更新本地数据
+    const currentNickName = this.data.userInfo.nickName;
+
+    const newUserInfo = {
+      nickName: currentNickName,
+      avatarUrl: avatarUrl
+    };
+
+    const hasUserInfo = currentNickName && avatarUrl && avatarUrl !== defaultAvatarUrl;
+
     this.setData({
-      'userInfo.avatarUrl': avatarUrl,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
+      userInfo: newUserInfo,
+      hasUserInfo: hasUserInfo,
       loginFailed: false
     });
-    // 保存头像到本地存储
-    wx.setStorageSync('userInfo', this.data.userInfo);
+
+    wx.setStorageSync('userInfo', newUserInfo);
     console.log(avatarUrl);
   },
 
   onInputChange(e) {
     const nickName = e.detail.value;
-    const { avatarUrl } = this.data.userInfo;
-    // 更新本地数据
+    const currentAvatarUrl = this.data.userInfo.avatarUrl;
+
+    const newUserInfo = {
+      nickName: nickName,
+      avatarUrl: currentAvatarUrl
+    };
+
+    const hasUserInfo = nickName && currentAvatarUrl && currentAvatarUrl !== defaultAvatarUrl;
+
     this.setData({
-      'userInfo.nickName': nickName,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
+      userInfo: newUserInfo,
+      hasUserInfo: hasUserInfo,
       loginFailed: false
     });
-    // 保存昵称到本地存储
-    wx.setStorageSync('userInfo', this.data.userInfo);
+
+    wx.setStorageSync('userInfo', newUserInfo);
     console.log(nickName);
   },
-  // 统一的登录处理函数
+
   handleLogin() {
     if (!this.data.hasUserInfo) {
       wx.showToast({
@@ -63,7 +80,6 @@ Page({
       });
       return;
     }
-    // 调用登录服务器的逻辑
     this.loginToServer(this.data.userInfo);
   },
   loginToServer(userInfo) {
@@ -95,12 +111,7 @@ Page({
               wx.setStorageSync('isLoggedIn', true);
               wx.setStorageSync('userId', res.data.user_id);
               // 登录成功后跳转到首页或用户中心
-              setTimeout(() => {
-                wx.switchTab({ // 如果是 Tab 栏页面，请使用 switchTab
-                  url: '/pages/index/index',
-                });
-              }, 1000);
-  
+              wx.navigateBack()
             } else {
               // ... 登录失败逻辑不变 ...
             }
@@ -111,7 +122,6 @@ Page({
     });
   },
   autoLogin() {
-
     const userInfo = wx.getStorageSync('userInfo');
     if (userInfo) {
       this.loginToServer(userInfo);

@@ -1,0 +1,106 @@
+<!-- pages/classManage/classManage.wxml -->
+<view class="container">
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="title">班级管理</text>
+  </view>
+
+  <!-- 主要内容 -->
+  <view class="main-content">
+    <!-- 新建班级按钮 -->
+    <view class="create-btn" bindtap="showCreateClassModal">
+      <view class="btn-icon">🏫</view>
+      <view class="btn-text">
+        <text class="btn-title">新建班级</text>
+        <text class="btn-desc">创建新的教学班级</text>
+      </view>
+      <view class="btn-arrow">›</view>
+    </view>
+
+    <!-- 班级列表 -->
+    <view class="class-section">
+      <view class="section-title">
+        <text class="title-text">我的班级</text>
+        <text class="class-count">共{{classList.length}}个班级</text>
+      </view>
+
+      <view class="class-list">
+        <block wx:for="{{classList}}" wx:key="id" wx:for-index="index">
+          <view class="class-item" data-index="{{index}}">
+            <view class="class-header">
+              <view class="class-info">
+                <text class="class-name">{{item.name}}</text>
+                <text class="class-code">班级教师：{{item.created_by_name}}</text>
+                <text class="class-code">班级码：{{item.code}}</text>
+              </view>
+              <view class="class-stats">
+                <text class="student-count">{{item.studentCount}}人</text>
+              </view>
+            </view>
+            <!--班级操作-->
+            <view class="action-buttons">
+              <button class="action-btn student-btn" bindtap="manageStudents" data-class="{{item}}">
+                <text class="btn-icon">👥</text>
+                学生(不可用)
+              </button>
+              <button class="action-btn homework-btn" bindtap="assignHomework" data-class="{{item}}">
+                <text class="btn-icon">📝</text>
+                作业(测试中)
+              </button>
+              <button class="action-btn detail-btn" bindtap="viewClassDetail" data-class="{{item}}">
+                <text class="btn-icon">📊</text>
+                详情(不可用)
+              </button>
+            </view>
+          </view>
+        </block>
+
+        <!-- 空状态 -->
+        <view wx:if="{{classList.length === 0}}" class="empty-state">
+          <text class="empty-icon">🏫</text>
+          <text class="empty-text">暂无班级</text>
+          <text class="empty-tip">点击上方"新建班级"开始创建</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新建班级弹窗 -->
+  <view class="modal" wx:if="{{showCreateClassModal}}">
+    <view class="modal-mask" bindtap="hideCreateClassModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">新建班级</text>
+        <view class="modal-close" bindtap="hideCreateClassModal">×</view>
+      </view>
+      
+      <view class="modal-body">
+        <view class="form-group">
+          <text class="form-label">班级名称</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入班级名称" 
+            value="{{newClassName}}"
+            bindinput="onClassNameInput"
+          />
+        </view>
+        
+        <view class="form-group">
+          <text class="form-label">班级描述</text>
+          <textarea 
+            class="form-textarea" 
+            placeholder="请输入班级描述（可选）" 
+            value="{{newClassDesc}}"
+            bindinput="onClassDescInput"
+            maxlength="100"
+          />
+        </view>
+      </view>
+      
+      <view class="modal-footer">
+        <button class="modal-btn cancel-btn" bindtap="hideCreateClassModal">取消</button>
+        <button class="modal-btn confirm-btn" bindtap="createClass">创建</button>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,42 +1,42 @@
 // pages/home/home.js
 Page({
   data: {
-    userInfo: null
+    userInfo: null,
+    isTeacher:false,
+    isStudent:false,
   },
-  onLoad(options) {
+  onShow() {
+    const app = getApp();
+    const token = wx.getStorageSync('accessToken');
+    const userId = wx.getStorageSync('userId');
     // 尝试从本地存储获取用户信息，如果没有则留空，让用户点击头像获取
-    const storedUserInfo = wx.getStorageSync('userInfo');
-    if (storedUserInfo) {
-      this.setData({
-        userInfo: storedUserInfo
-      });
-    }
-  },
-
-  // 点击头像时触发，获取用户信息
-  handleUserProfile() {
-    // 如果已经有信息了，就不再请求
-    if (this.data.userInfo) return;
-
-    wx.getUserProfile({
-      desc: '用于展示您的头像和昵称', // 声明用途
-      success: (res) => {
-        const userInfo = {
-          avatarUrl: res.userInfo.avatarUrl,
-          nickName: res.userInfo.nickName,
-        };
-        this.setData({
-          userInfo: userInfo
-        });
-        // 将用户信息保存到本地存储，方便下次使用
-        wx.setStorageSync('userInfo', userInfo);
+    wx.request({
+      url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`, 
+      method:'GET',
+      header: {
+        'Authorization': `Bearer ${token}`
       },
-      fail: (err) => {
-        wx.showToast({
-          title: '授权后体验更佳',
-          icon: 'none'
-        });
-      }
+      success:(res)=>{
+        if (res.statusCode === 401) {
+          app.handleTokenExpired();
+          return;
+        }
+        if(res.statusCode === 200){
+          console.log('收到用户数据:',res.data.data);
+          this.setData({
+            userInfo:res.data.data
+          })
+          this.updateView();
+        }
+      },
+    })
+  },
+  updateView() {
+    const attr = Number(this.data.userInfo?.user_attribute);
+    console.log('用户状态是：',attr);
+    this.setData({
+      isStudent: attr === 0,    // 根据你的业务定义
+      isTeacher: attr === 1   // 根据你的业务定义
     });
   }
 })

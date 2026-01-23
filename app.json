@@ -5,7 +5,20 @@
     "pages/logs/logs",
     "pages/user/list/userList",
     "pages/user/edit/edit",
-    "pages/question/show/show"
+    "pages/student_mode/question/show/show",
+    "pages/student_mode/myclass/myclass",
+    "pages/user/mySubmissions/mySubmissions",
+    "pages/classManage/classManage",
+    "pages/classDetail/classDetail",
+    "pages/teacher_mode/assignChoice/assignChoice",
+    "pages/teacher_mode/manualInput/manualInput",
+    "pages/user/submissionDetail/submissionDetail",
+    "pages/myclass/showHomework/showHomework",
+    "pages/myclass/doHomework/doHomework",
+    "pages/teacher_mode/classHomeworkManagement/classHomeworkManagement",
+    "pages/teacher_mode/homeworkDetail/homeworkDetail",
+    "pages/student_mode/question/search/search",
+    "pages/user/learningStats/learningStats"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -14,7 +27,6 @@
     "enablePullDownRefresh": true,
     "backgroundColor": "#efefef",
     "backgroundTextStyle": "dark"
-
   },
   "style": "v2",
   "componentFramework": "glass-easel",

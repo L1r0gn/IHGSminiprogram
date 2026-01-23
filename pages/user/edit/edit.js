@@ -1,48 +1,58 @@
 Page({
   data: {
-    userInfo: {}, // 本地缓存user
-    userDetail: {}, // 服务器内user
-    classList: [],
-    genderOptions: ['男', '女'],  // 性别选项
-    genderIndex: 2,  // 默认性别索引
-    userAttributeOptions: ['学生', '教师'],  // 用户身份选项
-    userAttributeIndex: 2,  // 默认身份索引
+    userInfo: {}, // 仅用于表单绑定，初始为空
+    genderOptions: ['男', '女'],
+    userAttributeOptions: ['学生', '教师'],
+    genderIndex: -1,
+    userAttributeIndex: -1,
   },
-  
+
   onLoad() {
-    // 获取信息
     const app = getApp();
     const userId = wx.getStorageSync('userId');
-    const userInfo = wx.getStorageSync('userInfo');
     const token = wx.getStorageSync('accessToken');
-    if (userInfo) { this.setData({ userInfo: userInfo }); }
-    // GET信息
+
+    if (!userId || !token) {
+      wx.showToast({ title: '用户信息缺失', icon: 'none' });
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
+    //发出请求
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,
       method: 'GET',
-      header: {
-        'Authorization': `Bearer ${token}`
-      },
+      header: { 'Authorization': `Bearer ${token}` },
       success: (res) => {
+        //登录验证
         if (res.statusCode === 401) {
-          wx.showToast({
-            title: '登录已过期，请重新登录',
-            icon: 'none'
-          });
+          wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' });
           wx.removeStorageSync('accessToken');
+          wx.removeStorageSync('userId');
           wx.navigateTo({ url: '/pages/login/login' });
           return;
         }
-        console.log(res);
+        const user = res.data.user || {};
+        const classList = res.data.classNameList || [];
+        // 初始化性别索引
+        const genderIndex = user.gender;
+        // 初始化身份索引
+        const userAttributeIndex =  user.user_attribute < 2 ? user.user_attribute : 0;
+        // 初始化班级索引
+        const classIndex = classList.findIndex(cls => cls.id === (user.class_in?.id));
+
         this.setData({
-          classList: res.data.classNameList,
-          userDetail: res.data.user
+          userInfo: { ...user }, // 完全来自服务器
+          classList,
+          genderIndex: genderIndex >= 0 ? genderIndex : -1,
+          userAttributeIndex: userAttributeIndex >= 0 ? userAttributeIndex : -1,
+          classIndex: classIndex >= 0 ? classIndex : -1
         });
-        console.log(this.data.classList);
-        console.log(this.data.userDetail);
+        console.log('收到用户数据：',this.data.userInfo);
+        console.log('收到班级数据：',res.data.classNameList);
       },
       fail: (err) => {
-        console.error('请求失败', err);
+        console.error('获取用户信息失败', err);
+        wx.showToast({ title: '加载失败', icon: 'none' });
       }
     });
   },
@@ -51,88 +61,145 @@ Page({
     const app = getApp();
     const userId = wx.getStorageSync('userId');
     const token = wx.getStorageSync('accessToken');
-    const { userInfo } = this.data;
+    const { userInfo, genderIndex, userAttributeIndex} = this.data;
+    // 获取班级 ID（如果选择了班级）
     const requestData = {
-      gender: userInfo.gender,  // 用户选择的性别
-      attribute: userInfo.attribute,  // 用户选择的身份
-      class_in_id:userInfo.class_in_id,
-      phone: userInfo.phone,  // 用户修改后的手机号
-      nickName: userInfo.nickName,  // 用户修改后的昵称
-      avatarUrl: userInfo.avatarUrl  // 用户修改后的头像URL
+      gender: genderIndex,               // 后端是否接受 index？需确认
+      attribute: userAttributeIndex,
+      phone: userInfo.phone || '',
+      nickName: userInfo.wx_nickName || '',
+      avatarUrl: userInfo.wx_avatar || ''
     };
-    console.log("发送的数据：", requestData);  // 打印数据，方便调试
-    // 发起 POST 请求，将数据提交到服务器
+
+    console.log('提交数据:', requestData);
+ 
     wx.request({
-      url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,  
+      url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,
       method: 'POST',
-      header: {
-        'Authorization': `Bearer ${token}`
-      },
-      data: requestData,  // 发送的数据
+      header: { 'Authorization': `Bearer ${token}` },
+      data: requestData,
       success: (res) => {
         if (res.statusCode === 401) {
-          wx.showToast({
-            title: '登录已过期，请重新登录',
-            icon: 'none'
-          });
-          wx.removeStorageSync('accessToken');
-          wx.navigateTo({ url: '/pages/login/login' });
+          app.handleTokenExpired();
           return;
         }
-        if (res.data.code === 200) {
-          wx.showToast({
-            title: '保存成功',
-            icon: 'success',
-            duration: 2000
-          });
-          wx.setStorageSync('userInfo', this.data.userInfo);
-          this.setData({ classList: res.data.classNameList });
+        if (res.statusCode === 200) {
+          wx.showToast({ title: '保存成功', icon: 'success' });
+          wx.navigateBack();
         } else {
-          wx.showToast({
-            title: '保存失败',
-            icon: 'none',
-            duration: 2000
-          });
+          wx.showToast({ title: '保存失败', icon: 'none' });
         }
       },
       fail: (err) => {
-        console.error('该用户信息请求请求失败', err);
-        wx.showToast({
-          title: '请求失败',
-          icon: 'none',
-          duration: 2000
-        });
+        console.error('保存失败', err);
+        wx.showToast({ title: '网络错误', icon: 'none' });
       }
     });
   },
   onGenderChange(e) {
-    // 获取选择的性别索引 && 性别
-    const selectedGenderIndex = e.detail.value;  
-    const selectedGender = this.data.genderOptions[selectedGenderIndex];  
+    const idx = Number(e.detail.value);
     this.setData({
-      genderIndex: selectedGenderIndex,  // 更新性别索引
-      'userInfo.gender': selectedGender  // 更新 userInfo 中的性别信息
+      genderIndex: idx,
+      'userInfo.gender': this.data.genderOptions[idx]
     });
-    console.log(this.data.userInfo.gender);  // 打印选中的性别
   },
+
   onUserAttributeChange(e) {
-    // 获取选择的身份索引 && 身份
-    const selectedAttributeIndex = e.detail.value;  
-    const selectedAttribute = this.data.userAttributeOptions[selectedAttributeIndex];
+    const idx = Number(e.detail.value);
     this.setData({
-      userAttributeIndex: selectedAttributeIndex,  // 更新身份索引
-      'userInfo.attribute': selectedAttribute  // 更新 userInfo 中的身份信息
+      userAttributeIndex: idx,
+      'userInfo.attribute': this.data.userAttributeOptions[idx]
     });
-    console.log(this.data.userInfo.attribute);  // 打印选中的身份
   },
+
   onClassChange(e) {
-    // 获取选择的班级索引 && 班级
-    const selectedClassIndex = e.detail.value;  
-    const selectedClass = this.data.classList[selectedClassIndex];
+    const idx = Number(e.detail.value);
     this.setData({
-      classIndex: selectedClassIndex,  // 更新班级索引
-      'userInfo.class_in': selectedClass  // 更新 userInfo 中的班级信息
+      classIndex: idx,
+      'userInfo.class_in': this.data.classList[idx] || null
     });
-    console.log(this.data.userInfo.class_in);  // 打印选中的班级
+  },
+
+  onNicknameInput(e) {
+    this.setData({ 'userInfo.nickName': e.detail.value });
+  },
+
+  onPhoneInput(e) {
+    this.setData({ 'userInfo.phone': e.detail.value });
+  },
+
+  showCreateClassModal() {
+    this.setData({ showCreateModal: true, newClassName: '' });
+  },
+
+  hideCreateClassModal() {
+    this.setData({ showCreateModal: false });
+  },
+
+  onClassInput(e) {
+    this.setData({ newClassName: e.detail.value });
+  },
+  async createNewClass() {
+    const name = this.data.newClassName.trim();
+    if (!name) {
+      wx.showToast({ title: '请输入班级名称', icon: 'none' });
+      return;
+    }
+
+    const token = wx.getStorageSync('access_token');
+    wx.showLoading({ title: '创建中...' });
+
+    try {
+      const res = await wx.request({
+        url: `${app.globalData.globalUrl}/class/create/`,  // 接口路径需与后端路由对应
+        method: 'POST',
+        header: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        data: { name }
+      });
+
+      if (res.statusCode === 200 && res.data.success) {
+        wx.showToast({ title: res.data.message });
+        // 关闭弹窗
+        this.hideCreateClassModal();
+        // 1. 将新班级加入 classList
+        const newClass = res.data.class;
+        const updatedList = [...this.data.classList, newClass];
+        // 2. 自动选中新班级
+        const newIndex = updatedList.length - 1;
+        this.setData({
+          classList: updatedList,
+          classIndex: newIndex,
+          'userInfo.class_in': newClass
+        });
+        // 3. 立即保存到用户资料（可选）
+        this.saveUserEdit({ class_in_id: newClass.id });
+      } else {
+        wx.showToast({ title: res.data.error || '创建失败', icon: 'none' });
+      }
+    } catch (err) {
+      console.error(err);
+      wx.showToast({ title: '网络错误', icon: 'none' });
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
+  onNicknameInput(e) {
+    const nickName = e.detail.value;
+    this.setData({
+      ['userInfo.nickName']: nickName 
+    });
+    console.log(nickName);
+  },
+
+  onChooseAvatar(e) {
+    const { avatarUrl } = e.detail;
+    console.log('新头像临时路径:', avatarUrl);
+    this.setData({
+      ['userInfo.avatarUrl']: avatarUrl 
+    });
   }
 });

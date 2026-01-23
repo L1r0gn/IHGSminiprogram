@@ -3,9 +3,9 @@
   
   <view class="content-wrapper">
     <view class="user-profile">
-      <image class="avatar" bindtap="handleUserProfile" src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <image class="avatar" bindtap="handleUserProfile" src="{{userInfo.wx_avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
       <view class="user-info">
-        <text class="greeting">下午好, {{userInfo.nickName || '朋友'}}!</text>
+        <text class="greeting">下午好, {{userInfo.wx_nickName || '朋友'}}!</text>
         <text class="sub-greeting">开始您今天的学习吧</text>
       </view>
     </view>
@@ -13,45 +13,51 @@
     <view class="action-section">
       <view class="section-title">快捷功能</view>
       <view class="action-grid">
+
         <navigator url="/pages/user/list/userList" class="action-card">
-          <!-- <view class="icon-wrapper" style="background-color: #eaf2ff;">
-            <image src="/images/icon-user.png" class="card-icon" mode="aspectFit" />
-          </view> -->
           <view class="card-content">
             <text class="card-title">信息管理</text>
             <text class="card-desc">管理您的个人信息</text>
           </view>
         </navigator>
 
-        <navigator url="/pages/question/show/show" class="action-card">
-          <!-- <view class="icon-wrapper" style="background-color: #fff0e9;">
-            <image src="/images/icon-question.png" class="card-icon" mode="aspectFit" />
-          </view> -->
+        <navigator wx:if="{{isStudent}}"  url="/pages/student_mode/question/search/search" class="action-card">
           <view class="card-content">
             <text class="card-title">开始做题</text>
             <text class="card-desc">挑战今日份的题目</text>
           </view>
         </navigator>
 
-        <view class="action-card">
-          <!-- <view class="icon-wrapper" style="background-color: #e9fbf0;">
-            <image src="/images/icon-stats.png" class="card-icon" mode="aspectFit" />
-          </view> -->
+        <navigator wx:if="{{isStudent}}" url="/pages/user/learningStats/learningStats" class="action-card">
           <view class="card-content">
             <text class="card-title">学习统计</text>
             <text class="card-desc">查看您的学习报告</text>
           </view>
-        </view>
-        
-        <view class="action-card">
-          <!-- <view class="icon-wrapper" style="background-color: #f6edff;">
-            <image src="/images/icon-settings.png" class="card-icon" mode="aspectFit" />
-          </view> -->
+        </navigator>
+
+        <!--先不要弃用-->
+        <!-- <view class="action-card">
           <view class="card-content">
             <text class="card-title">系统设置</text>
             <text class="card-desc">个性化您的系统</text>
+          </view> -->
+
+        <!--教师进行班级管理-->
+        <navigator wx:if="{{isTeacher}}" url="/pages/classManage/classManage" class="action-card">
+          <view class="card-content">
+            <text class="card-title">班级管理</text>
+            <text class="card-desc">创建，管理班级服务</text>
           </view>
-        </view>
+        </navigator>
+
+        <!--学生加入班级-->
+        <navigator wx:if="{{isStudent}}" url="/pages/student_mode/myclass/myclass" class="action-card">
+          <view class="card-content">
+            <text class="card-title">我的班级</text>
+            <text class="card-desc">加入班级，班级事务</text>
+          </view>
+        </navigator>
+
       </view>
     </view>
   </view>

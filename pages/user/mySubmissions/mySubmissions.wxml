@@ -1,0 +1,42 @@
+<view class="container">
+  <view class="header">
+    <text class="title">我的做题记录</text>
+  </view>
+
+  <view class="record-list">
+    <block wx:for="{{mySubmissions}}" wx:key="id">
+      <view class="record-item {{getStatusClass(item.status)}}">
+        <!-- 问题标题 -->
+        <view class="problem-title">提交记录 #{{item.id}}</view>
+
+        <!-- 提交时间 -->
+        <view class="meta">
+          <text class="time">提交时间：{{item.formatted_time}}</text>
+          <text class="status {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+        </view>
+
+        <!-- 得分 -->
+        <view class="score-section">
+          <text wx:if="{{item.score !== null && item.score !== undefined}}" class="score">得分：{{item.score}} 分</text>
+          <text wx:else class="no-score">暂无评分</text>
+        </view>
+
+         <!-- 提交情况 -->
+         <view class="score-section">
+          <text wx:if="{{item.status!== null && item.status !== undefined}}" class="status">批改情况：{{item.status}}</text>
+          <text wx:else class="no-score">暂无批改情况</text>
+        </view>
+
+        <!-- 查看详情按钮 -->
+        <button class="detail-btn" size="mini" bindtap="goToDetail" data-id="{{item.id}}">
+          查看详情
+        </button>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{mySubmissions.length === 0}}" class="empty">
+      <text>暂无做题记录</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,188 @@
+/* pages/submission-detail/submission-detail.wxss */
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400rpx;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 4rpx solid #e0e0e0;
+  border-top: 4rpx solid #007AFF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20rpx;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 错误状态 */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400rpx;
+}
+
+.error-text {
+  color: #ff4d4f;
+  font-size: 28rpx;
+  margin-bottom: 30rpx;
+}
+
+.retry-btn {
+  background-color: #007AFF;
+  color: white;
+  padding: 20rpx 40rpx;
+  border-radius: 10rpx;
+}
+
+/* 详情容器 */
+.detail-container {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 头部信息 */
+.header {
+  margin-bottom: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  padding-bottom: 20rpx;
+}
+
+.problem-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 15rpx;
+}
+
+.submit-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 状态区域 */
+.status-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+  padding: 20rpx;
+  background-color: #f8f9fa;
+  border-radius: 10rpx;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.value {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.status-Graded {
+  color: #52c41a;
+}
+
+.status-PENDING {
+  color: #faad14;
+}
+
+.status-RUNTIME_ERROR {
+  color: #ff4d4f;
+}
+
+.score {
+  color: #007AFF;
+}
+
+/* 图片区域 */
+.image-section {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.submitted-image {
+  width: 100%;
+  height: 400rpx;
+  border-radius: 10rpx;
+  background-color: #f0f0f0;
+}
+
+.image-tip {
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  display: block;
+  margin-top: 10rpx;
+}
+
+/* 反馈区域 */
+.feedback-section, .justification-section {
+  margin-bottom: 30rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.copy-btn {
+  color: #007AFF;
+  font-size: 24rpx;
+  padding: 10rpx 20rpx;
+  border: 1rpx solid #007AFF;
+  border-radius: 8rpx;
+}
+
+.feedback-content, .justification-content {
+  background-color: #f8f9fa;
+  padding: 25rpx;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* 无数据 */
+.no-data {
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+  padding: 60rpx 0;
+}

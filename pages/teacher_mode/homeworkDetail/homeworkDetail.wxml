@@ -1,0 +1,118 @@
+<!-- pages/teacherHomeworkPage/homeworkDetail/homeworkDetail.wxml -->
+<view class="homework-detail-container">
+  <!-- 顶部作业信息卡片 -->
+  <view class="homework-info-card">
+    <view class="homework-title-section">
+      <text class="homework-title">{{homeworkDetail.title}}</text>
+      <view class="status-tag {{homeworkDetail.status === '已截止' ? 'expired' : homeworkDetail.status === '进行中' ? 'ongoing' : 'draft'}}">
+        {{homeworkDetail.status}}
+      </view>
+    </view>
+    
+    <view class="homework-meta">
+      <view class="meta-item">
+        <text class="meta-label">科目：</text>
+        <text class="meta-value">{{homeworkDetail.subject}}</text>
+      </view>
+      <view class="meta-item">
+        <text class="meta-label">截止时间：</text>
+        <text class="meta-value">{{homeworkDetail.deadline}}</text>
+      </view>
+      <view class="meta-item">
+        <text class="meta-label">布置时间：</text>
+        <text class="meta-value">{{homeworkDetail.created_at}}</text>
+      </view>
+    </view>
+    
+    <view class="homework-description">
+      <text class="description-label">作业要求：</text>
+      <text class="description-content">{{homeworkDetail.description}}</text>
+    </view>
+  </view>
+  
+  <!-- 提交统计 -->
+  <view class="submit-stats-card">
+    <view class="stats-title">提交统计</view>
+    <view class="stats-content">
+      <view class="stat-item">
+        <text class="stat-number">{{submitStats.submittedCount}}</text>
+        <text class="stat-label">已提交</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{submitStats.totalCount - submitStats.submittedCount}}</text>
+        <text class="stat-label">未提交</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-number">{{submitStats.totalCount}}</text>
+        <text class="stat-label">总人数</text>
+      </view>
+    </view>
+    <progress 
+      class="submit-progress" 
+      percent="{{(submitStats.submittedCount / submitStats.totalCount) * 100}}" 
+      stroke-width="6"
+      activeColor="#07c160"
+      backgroundColor="#ebedf0"
+    />
+  </view>
+  
+  <!-- 学生列表 -->
+  <view class="student-list-card">
+    <view class="list-header">
+      <text class="list-title">学生列表</text>
+      <view class="filter-tabs">
+        <text 
+          class="filter-tab {{currentFilter === 'all' ? 'active' : ''}}" 
+          bindtap="changeFilter" 
+          data-filter="all"
+        >
+          全部({{studentList.length}})
+        </text>
+        <text 
+          class="filter-tab {{currentFilter === 'submitted' ? 'active' : ''}}" 
+          bindtap="changeFilter" 
+          data-filter="submitted"
+        >
+          已提交({{submitStats.submittedCount}})
+        </text>
+        <text 
+          class="filter-tab {{currentFilter === 'unsubmitted' ? 'active' : ''}}" 
+          bindtap="changeFilter" 
+          data-filter="unsubmitted"
+        >
+          未提交({{getUnsubmittedCount() || 0}})
+        </text>
+      </view>
+    </view>
+    
+    <view class="student-list">
+      <block wx:for="{{filteredStudentList}}" wx:key="id">
+        <view class="student-item" bindtap="navigateToStudentWork" data-student-id="{{item.id}}">
+          <!-- <view class="student-avatar">
+            <image src="{{item.avatar}}" mode="aspectFill"></image>
+          </view> -->
+          <view class="student-info">
+            <text class="student-name">{{item.name}}</text>
+            <text class="student-id">学号: {{item.studentId}}</text>
+          </view>
+          <view class="submit-status {{item.submitted ? 'submitted' : 'unsubmitted'}}">
+            {{item.submitted ? '已提交' : '未提交'}}
+          </view>
+          <!-- <view class="arrow-icon">
+            <image src="/images/icon_arrow_right.png" mode="aspectFit"></image>
+          </view> -->
+        </view>
+      </block>
+    </view>
+  </view>
+  
+  <!-- 底部操作栏 -->
+  <view class="action-bar">
+    <button class="btn-secondary" bindtap="editHomework">编辑作业</button>
+    <button class="btn-primary" bindtap="publishReminder" wx:if="{{homeworkDetail.status === '进行中'}}">
+      发布提醒
+    </button>
+  </view>
+</view>

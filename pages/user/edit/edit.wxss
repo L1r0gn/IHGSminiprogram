@@ -11,22 +11,48 @@
 /* 头像与昵称 */
 .user-header {
   display: flex;
-align-items: center;
+  align-items: center;
   margin-bottom: 24rpx;
   background-color: #ffffff;
   padding: 32rpx;
   border-radius: 24rpx;
   box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.05);
+  /* 移除固定高度，让内容自适应 */
 }
 
-.avatar {
+/* 修复头像按钮容器 */
+.avatar-btn {
   width: 140rpx;
   height: 140rpx;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
   border-radius: 50%;
-  margin-right: 32rpx;
-  border: 4rpx solid #f2f3f5;
-box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  font-size: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  /* 添加相对定位 */
+  position: relative;
+  overflow: hidden;
 }
+
+/* 修复头像图片样式 */
+.avatar {
+  width: 140rpx;  
+  height: 140rpx; 
+  border-radius: 50%;
+  border: 6rpx solid #fff;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1;
+  object-fit: cover;
+}
+
 
 .user-name {
   flex-grow: 1;
@@ -92,13 +118,14 @@ box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.05);
 }
 
 .info-input {
-  width: 100%;
+  width: 32%;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fff;
   color: #333;
+  text-align: left;
 }
 
 .picker-container .info-value {

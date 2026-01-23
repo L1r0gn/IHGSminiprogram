@@ -1,0 +1,386 @@
+/* pages/classManage/classManage.wxss */
+.container {
+  /* min-height: 100vh; */
+  background-color: #f5f7fa;
+  padding: 0 20rpx;   
+}
+
+.header {
+  text-align: center;
+  padding: 40rpx 0;
+  margin-bottom: 0; 
+}
+
+.title {
+  font-size: 50rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.sub-title {
+  font-size: 26rpx;
+  color: #666;
+  display: block;
+}
+
+.main-content {
+  width: 100%;
+  margin-top: 0rpx;
+}
+
+/* 新建班级按钮 */
+.create-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  color: white;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.3);
+}
+
+.btn-icon {
+  font-size: 44rpx;
+  margin-right: 20rpx;
+}
+
+.btn-text {
+  flex: 1;
+}
+
+.btn-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.btn-desc {
+  font-size: 24rpx;
+  opacity: 0.9;
+  display: block;
+}
+
+.btn-arrow {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+/* 班级列表 */
+.class-section {
+  margin-top: 20rpx;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding: 0 10rpx;
+}
+
+.title-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.class-count {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.class-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.class-item {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+  border-left: 6rpx solid #1890ff;
+}
+
+.class-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25rpx;
+}
+
+.class-info {
+  flex: 1;
+}
+
+.class-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.class-code {
+  font-size: 24rpx;
+  color: #666;
+  display: block;
+}
+
+.class-stats {
+  background: #e6f7ff;
+  padding: 8rpx 16rpx;
+  border-radius: 12rpx;
+}
+
+.student-count {
+  font-size: 24rpx;
+  color: #1890ff;
+  font-weight: 500;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 16rpx;
+}
+
+.action-btn {
+  flex: 1;
+  background: #f5f5f5;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  padding: 20rpx 0;
+  font-size: 24rpx;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.action-btn::after {
+  border: none;
+}
+
+.action-btn:active {
+  background: #e8e8e8;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx 40rpx;
+  background: white;
+  border-radius: 16rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.empty-tip {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+}
+
+/* 模态框样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 20rpx;
+  width: 85%;
+  max-width: 600rpx;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.homework-modal {
+  max-width: 650rpx;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 36rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.modal-body {
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 15rpx;
+}
+
+.form-input, .form-textarea {
+  width: 100%;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  padding: 30rpx;
+  font-size: 26rpx;
+  background: #fafafa;
+}
+
+.form-textarea {
+  height: 120rpx;
+}
+
+.date-picker {
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  font-size: 26rpx;
+  background: #fafafa;
+  color: #999;
+}
+
+.date-picker.has-value {
+  color: #333;
+}
+
+/* 题目列表 */
+.problem-list {
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  background: #fafafa;
+  min-height: 120rpx;
+}
+
+.problem-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15rpx;
+  background: white;
+  border-radius: 8rpx;
+  margin-bottom: 10rpx;
+  border-left: 4rpx solid #1890ff;
+}
+
+.problem-title {
+  font-size: 24rpx;
+  color: #333;
+  flex: 1;
+}
+
+.problem-remove {
+  color: #ff4d4f;
+  font-size: 28rpx;
+  font-weight: bold;
+  padding: 0 10rpx;
+}
+
+.add-problem {
+  background: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  font-size: 24rpx;
+  width: 100%;
+}
+
+.add-problem::after {
+  border: none;
+}
+
+/* 模态框底部按钮 */
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  padding: 0 30rpx 30rpx;
+}
+
+.modal-btn {
+  flex: 1;
+  border: none;
+  border-radius: 10rpx;
+  padding: 24rpx 0;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.modal-btn::after {
+  border: none;
+}
+
+.cancel-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.cancel-btn:active {
+  background: #e8e8e8;
+}
+
+.confirm-btn {
+  background: #1890ff;
+  color: white;
+}
+
+.confirm-btn:active {
+  background: #096dd9;
+}

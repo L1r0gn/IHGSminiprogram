@@ -1,0 +1,106 @@
+<view class="page-container">
+  <!-- 顶部背景 -->
+  <view class="header-bg" style="background: {{classInfo.color}}">
+    <view class="header-content">
+      <text class="page-title">{{classInfo.name}}</text>
+      <text class="page-subtitle">班级码 : {{classInfo.code}}</text>
+    </view>
+  </view> 
+
+  <view class="content-wrapper">
+    <!-- 基本信息卡片 -->
+    <view class="info-card">
+      <view class="info-item">
+        <text class="info-label">任课老师</text>
+        <text class="info-value">{{classInfo.teacher_name}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">创建时间</text>
+        <text class="info-value">{{classInfo.create_time}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">班级描述</text>
+        <text class="info-value">{{classInfo.description || '暂无描述'}}</text>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-section">
+      <view class="menu-title">班级功能</view>
+      <view class="menu-grid">
+        <view class="menu-item" bindtap="goToHomework">
+          <view class="menu-icon homework">📚</view>
+          <text class="menu-text">查看作业</text>
+        </view>
+        <view class="menu-item" bindtap="goToMembers">
+          <view class="menu-icon members">👥</view>
+          <text class="menu-text">班级成员（不可用）</text>
+        </view>
+        <view class="menu-item" bindtap="goToSchedule">
+          <view class="menu-icon schedule">📅</view>
+          <text class="menu-text">课程表（不可用）</text>
+        </view>
+        <view class="menu-item" bindtap="goToAnnouncements">
+          <view class="menu-icon announcements">📢</view>
+          <text class="menu-text">班级通知（不可用）</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 最近作业 -->
+    <view class="homework-section">
+      <view class="section-header">
+        <text class="section-title">最近作业</text>
+        <text class="section-more" bindtap="goToHomework">查看更多</text>
+      </view>
+      <view wx:if="{{recentHomeworks.length > 0}}" class="homework-list">
+        <view class="homework-item" wx:for="{{recentHomeworks}}" wx:key="id" bindtap="viewHomework" data-homework="{{item}}">
+          <view class="homework-header">
+            <text class="homework-title">{{item.title}}</text>
+            <view class="homework-status {{item.status}}">
+              <text class="status-text">{{item.status_text}}</text>
+            </view>
+          </view>
+          <text class="homework-desc">{{item.description}}</text>
+          <view class="homework-meta">
+            <text class="meta-item">截止: {{item.deadline}}</text>
+            <text class="meta-item">提交: {{item.submit_count}}/{{classInfo.student_count}}</text>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="empty-homework">
+        <text class="empty-text">暂无作业</text>
+      </view>
+    </view>
+
+    <!-- 退出班级按钮 -->
+    <view class="action-section">
+      <button class="quit-btn" bindtap="showQuitConfirm">退出班级</button>
+    </view>
+  </view>
+
+  <!-- 退出确认弹窗 -->
+  <view wx:if="{{showQuitConfirm}}" class="modal-overlay" bindtap="hideQuitConfirm">
+    <view class="modal-container" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">退出班级</text>
+      </view>
+      <view class="modal-body">
+        <text class="confirm-text">确定要退出 "{{classInfo.name}}" 班级吗？</text>
+        <text class="confirm-tip">退出后将无法查看班级作业和通知</text>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="hideQuitConfirm">取消</button>
+        <button class="modal-btn confirm quit" bindtap="quitClass">确认退出</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{isLoading}}" class="loading-mask">
+    <view class="loading-content">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+</view>

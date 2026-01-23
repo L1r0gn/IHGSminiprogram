@@ -1,0 +1,186 @@
+/* pages/teacherHomeworkPage/assignChoice/assignChoice.wxss */
+.container {
+  padding: 30rpx;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+  padding-top: 20rpx;
+  margin-bottom: 40rpx; /* 增加底部间距 */
+}
+
+.title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40rpx;
+  flex: 1; /* 占据剩余空间 */
+}
+
+.option-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center; /* 改为居中对齐 */
+  justify-content: space-between;
+  transition: all 0.3s;
+}
+
+.option-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.1);
+}
+
+.card-left {
+  display: flex;
+  align-items: center; /* 改为居中对齐 */
+  flex: 1;
+}
+
+.icon-container {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 30rpx;
+  flex-shrink: 0; /* 防止图标被压缩 */
+}
+
+.ai-icon {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.manual-icon {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.icon-image {
+  width: 50rpx;
+  height: 50rpx;
+}
+
+.option-content {
+  flex: 1;
+}
+
+.option-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 12rpx; /* 恢复标题和描述之间的间距 */
+}
+
+.option-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #7f8c8d;
+  line-height: 1.5;
+}
+
+.arrow-image {
+  width: 30rpx;
+  height: 30rpx;
+  flex-shrink: 0; /* 防止箭头被压缩 */
+  margin-left: 20rpx; /* 添加左边距 */
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 40rpx 0; /* 调整上下间距 */
+}
+
+.divider-line {
+  flex: 1;
+  height: 2rpx;
+  background: #ecf0f1;
+}
+
+.divider-text {
+  padding: 0 20rpx;
+  font-size: 26rpx;
+  color: #95a5a6;
+}
+
+.recent-homeworks {
+  margin-top: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  color: #2c3e50;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #ecf0f1;
+}
+
+.homework-list {
+  background: white;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.homework-item {
+  padding: 30rpx;
+  border-bottom: 2rpx solid #f1f2f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.homework-item:last-child {
+  border-bottom: none;
+}
+
+.homework-info {
+  flex: 1;
+}
+
+.homework-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 500;
+  margin-bottom: 10rpx;
+}
+
+.homework-date {
+  display: block;
+  font-size: 24rpx;
+  color: #95a5a6;
+}
+
+.reuse-btn {
+  background-color: #3498db;
+  color: white;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  padding: 0 30rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+}
+
+.reuse-btn:active {
+  background-color: #2980b9;
+}

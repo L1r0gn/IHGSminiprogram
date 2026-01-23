@@ -1,0 +1,32 @@
+<view class="container">
+
+<view class="homework-list" wx:if="{{homeworkList.length > 0}}">
+  <view 
+    class="homework-card" 
+    wx:for="{{homeworkList}}" 
+    wx:key="id" 
+    data-homework-id="{{item.id}}"
+    bindtap="navigateToDetail">
+
+    <view class="card-header">
+      <view class="card-title">{{item.title}}</view>
+    </view>
+
+    <view class="card-body">
+      <view class="card-info">发布于: {{item.created_at}}</view>
+      <view class="card-info">截止于: {{item.deadline || '未设置截止时间'}}</view>
+    </view>
+
+    <view class="card-footer">
+      <view class="detail-text">查看详情</view>
+    </view>
+  </view>
+</view>
+
+<view class="empty-container" wx:if="{{!isLoading && homeworkList.length === 0}}">
+  <image class="empty-image" src="" mode="aspectFit" />
+  <view class="empty-text">该班级暂无作业</view>
+  <view class="empty-subtext">快去“发布作业”吧</view>
+</view>
+
+</view>

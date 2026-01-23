@@ -1,0 +1,76 @@
+<!-- pages/question/search/search.wxml -->
+<view class="container">
+  <!-- 顶部搜索区 -->
+  <view class="search-header">
+    <view class="search-bar">
+      <icon type="search" size="16"></icon>
+      <input 
+        class="search-input" 
+        placeholder="搜索题目内容或知识点" 
+        confirm-type="search" 
+        bindconfirm="onSearch"
+        bindinput="onInput"
+        value="{{keyword}}"
+      />
+      <icon type="clear" size="16" wx:if="{{keyword}}" bindtap="clearKeyword"></icon>
+    </view>
+    
+    <!-- 知识点筛选 Picker -->
+    <picker 
+      mode="selector" 
+      range="{{knowledgePoints}}" 
+      range-key="name" 
+      bindchange="onKpChange"
+    >
+      <view class="filter-btn {{selectedKp ? 'active' : ''}}">
+        {{selectedKp ? selectedKp.name : '按知识点筛选'}}
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 随机练习入口 -->
+  <view class="random-entry" bindtap="goToRandomPractice">
+    <text>🎲 不想挑题？直接开始随机练习</text>
+    <text class="go-icon">></text>
+  </view>
+
+  <!-- 题目列表 -->
+  <scroll-view scroll-y class="question-list">
+    <block wx:if="{{questionList.length > 0}}">
+      <view 
+        class="question-item" 
+        wx:for="{{questionList}}" 
+        wx:key="id"
+        bindtap="goToQuestion"
+        data-id="{{item.id}}"
+      >
+        <view class="q-header">
+          <view class="q-tags">
+            <text class="tag type">{{item.problem_type}}</text>
+            <text class="tag diff">{{item.difficulty}}</text>
+          </view>
+          <text class="q-id">#{{item.id}}</text>
+        </view>
+        
+        <view class="q-title">{{item.title}}</view>
+        <view class="q-preview">{{item.content_preview}}</view>
+        
+        <view class="q-footer" wx:if="{{item.knowledge_points.length > 0}}">
+          <image src="/images/icon_kp.png" class="kp-icon" wx:if="{{false}}"></image> <!-- 可选图标 -->
+          <text class="kp-text">考点: {{item.knowledge_points}}</text>
+        </view>
+      </view>
+      
+      <view class="loading-tip">已加载 {{questionList.length}} 条相关题目</view>
+    </block>
+    
+    <!-- 空状态 -->
+    <block wx:else>
+      <view class="empty-state">
+        <text>🔍 暂无搜索结果</text>
+        <text class="sub-text">尝试更换关键词或选择其他知识点</text>
+      </view>
+    </block>
+  </scroll-view>
+</view>

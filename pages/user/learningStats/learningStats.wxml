@@ -1,0 +1,68 @@
+<view class="container">
+  <!-- 头部概览卡片 -->
+  <view class="overview-card">
+    <view class="user-info">
+      <view class="greeting">👋 嗨，{{userInfo.nickName || '同学'}}</view>
+      <view class="subtitle">这是你的AI学习能力分析报告</view>
+    </view>
+    
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-num">{{stats.avg_mastery || 0}}</text>
+        <text class="stat-label">平均能力值</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.total_questions || 0}}</text>
+        <text class="stat-label">刷题数量</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 知识点列表区域 -->
+  <view class="section-title">
+    <text class="icon">📊</text> 知识点掌握详情
+  </view>
+
+  <scroll-view scroll-y class="list-container">
+    <block wx:if="{{stats.stats_list && stats.stats_list.length > 0}}">
+      <view class="kp-item" wx:for="{{stats.stats_list}}" wx:key="id">
+        <view class="kp-header">
+          <text class="kp-name">{{item.name}}</text>
+          <text class="kp-score {{item.score >= 4 ? 'high' : (item.score >= 2.5 ? 'mid' : 'low')}}">{{item.score}} 分</text>
+        </view>
+        
+        <!-- 进度条背景 -->
+        <view class="progress-bg">
+          <!-- 进度条前景 -->
+          <view 
+            class="progress-bar {{item.score >= 4 ? 'bg-green' : (item.score >= 2.5 ? 'bg-orange' : 'bg-red')}}" 
+            style="width: {{item.score_percent}}%"
+          ></view>
+        </view>
+        
+        <view class="kp-footer">
+          <text class="kp-desc">基于 {{item.count}} 次练习分析</text>
+          <text class="kp-level">
+            {{item.score >= 4.5 ? '精通' : (item.score >= 3.5 ? '熟练' : (item.score >= 2.5 ? '掌握' : '入门'))}}
+          </text>
+        </view>
+      </view>
+    </block>
+    
+    <block wx:else>
+      <view class="empty-state">
+        <image class="empty-img" src="/images/empty_chart.png" mode="aspectFit" wx:if="{{false}}"></image>
+        <text>暂无数据，快去刷题积累数据吧！</text>
+        <navigator url="/pages/question/show/show" class="go-btn">去刷题</navigator>
+      </view>
+    </block>
+  </scroll-view>
+  
+  <!-- 底部链接：查看详细提交记录 -->
+  <view class="footer-link">
+    <navigator url="/pages/user/mySubmissions/mySubmissions" class="link-text">
+      查看详细做题历史 >
+    </navigator>
+  </view>
+</view>
