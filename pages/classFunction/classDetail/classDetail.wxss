@@ -1,4 +1,4 @@
-/* pages/classDetail/classDetail.wxss */
+/* pages/classFunction/classDetail/classDetail.wxss */
 page {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

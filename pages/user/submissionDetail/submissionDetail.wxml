@@ -16,19 +16,30 @@
   <view wx:elif="{{submissionDetail}}" class="detail-container">
     <!-- 头部信息 -->
     <view class="header">
-      <text class="problem-title">{{submissionDetail.problem_title}}</text>
-      <text class="submit-time">{{submissionDetail.submitted_time}}</text>
+      <text class="problem-title">{{submissionDetail.question_title}}</text>
+      <text class="submit-time">{{submissionDetail.created_at}}</text>
     </view>
 
     <!-- 状态和分数 -->
-    <view class="status-section">
+    <view class="status-section {{submissionDetail.is_correct ? 'bg-correct' : ''}}">
       <view class="status-item">
         <text class="label">状态：</text>
-        <text class="value status-{{submissionDetail.status}}">{{submissionDetail.status}}</text>
+        <text class="value status-{{submissionDetail.statusClass}}">{{submissionDetail.statusText}}</text>
       </view>
       <view class="status-item">
         <text class="label">得分：</text>
         <text class="value score">{{submissionDetail.score}}分</text>
+      </view>
+    </view>
+
+    <!-- 用户答案 (文本/代码) -->
+    <view wx:if="{{submissionDetail.user_answer}}" class="answer-section">
+      <view class="section-header">
+        <text class="section-title">我的答案</text>
+        <text class="copy-btn" bindtap="copyAnswer">复制</text>
+      </view>
+      <view class="answer-content">
+        <text user-select="true">{{submissionDetail.user_answer}}</text>
       </view>
     </view>
 

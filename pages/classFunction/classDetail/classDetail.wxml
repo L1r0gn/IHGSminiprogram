@@ -30,11 +30,11 @@
       <view class="menu-grid">
         <view class="menu-item" bindtap="goToHomework">
           <view class="menu-icon homework">📚</view>
-          <text class="menu-text">查看作业</text>
+          <text class="menu-text">{{isTeacher ? '管理作业' : '查看作业'}}</text>
         </view>
         <view class="menu-item" bindtap="goToMembers">
           <view class="menu-icon members">👥</view>
-          <text class="menu-text">班级成员（不可用）</text>
+          <text class="menu-text">{{isTeacher ? '管理成员' : '班级成员'}}</text>
         </view>
         <view class="menu-item" bindtap="goToSchedule">
           <view class="menu-icon schedule">📅</view>
@@ -73,9 +73,10 @@
       </view>
     </view>
 
-    <!-- 退出班级按钮 -->
+    <!-- 退出/删除班级按钮 -->
     <view class="action-section">
-      <button class="quit-btn" bindtap="showQuitConfirm">退出班级</button>
+      <button wx:if="{{isTeacher}}" class="quit-btn delete-btn" style="background-color: #ff4d4f; color: white;" bindtap="deleteClass">解散班级</button>
+      <button wx:else class="quit-btn" bindtap="showQuitConfirm">退出班级</button>
     </view>
   </view>
 

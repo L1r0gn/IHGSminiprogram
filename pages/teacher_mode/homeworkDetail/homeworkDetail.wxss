@@ -173,11 +173,14 @@
   color: #666;
   border-radius: 28rpx;
   display: flex; /* 使用flex布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
 }
 
 .filter-tab.active {
   background-color: #07c160;
   color: #fff;
+  
 }
 
 .student-list {

@@ -51,7 +51,7 @@ Page({
       this.setData({ isLoading: true });
       const app = getApp();
       const token = wx.getStorageSync('accessToken');
-      const userId = wx.getStorageSync('userId');
+      
       wx.request({
         url: `${app.globalData.globalUrl}/user/wx/userJoinClass/`,
         method: 'POST',
@@ -59,8 +59,7 @@ Page({
           'Authorization': `Bearer ${token}`,
         },
         data: {
-          class_code: classCode,
-          user_id: userId
+          class_code: classCode
         },
         success: (res) => {
           if (res.statusCode === 200) {
@@ -70,6 +69,11 @@ Page({
             });
             this.hideJoinModal();
             this.fetchJoinedClasses(); // 刷新班级列表
+          } else if (res.statusCode === 403 && res.data.message === "只有学生可加入班级") {
+             wx.showToast({
+               title: '只有学生身份可加入班级',
+               icon: 'none'
+             });
           } else if (res.statusCode === 400) {
             wx.showToast({
               title: res.data.message || '班级码错误',
@@ -77,7 +81,7 @@ Page({
             });
           } else {
             wx.showToast({
-              title: '加入失败',
+              title: res.data.message || '加入失败',
               icon: 'none'
             });
           }
@@ -176,7 +180,7 @@ Page({
   viewClassDetail(e) {
     const classInfo = e.currentTarget.dataset.class;
     wx.navigateTo({
-      url: `/pages/classDetail/classDetail?classId=${classInfo.id}&className=${classInfo.name}`
+      url: `/pages/classFunction/classDetail/classDetail?classId=${classInfo.id}&className=${classInfo.name}`
     });
   },
 

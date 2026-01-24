@@ -39,8 +39,24 @@ Page({
         }
         if (res.statusCode === 200) {
           console.log('收到了submission数据：',res.data);
+          
+          const rawData = res.data;
+          // 处理数据，添加显示用的属性
+          const processedData = {
+            ...rawData,
+            // 兼容不同字段名
+            question_title: rawData.question_title || rawData.problem_title || '未知题目',
+            created_at: rawData.created_at || rawData.submitted_time || '',
+            statusClass: this.getStatusClass(rawData.status),
+            statusText: this.getStatusText(rawData.status),
+            // 确保 user_answer 存在
+            user_answer: rawData.user_answer || '',
+            // 确保 is_correct 存在 (如果后端没返回，根据 status 判断)
+            is_correct: rawData.is_correct !== undefined ? rawData.is_correct : (rawData.status === 'ACCEPTED' || rawData.status === 'GRADED')
+          };
+
           this.setData({
-            submissionDetail: res.data,
+            submissionDetail: processedData,
             loading: false
           });
         } else {
@@ -59,6 +75,47 @@ Page({
       }
     });
   },
+
+  // 状态分类函数
+  getStatusClass(status) {
+    const statusMap = {
+      'GRADED': 'correct',
+      'ACCEPTED': 'correct',
+      'RUNTIME_ERROR': 'incorrect',
+      'WRONG_ANSWER': 'incorrect',
+      'PENDING': 'pending'
+    };
+    return statusMap[status] || 'pending';
+  },
+
+  // 状态文本显示函数
+  getStatusText(status) {
+    const textMap = {
+      'GRADED': '已评分',
+      'ACCEPTED': '已通过',
+      'RUNTIME_ERROR': '运行错误',
+      'WRONG_ANSWER': '答案错误',
+      'PENDING': '待批改'
+    };
+    return textMap[status] || status; // 如果没有匹配，显示原状态
+  },
+
+  // 复制用户答案
+  copyAnswer() {
+    const { submissionDetail } = this.data;
+    if (submissionDetail && submissionDetail.user_answer) {
+      wx.setClipboardData({
+        data: submissionDetail.user_answer,
+        success: () => {
+          wx.showToast({
+            title: '答案已复制',
+            icon: 'success'
+          });
+        }
+      });
+    }
+  },
+
   // 重新加载
   onRetry() {
     if (this.data.submissionId) {

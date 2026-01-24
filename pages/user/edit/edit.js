@@ -145,19 +145,33 @@ Page({
       wx.showToast({ title: '请输入班级名称', icon: 'none' });
       return;
     }
+    
+    // 权限检查
+    if (this.data.userInfo.user_attribute < 2) {
+       // 注意：这里 user_attribute < 2 表示学生(0)或普通老师(1)，假设只有特定权限老师才能创建
+       // 根据 prompt，user_attribute >= 2 才能创建
+       // 如果 user_attribute=1 也是老师，需要确认后端逻辑。Prompt 说 user_attribute >= 2
+       wx.showToast({ title: '权限不足，无法创建班级', icon: 'none' });
+       return;
+    }
 
-    const token = wx.getStorageSync('access_token');
+    const token = wx.getStorageSync('accessToken'); // 修正：原代码用的 access_token，这里统一用 accessToken
     wx.showLoading({ title: '创建中...' });
 
     try {
-      const res = await wx.request({
-        url: `${app.globalData.globalUrl}/class/create/`,  // 接口路径需与后端路由对应
-        method: 'POST',
-        header: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        data: { name }
+      const app = getApp(); // 确保 app 定义
+      const res = await new Promise((resolve, reject) => {
+        wx.request({
+          url: `${app.globalData.globalUrl}/class/create/`,  // 接口路径需与后端路由对应
+          method: 'POST',
+          header: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          data: { name },
+          success: resolve,
+          fail: reject
+        })
       });
 
       if (res.statusCode === 200 && res.data.success) {
@@ -175,7 +189,9 @@ Page({
           'userInfo.class_in': newClass
         });
         // 3. 立即保存到用户资料（可选）
-        this.saveUserEdit({ class_in_id: newClass.id });
+        // this.saveUserEdit({ class_in_id: newClass.id });
+      } else if (res.statusCode === 403) {
+        wx.showToast({ title: '权限不足', icon: 'none' });
       } else {
         wx.showToast({ title: res.data.error || '创建失败', icon: 'none' });
       }
@@ -198,8 +214,59 @@ Page({
   onChooseAvatar(e) {
     const { avatarUrl } = e.detail;
     console.log('新头像临时路径:', avatarUrl);
+    
+    // 立即更新视图
     this.setData({
-      ['userInfo.avatarUrl']: avatarUrl 
+      ['userInfo.wx_avatar']: avatarUrl // 更新 WXML 使用的字段
+    });
+
+    // 立即上传获取永久 URL
+    this.uploadAvatar(avatarUrl);
+  },
+
+  uploadAvatar(tempPath) {
+    const app = getApp();
+    const token = wx.getStorageSync('accessToken');
+    
+    wx.showLoading({ title: '上传头像中...' });
+
+    wx.uploadFile({
+      url: `${app.globalData.globalUrl}/user/wx/upload/avatar/`, // 假设后端有此上传接口
+      filePath: tempPath,
+      name: 'avatar', // 对应后端接收的文件字段名
+      header: {
+        'Authorization': `Bearer ${token}`
+      },
+      success: (res) => {
+        wx.hideLoading();
+        console.log('上传结果:', res);
+        
+        // wx.uploadFile 返回的 data 是 string 类型
+        let data;
+        try {
+          data = JSON.parse(res.data);
+        } catch (e) {
+          console.error('解析上传响应失败', e);
+          wx.showToast({ title: '上传失败', icon: 'none' });
+          return;
+        }
+
+        if (res.statusCode === 200 && data.url) {
+           console.log('头像上传成功，永久URL:', data.url);
+           // 将永久 URL 更新到 userInfo 中，以便 saveToServer 提交
+           this.setData({
+             ['userInfo.wx_avatar']: data.url
+           });
+           wx.showToast({ title: '头像上传成功', icon: 'success' });
+        } else {
+           wx.showToast({ title: data.message || '上传失败', icon: 'none' });
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading();
+        console.error('上传头像失败', err);
+        wx.showToast({ title: '网络错误', icon: 'none' });
+      }
     });
   }
 });

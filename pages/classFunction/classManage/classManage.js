@@ -36,9 +36,16 @@ Page({
   loadClassList(callback) {
     const userId = wx.getStorageSync('userId');
     const token = wx.getStorageSync('accessToken')
+
+    if (!token || !userId) {
+      console.log('未登录或userId缺失');
+      // wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
+
     // 模拟数据
     wx.request({
-      url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,  
+      url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,
       method: 'GET',
       header: {
         'Authorization': `Bearer ${token}`
@@ -56,11 +63,11 @@ Page({
           return;
         }
         //保存数据
-        console.log('收到用户数据:',res.data.data);
+        console.log('收到用户数据:', res.data.data);
         this.setData({
-          classList:res.data.data.class_in,
+          classList: res.data.data.class_in,
         })
-        console.log('当前用户的班级为:',this.data.classList);
+        console.log('当前用户的班级为:', this.data.classList);
       },
       fail: () => {
         wx.showToast({ title: '网络错误', icon: 'none' });
@@ -91,10 +98,22 @@ Page({
       wx.showToast({ title: '请输入班级名称', icon: 'none' });
       return;
     }
+
+    // 权限校验
+    const app = getApp();
+    // 这里假设 userInfo 中有 user_attribute，或者从 storage 获取
+    // 实际项目中可能需要从 globalData.userInfo 中获取，或者再次请求用户信息
+    // 这里做简单的本地 storage 检查，如果之前有存的话
+    // const userInfo = wx.getStorageSync('userInfo');
+    // if (userInfo && userInfo.user_attribute < 2) {
+    //    wx.showToast({ title: '权限不足，仅教师可创建', icon: 'none' });
+    //    return;
+    // }
+
     const newClass = {
       className: newClassName,
     };
-    const app = getApp();
+
     const token = wx.getStorageSync('accessToken');
     this.setData({
       classList: [newClass, ...this.data.classList],
@@ -102,21 +121,24 @@ Page({
     });
     wx.request({
       url: `${app.globalData.globalUrl}/class/create/`,
-      method:'POST',
-      header:{
+      method: 'POST',
+      header: {
         'Authorization': `Bearer ${token}`
       },
-      data : {'name':newClassName},
+      data: { 'name': newClassName },
       success: (res) => {
-        if(res.statusCode == 401)
-        {
+        if (res.statusCode == 401) {
           app.handleTokenExpired();
+          return;
+        }
+        if (res.statusCode === 403) {
+          wx.showToast({ title: '权限不足', icon: 'none' });
           return;
         }
         if (res.data.success) {
           wx.showToast({ title: res.data.message, icon: 'success' });
           this.setData({
-            classList: res.data.user_classes  
+            classList: res.data.user_classes
           });
         } else {
           wx.showToast({ title: res.data.error || '失败', icon: 'none' });
@@ -128,10 +150,8 @@ Page({
   // 管理学生
   manageStudents(e) {
     const classInfo = e.currentTarget.dataset.class;
-    wx.showModal({
-      title: '管理学生',
-      content: `进入${classInfo.name}的学生管理页面`,
-      showCancel: false
+    wx.navigateTo({
+      url: `/pages/classMembers/classMembers?classId=${classInfo.id}&className=${classInfo.name}&isTeacher=true`
     });
   },
   hideAssignHomeworkModal() {
@@ -155,13 +175,11 @@ Page({
   // 查看班级详情
   viewClassDetail(e) {
     const classInfo = e.currentTarget.dataset.class;
-    wx.showModal({
-      title: '班级详情',
-      content: `查看${classInfo.name}的详细信息`,
-      showCancel: false
+    wx.navigateTo({
+      url: `/pages/classFunction/classDetail/classDetail?classId=${classInfo.id}&className=${classInfo.name}&isTeacher=true`
     });
   },
-  assignHomework(e){
+  assignHomework(e) {
     const classData = e.currentTarget.dataset.class;
     console.log('班级数据:', classData);
     wx.navigateTo({

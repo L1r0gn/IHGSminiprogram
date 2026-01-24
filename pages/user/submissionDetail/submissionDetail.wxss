@@ -104,20 +104,43 @@
   font-weight: bold;
 }
 
-.status-Graded {
+.status-correct {
   color: #52c41a;
 }
 
-.status-PENDING {
+.status-pending {
   color: #faad14;
 }
 
-.status-RUNTIME_ERROR {
+.status-incorrect {
   color: #ff4d4f;
+}
+
+.bg-correct {
+  background-color: #f6ffed;
+  border: 1rpx solid #b7eb8f;
 }
 
 .score {
   color: #007AFF;
+}
+
+/* 答案区域 */
+.answer-section {
+  margin-bottom: 30rpx;
+}
+
+.answer-content {
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 25rpx;
+  border-radius: 10rpx;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 26rpx;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
 }
 
 /* 图片区域 */

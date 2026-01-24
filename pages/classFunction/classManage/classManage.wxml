@@ -1,4 +1,4 @@
-<!-- pages/classManage/classManage.wxml -->
+<!-- pages/classFunction/classManage/classManage.wxml -->
 <view class="container">
   <!-- 顶部标题 -->
   <view class="header">
@@ -41,15 +41,15 @@
             <view class="action-buttons">
               <button class="action-btn student-btn" bindtap="manageStudents" data-class="{{item}}">
                 <text class="btn-icon">👥</text>
-                学生(不可用)
+                学生
               </button>
               <button class="action-btn homework-btn" bindtap="assignHomework" data-class="{{item}}">
                 <text class="btn-icon">📝</text>
-                作业(测试中)
+                作业
               </button>
               <button class="action-btn detail-btn" bindtap="viewClassDetail" data-class="{{item}}">
                 <text class="btn-icon">📊</text>
-                详情(不可用)
+                详情
               </button>
             </view>
           </view>

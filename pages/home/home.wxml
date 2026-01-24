@@ -3,7 +3,7 @@
   
   <view class="content-wrapper">
     <view class="user-profile">
-      <image class="avatar" bindtap="handleUserProfile" src="{{userInfo.wx_avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <image class="avatar" bindtap="handleUserProfile" src="{{userInfo.wx_avatar || defaultAvatarUrl}}" mode="aspectFill"></image>
       <view class="user-info">
         <text class="greeting">下午好, {{userInfo.wx_nickName || '朋友'}}!</text>
         <text class="sub-greeting">开始您今天的学习吧</text>
@@ -43,7 +43,7 @@
           </view> -->
 
         <!--教师进行班级管理-->
-        <navigator wx:if="{{isTeacher}}" url="/pages/classManage/classManage" class="action-card">
+        <navigator wx:if="{{isTeacher}}" url="/pages/classFunction/classManage/classManage" class="action-card">
           <view class="card-content">
             <text class="card-title">班级管理</text>
             <text class="card-desc">创建，管理班级服务</text>

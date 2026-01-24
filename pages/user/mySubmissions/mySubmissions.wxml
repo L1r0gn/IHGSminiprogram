@@ -5,14 +5,14 @@
 
   <view class="record-list">
     <block wx:for="{{mySubmissions}}" wx:key="id">
-      <view class="record-item {{getStatusClass(item.status)}}">
+      <view class="record-item {{item.statusClass}}">
         <!-- 问题标题 -->
         <view class="problem-title">提交记录 #{{item.id}}</view>
 
         <!-- 提交时间 -->
         <view class="meta">
           <text class="time">提交时间：{{item.formatted_time}}</text>
-          <text class="status {{getStatusClass(item.status)}}">{{getStatusText(item.status)}}</text>
+          <text class="status {{item.statusClass}}">{{item.statusText}}</text>
         </view>
 
         <!-- 得分 -->
@@ -34,8 +34,14 @@
       </view>
     </block>
 
+    <!-- 加载状态 -->
+    <view class="loading-footer" style="text-align: center; padding: 20rpx; color: #999; font-size: 24rpx;" wx:if="{{mySubmissions.length > 0}}">
+      <view wx:if="{{isLoading}}">加载中...</view>
+      <view wx:elif="{{!hasMore}}">没有更多数据了</view>
+    </view>
+
     <!-- 空状态 -->
-    <view wx:if="{{mySubmissions.length === 0}}" class="empty">
+    <view wx:if="{{mySubmissions.length === 0 && !isLoading}}" class="empty">
       <text>暂无做题记录</text>
     </view>
   </view>

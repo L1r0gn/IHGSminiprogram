@@ -1,0 +1,241 @@
+/* pages/classMembers/classMembers.wxss */
+page {
+  background-color: #f8fafc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+
+.container {
+  display: block; /* 覆盖 app.wxss 可能存在的 flex */
+  min-height: 100vh;
+  padding: 0; /* 覆盖 app.wxss 的 padding */
+  padding-bottom: 60rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部区域优化 */
+.header-section {
+  position: relative;
+  margin-bottom: 60rpx;
+}
+
+.header-bg {
+  /* padding-top: 0px; */
+  height: 200rpx;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  border-bottom-left-radius: 60rpx;
+  border-bottom-right-radius: 60rpx;
+  box-shadow: 0 4rpx 20rpx rgba(79, 172, 254, 0.2);
+}
+
+.class-info-card {
+  margin: -120rpx 30rpx 0;
+  background-color: #fff;
+  border-radius: 32rpx;
+  padding: 40rpx;
+  box-shadow: 0 15rpx 35rpx rgba(0, 0, 0, 0.05);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.class-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.class-name {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.5rpx;
+}
+
+.member-badge {
+  background-color: #eff6ff;
+  padding: 8rpx 24rpx;
+  border-radius: 40rpx;
+}
+
+.count {
+  font-size: 24rpx;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.class-desc {
+  font-size: 26rpx;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* 成员卡片优化 */
+.member-list-container {
+  padding: 0 30rpx;
+}
+
+.member-card {
+  background-color: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 50rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4rpx 15rpx rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1rpx solid #f1f5f9;
+}
+
+.member-card:active {
+  transform: scale(0.98);
+  background-color: #fdfdfd;
+}
+
+.member-main {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.avatar-wrapper {
+  position: relative;
+  margin-right: 28rpx;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background-color: #f1f5f9;
+  border: 4rpx solid #fff;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.1);
+}
+
+.teacher-crown {
+  position: absolute;
+  right: -4rpx;
+  bottom: -4rpx;
+  background: #f59e0b;
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2rpx solid #fff;
+}
+
+.teacher-crown .iconfont {
+  font-size: 20rpx;
+  color: #fff;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #334155;
+  margin-right: 16rpx;
+}
+
+.role-tag {
+  font-size: 20rpx;
+  color: #fff;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  padding: 4rpx 14rpx;
+  border-radius: 10rpx;
+  font-weight: 500;
+}
+
+.student-id {
+  font-size: 24rpx;
+  color: #94a3b8;
+}
+
+/* 移除按钮优化 */
+.remove-btn {
+  padding: 12rpx 28rpx;
+  border-radius: 50rpx;
+  background-color: #fff1f0;
+  border: 1rpx solid #ffa39e;
+  transition: all 0.2s;
+}
+
+.remove-btn text {
+  font-size: 24rpx;
+  color: #f87171;
+  font-weight: 600;
+}
+
+.remove-btn-active {
+  background-color: #f87171 !important;
+  border-color: #f87171 !important;
+}
+
+.remove-btn-active text {
+  color: #fff !important;
+}
+
+/* 状态样式优化 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 150rpx;
+}
+
+.empty-icon-wrapper {
+  background-color: #f1f5f9;
+  padding: 40rpx;
+  border-radius: 50%;
+  margin-bottom: 40rpx;
+}
+
+.empty-icon {
+  width: 120rpx;
+  opacity: 0.6;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #475569;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.empty-subtext {
+  font-size: 26rpx;
+  color: #94a3b8;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+}
+
+.spinner {
+  width: 50rpx;
+  height: 50rpx;
+  border: 6rpx solid #e2e8f0;
+  border-top: 6rpx solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 30rpx;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #64748b;
+}

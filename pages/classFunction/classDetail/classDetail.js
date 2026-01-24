@@ -5,15 +5,17 @@ Page({
     classInfo: {},
     recentHomeworks: [],
     isLoading: false,
-    showQuitConfirm: false
+    showQuitConfirm: false,
+    isTeacher: false
   },
 
   onLoad(options) {
-    const { classId, className } = options;
+    const { classId, className, isTeacher } = options;
     this.setData({
       classId: classId,
-      'classInfo.id':classId,
-      'classInfo.name': className
+      'classInfo.id': classId,
+      'classInfo.name': className,
+      isTeacher: isTeacher === 'true'
     });
     this.fetchClassDetail();
     this.fetchRecentHomeworks();
@@ -23,7 +25,7 @@ Page({
   fetchClassDetail() {
     const app = getApp();
     const token = wx.getStorageSync('accessToken');
-    const userId = wx.getStorageSync('userId')    
+    const userId = wx.getStorageSync('userId')
     this.setData({ isLoading: true });
     //发出请求 class/${userId}/${this.data.classId}/
     wx.request({
@@ -38,7 +40,7 @@ Page({
           return;
         }
         if (res.statusCode === 200) {
-          console.log('收到classData:',res.data.data);
+          console.log('收到classData:', res.data.data);
           const classData = res.data.data || {};
           this.setData({
             classInfo: {
@@ -75,10 +77,10 @@ Page({
     console.log(`查询班级id为${this.data.classId}的作业`);
     const headers = {
       'Authorization': `Bearer ${token}`,
-      'ClassId': String(this.data.classId), 
+      'ClassId': String(this.data.classId),
     };
     wx.request({
-      url: `${app.globalData.globalUrl}/assignment/wx/show_assignment/`,  
+      url: `${app.globalData.globalUrl}/assignment/wx/show_assignment/`,
       method: 'GET',
       header: headers,
       success: (res) => {
@@ -93,7 +95,7 @@ Page({
             deadline: this.formatTime(hw.deadline),
             submit_count: hw.submit_count || 0
           }));
-          console.log('收到最近作业：',homeworks);
+          console.log('收到最近作业：', homeworks);
           this.setData({ recentHomeworks: homeworks });
         }
       }
@@ -108,15 +110,21 @@ Page({
   },
   // 跳转到作业列表
   goToHomework() {
-    console.log('发送给下一个页面的数据：',this.data.classInfo);
-    wx.navigateTo({
-      url: `/pages/myclass/showHomework/showHomework?class_id=${this.data.classInfo.id}&class_name=${this.data.classInfo.name}&class_code=${this.data.classInfo.code}&class_teacher=${this.data.classInfo.created_by}&class_created_time=${this.data.classInfo.created_at}`
-    });
+    console.log('发送给下一个页面的数据：', this.data.classInfo);
+    if (this.data.isTeacher) {
+      wx.navigateTo({
+        url: `/pages/teacher_mode/classHomeworkManagement/classHomeworkManagement?class_id=${this.data.classInfo.id}`
+      });
+    } else {
+      wx.navigateTo({
+        url: `/pages/student_mode/myclass/showHomework/showHomework?class_id=${this.data.classInfo.id}&class_name=${this.data.classInfo.name}&class_code=${this.data.classInfo.code}&class_teacher=${this.data.classInfo.created_by}&class_created_time=${this.data.classInfo.created_at}`
+      });
+    }
   },
   // 跳转到班级成员
   goToMembers() {
     wx.navigateTo({
-      url: `/pages/classMembers/classMembers?classId=${this.data.classId}&className=${this.data.classInfo.name}`
+      url: `/pages/classMembers/classMembers?classId=${this.data.classId}&className=${this.data.classInfo.name}&isTeacher=${this.data.isTeacher}`
     });
   },
 
@@ -154,9 +162,9 @@ Page({
     const app = getApp();
     const token = wx.getStorageSync('accessToken');
     const userId = wx.getStorageSync('userId');
-    
+
     this.setData({ isLoading: true });
-    
+
     wx.request({
       url: `${app.globalData.globalUrl}/class/quit/`,
       method: 'POST',
@@ -194,10 +202,56 @@ Page({
         });
       },
       complete: () => {
-        this.setData({ 
+        this.setData({
           isLoading: false,
-          showQuitConfirm: false 
+          showQuitConfirm: false
         });
+      }
+    });
+  },
+
+  // 删除班级 (老师功能)
+  deleteClass() {
+    const app = getApp();
+    const token = wx.getStorageSync('accessToken');
+    
+    wx.showModal({
+      title: '删除班级',
+      content: '确定要解散该班级吗？此操作不可恢复。',
+      confirmColor: '#ff4d4f',
+      success: (res) => {
+        if (res.confirm) {
+          this.setData({ isLoading: true });
+          wx.request({
+            url: `${app.globalData.globalUrl}/class/${this.data.classId}/delete/`,
+            method: 'DELETE',
+            header: {
+              'Authorization': `Bearer ${token}`,
+            },
+            success: (res) => {
+              if (res.statusCode === 200) {
+                wx.showToast({
+                  title: '班级已解散',
+                  icon: 'success'
+                });
+                setTimeout(() => {
+                  wx.navigateBack();
+                }, 1500);
+              } else {
+                wx.showToast({
+                  title: res.data.message || '删除失败',
+                  icon: 'none'
+                });
+              }
+            },
+            fail: () => {
+              wx.showToast({ title: '网络错误', icon: 'none' });
+            },
+            complete: () => {
+              this.setData({ isLoading: false });
+            }
+          });
+        }
       }
     });
   },

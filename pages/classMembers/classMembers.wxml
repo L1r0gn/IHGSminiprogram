@@ -1,0 +1,64 @@
+<view class="container">
+  <view class="header-section">
+    <view class="header-bg"></view>
+    <view class="class-info-card">
+      <view class="class-title-row">
+        <text class="class-name">{{className || '未命名班级'}}</text>
+        <view class="member-badge">
+          <text class="count">{{memberList.length}} 名成员</text>
+        </view>
+      </view>
+      <view class="class-desc-box">
+        <text class="class-desc">管理班级成员，维护教学秩序</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading-state" wx:if="{{isLoading}}">
+    <view class="spinner"></view>
+    <text class="loading-text">加载中，请稍候...</text>
+  </view>
+
+  <view class="member-list-container" wx:elif="{{memberList.length > 0}}">
+    <block wx:for="{{memberList}}" wx:key="id">
+      <view class="member-card">
+        <view class="member-main">
+          <view class="avatar-wrapper">
+            <image class="avatar" src="{{item.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
+            <view class="teacher-crown" wx:if="{{item.role === 'teacher'}}">
+               <text class="iconfont">★</text>
+            </view>
+          </view>
+          
+          <view class="info-content">
+            <view class="name-row">
+              <text class="name">{{item.nickname || item.username}}</text>
+              <view class="role-tag" wx:if="{{item.role === 'teacher'}}">教师</view>
+            </view>
+            <view class="id-row">
+              <text class="student-id">{{item.student_id ? '学号: ' + item.student_id : '暂无学号'}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <view class="action-area" wx:if="{{isTeacher && item.role !== 'teacher'}}">
+          <view class="remove-btn" 
+                hover-class="remove-btn-active"
+                bindtap="confirmRemove" 
+                data-id="{{item.id}}" 
+                data-name="{{item.nickname || item.username}}">
+            <text>移除</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="empty-state" wx:else>
+    <view class="empty-icon-wrapper">
+      <image class="empty-icon" src="https://img.icons8.com/ios/100/cccccc/classroom.png" mode="widthFix"></image>
+    </view>
+    <text class="empty-text">这里空空如也</text>
+    <text class="empty-subtext">分享班级码，邀请你的第一位学生吧</text>
+  </view>
+</view>
