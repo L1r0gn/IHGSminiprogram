@@ -144,7 +144,7 @@ box-shadow: 0 8rpx 16rpx rgba(0,0,0,0.05);
   padding: 24rpx;
   font-size: 32rpx;
   font-weight: 500;
-  background: linear-gradient(135deg, #07c160, #19be6b);
+  background: linear-gradient(135deg, #3b82f6, #3b82f6);
   color: white;
   border: none;
   border-radius: 48rpx;

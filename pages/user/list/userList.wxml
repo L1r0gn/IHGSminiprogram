@@ -19,8 +19,8 @@
       <view class="info-item">
         <view class="info-label">性别</view>
         <view class="info-value">
-          <block wx:if="{{userInfo.gender === 0}}">男</block>
-          <block wx:elif="{{userInfo.gender === 1}}">女</block>
+          <block wx:if="{{userInfo.gender === 1}}">男</block>
+          <block wx:elif="{{userInfo.gender === 2}}">女</block>
           <block wx:else>未设置</block>
         </view>
       </view>
@@ -28,8 +28,10 @@
       <view class="info-item">
         <view class="info-label">身份</view>
         <view class="info-value">
-          <block wx:if="{{userInfo.user_attribute === 0}}">学生</block>
-          <block wx:elif="{{userInfo.user_attribute === 1}}">教师</block>
+          <block wx:if="{{userInfo.user_attribute === 1}}">学生</block>
+          <block wx:elif="{{userInfo.user_attribute === 2}}">教师</block>
+          <block wx:elif="{{userInfo.user_attribute === 3}}">管理员</block>
+          <block wx:elif="{{userInfo.user_attribute === 4}}">超级管理员</block>
           <block wx:else>未设置</block>
         </view>
       </view>

@@ -52,8 +52,8 @@ Page({
     const attr = Number(this.data.userInfo?.user_attribute);
     console.log('用户状态是：', attr);
     this.setData({
-      isStudent: attr === 0,    // 根据你的业务定义
-      isTeacher: attr === 1   // 根据你的业务定义
+      isStudent: attr === 1,    // 根据你的业务定义
+      isTeacher: attr === 2   // 根据你的业务定义
     });
   }
 })

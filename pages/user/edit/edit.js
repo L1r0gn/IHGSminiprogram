@@ -64,8 +64,8 @@ Page({
     const { userInfo, genderIndex, userAttributeIndex} = this.data;
     // 获取班级 ID（如果选择了班级）
     const requestData = {
-      gender: genderIndex,               // 后端是否接受 index？需确认
-      attribute: userAttributeIndex,
+      gender: genderIndex + 1,               // 后端是否接受 index？需确认
+      attribute: userAttributeIndex + 1,
       phone: userInfo.phone || '',
       nickName: userInfo.wx_nickName || '',
       avatarUrl: userInfo.wx_avatar || ''

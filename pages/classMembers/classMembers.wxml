@@ -32,7 +32,7 @@
           
           <view class="info-content">
             <view class="name-row">
-              <text class="name">{{item.nickname || item.username}}</text>
+              <text class="name">{{item.displayName}}</text>
               <view class="role-tag" wx:if="{{item.role === 'teacher'}}">教师</view>
             </view>
             <view class="id-row">
@@ -46,7 +46,7 @@
                 hover-class="remove-btn-active"
                 bindtap="confirmRemove" 
                 data-id="{{item.id}}" 
-                data-name="{{item.nickname || item.username}}">
+                data-name="{{item.displayName}}">
             <text>移除</text>
           </view>
         </view>
