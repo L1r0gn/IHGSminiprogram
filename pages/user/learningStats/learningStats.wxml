@@ -37,7 +37,7 @@
           <!-- 进度条前景 -->
           <view 
             class="progress-bar {{item.score >= 4 ? 'bg-green' : (item.score >= 2.5 ? 'bg-orange' : 'bg-red')}}" 
-            style="width: {{item.score_percent}}%"
+            style="width: {{item.score_percent}}"
           ></view>
         </view>
         

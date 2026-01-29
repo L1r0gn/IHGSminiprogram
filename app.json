@@ -19,7 +19,8 @@
     "pages/teacher_mode/assignChoice/assignChoice",
     "pages/teacher_mode/manualInput/manualInput",
     "pages/teacher_mode/classHomeworkManagement/classHomeworkManagement",
-    "pages/teacher_mode/homeworkDetail/homeworkDetail"
+    "pages/teacher_mode/homeworkDetail/homeworkDetail",
+    "pages/teacher_mode/editHomework/editHomework"
   ],
   "window": {
     "navigationBarTextStyle": "black",

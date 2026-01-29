@@ -1,0 +1,115 @@
+/* pages/teacher_mode/editHomework/editHomework.wxss */
+page {
+  background-color: #f5f7fa;
+  box-sizing: border-box;
+}
+
+.container {
+  padding: 30rpx;
+  padding-bottom: 120rpx;
+}
+
+.card {
+  width: 80%;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30rpx;
+  border-left: 8rpx solid #07c160;
+  padding-left: 20rpx;
+  line-height: 1;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-item-vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.input {
+  flex: 1;
+  text-align: right;
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 时间选择器样式优化 */
+.picker-group {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+}
+
+.picker-box {
+  background: #f5f5f5;
+  padding: 10rpx 24rpx;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #333;
+  min-width: 140rpx;
+  text-align: center;
+}
+
+.textarea {
+  width: 100%;
+  height: 300rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+  margin-top: 10rpx;
+}
+
+.word-count {
+  text-align: right;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 10rpx;
+}
+
+.footer-btn-area {
+  position: fixed;
+  bottom: 40rpx;
+  left: 0;
+  right: 0;
+  padding: 0 40rpx;
+}
+
+.btn-save {
+  background: #07c160;
+  color: #fff;
+  border-radius: 44rpx;
+  font-weight: bold;
+  box-shadow: 0 6rpx 16rpx rgba(7, 193, 96, 0.3);
+}
+
+.btn-save:active {
+  opacity: 0.9;
+}

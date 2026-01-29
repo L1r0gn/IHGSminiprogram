@@ -1,0 +1,57 @@
+<view class="container">
+  <view class="card">
+    <view class="card-header">基础信息</view>
+    
+    <view class="form-item">
+      <text class="label">作业标题</text>
+      <input 
+        class="input" 
+        placeholder="请输入标题" 
+        value="{{formData.title}}" 
+        data-field="title"
+        bindinput="onInputChange"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">科目</text>
+      <input 
+        class="input" 
+        value="{{formData.subject}}" 
+        disabled="true" 
+        style="color: #999;"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="label">截止时间</text>
+      <view class="picker-group">
+        <picker mode="date" value="{{date}}" start="{{today}}" bindchange="onDateChange">
+          <view class="picker-box">{{date || '选择日期'}}</view>
+        </picker>
+        <picker mode="time" value="{{time}}" bindchange="onTimeChange">
+          <view class="picker-box">{{time || '选择时间'}}</view>
+        </picker>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-header">作业要求</view>
+    <view class="form-item-vertical">
+      <textarea 
+        class="textarea" 
+        placeholder="请输入作业详细描述..." 
+        value="{{formData.description}}" 
+        data-field="description"
+        bindinput="onInputChange"
+        maxlength="500"
+      />
+      <view class="word-count">{{formData.description.length || 0}}/500</view>
+    </view>
+  </view>
+
+  <view class="footer-btn-area">
+    <button class="btn-save" bindtap="submitEdit">保存修改</button>
+  </view>
+</view>

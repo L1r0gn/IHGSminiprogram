@@ -44,6 +44,7 @@
 }
 
 .record-list {
+  width: 80%;
   display: flex;
   flex-direction: column;
   gap: 24rpx;
@@ -189,15 +190,14 @@
   background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
   border: none;
-  border-radius: 16rpx; /* 增大圆角 */
-  padding: 20rpx 40rpx; /* 增大内边距 */
-  font-size: 28rpx; /* 增大字体 */
-  font-weight: 600; /* 加粗 */
-  box-shadow: 0 6rpx 18rpx rgba(52, 152, 219, 0.4); /* 增强阴影 */
+  border-radius: 16rpx;
+  padding: 20rpx 40rpx; 
+  font-size: 28rpx;
+  font-weight: 600;
+  box-shadow: 0 6rpx 18rpx rgba(52, 152, 219, 0.4); 
   transition: all 0.3s ease;
   margin-top: 10rpx;
-  width: 200rpx; /* 固定按钮宽度 */
-  align-self: flex-start; /* 左对齐 */
+  width: 200rpx; 
 }
 
 .detail-btn:active {

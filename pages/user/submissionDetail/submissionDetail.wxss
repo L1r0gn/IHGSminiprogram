@@ -57,6 +57,7 @@
   border-radius: 20rpx;
   padding: 30rpx;
   margin-bottom: 20rpx;
+  width: 80%;
 }
 
 /* 头部信息 */

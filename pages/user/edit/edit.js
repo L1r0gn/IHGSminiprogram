@@ -34,12 +34,12 @@ Page({
         const user = res.data.user || {};
         const classList = res.data.classNameList || [];
         // 初始化性别索引
-        const genderIndex = user.gender;
+        const genderIndex = user.gender - 1;
         // 初始化身份索引
-        const userAttributeIndex =  user.user_attribute < 2 ? user.user_attribute : 0;
+        const userAttributeIndex =  user.user_attribute < 3 ? user.user_attribute - 1 : 0;
         // 初始化班级索引
         const classIndex = classList.findIndex(cls => cls.id === (user.class_in?.id));
-
+        
         this.setData({
           userInfo: { ...user }, // 完全来自服务器
           classList,

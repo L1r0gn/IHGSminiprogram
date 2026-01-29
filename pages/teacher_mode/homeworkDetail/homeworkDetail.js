@@ -163,11 +163,11 @@ Page({
       url: `/pages/teacher_mode/studentWork/studentWork?homework_id=${this.data.assignment_id}&student_id=${studentId}`
     });
   },
-
   // 编辑作业
   editHomework: function() {
     wx.navigateTo({
-      url: `/pages/teacher_mode/editHomework/editHomework?homework_id=${this.data.assignment_id}`
+      // 补上 class_id，因为获取详情可能需要
+      url: `/pages/teacher_mode/editHomework/editHomework?homework_id=${this.data.assignment_id}&class_id=${this.data.class_id}`
     });
   },
   // 发布提醒
