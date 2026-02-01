@@ -34,6 +34,13 @@ Page({
     });
   },
 
+  /*** 跳转到题库选择页面*/
+  navigateToSelectQuestions: function() {
+    wx.navigateTo({
+      url: `/pages/teacher_mode/selectQuestions/selectQuestions?class_id=${this.data.class_id}`
+    });
+  },
+
   /*** 复用已有作业*/
   reuseHomework: function(e) {
     const homeworkId = e.currentTarget.dataset.id;

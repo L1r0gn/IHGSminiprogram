@@ -32,26 +32,33 @@ Page({
         'Authorization': `Bearer ${token}`
       },
       success: (res) => {
-        if(res.statusCode == 401)
-        {
+        if(res.statusCode == 401) {
           app.handleTokenExpired();
           return;
         }
         if (res.statusCode === 200) {
-          console.log('收到了submission数据：',res.data);
+          console.log('收到了submission数据：', res.data);
           
           const rawData = res.data;
-          // 处理数据，添加显示用的属性
+          
+          // 1. 根据 problem_type 决定显示哪个答案字段
+          const finalUserAnswer = this.determineUserAnswer(rawData);
+
+          // 2. 处理数据
           const processedData = {
             ...rawData,
             // 兼容不同字段名
             question_title: rawData.question_title || rawData.problem_title || '未知题目',
             created_at: rawData.created_at || rawData.submitted_time || '',
+            
+            // 状态处理
             statusClass: this.getStatusClass(rawData.status),
             statusText: this.getStatusText(rawData.status),
-            // 确保 user_answer 存在
-            user_answer: rawData.user_answer || '',
-            // 确保 is_correct 存在 (如果后端没返回，根据 status 判断)
+            
+            // 核心修改：根据题型确定的答案
+            user_answer: finalUserAnswer,
+            
+            // 确保 is_correct 存在
             is_correct: rawData.is_correct !== undefined ? rawData.is_correct : (rawData.status === 'ACCEPTED' || rawData.status === 'GRADED')
           };
 
@@ -76,6 +83,29 @@ Page({
     });
   },
 
+  // 新增：根据题型决定显示的答案内容
+  determineUserAnswer(data) {
+    const type = (data.problem_type || '').toLowerCase(); // 获取题型并转小写方便匹配
+    const chooseAnswer = data.choose_answer;
+    const textAnswer = data.submitted_text;
+
+    // 逻辑：如果是选择类题型，优先取 choose_answer
+    // 假设后端返回的类型名称包含这些关键词
+    const isChoiceType = 
+      type.includes('choice') || 
+      type.includes('select') || 
+      type.includes('选择') || 
+      type.includes('多选');
+
+    if (isChoiceType) {
+      // 如果是选择题，返回选项（如果为空则回退到文本）
+      return chooseAnswer || textAnswer || '';
+    } else {
+      // 如果是问答、填空、编程等，优先取文本（如果为空则回退到选项）
+      return textAnswer || chooseAnswer || '';
+    }
+  },
+
   // 状态分类函数
   getStatusClass(status) {
     const statusMap = {
@@ -97,7 +127,7 @@ Page({
       'WRONG_ANSWER': '答案错误',
       'PENDING': '待批改'
     };
-    return textMap[status] || status; // 如果没有匹配，显示原状态
+    return textMap[status] || status;
   },
 
   // 复制用户答案
@@ -105,7 +135,7 @@ Page({
     const { submissionDetail } = this.data;
     if (submissionDetail && submissionDetail.user_answer) {
       wx.setClipboardData({
-        data: submissionDetail.user_answer,
+        data: submissionDetail.user_answer.toString(), // 确保是字符串
         success: () => {
           wx.showToast({
             title: '答案已复制',
@@ -122,6 +152,7 @@ Page({
       this.fetchSubmissionDetail(this.data.submissionId);
     }
   },
+  
   // 预览图片
   previewImage() {
     const { submissionDetail } = this.data;

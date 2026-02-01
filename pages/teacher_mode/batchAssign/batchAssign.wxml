@@ -1,0 +1,69 @@
+<!-- pages/teacher_mode/batchAssign/batchAssign.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">批量布置作业</text>
+    <text class="subtitle">共选择 {{total}} 道题目</text>
+  </view>
+
+  <!-- 设置表单 -->
+  <view class="form-card">
+    <view class="form-item">
+      <text class="label">作业标题前缀</text>
+      <input 
+        class="input" 
+        placeholder="例如：课后练习" 
+        value="{{titlePrefix}}"
+        bindinput="onTitleInput"
+      />
+    </view>
+    <view class="form-desc">最终标题格式：前缀 - 题目名称</view>
+
+    <view class="form-item">
+      <text class="label">截止日期</text>
+      <picker mode="date" value="{{deadlineDate}}" bindchange="onDateChange">
+        <view class="picker">{{deadlineDate || '请选择'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="label">截止时间</text>
+      <picker mode="time" value="{{deadlineTime}}" bindchange="onTimeChange">
+        <view class="picker">{{deadlineTime || '请选择'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 题目列表 -->
+  <view class="list-title" style="height: 30px;">已选题目</view>
+  <scroll-view scroll-y class="question-list">
+    <view class="question-item" wx:for="{{selectedQuestions}}" wx:key="id">
+      <view class="q-info">
+        <view class="q-title">{{item.title}}</view>
+        <view class="q-meta">
+          <text class="tag">{{item.problem_type}}</text>
+          <text class="id">#{{item.id}}</text>
+        </view>
+      </view>
+      <view class="delete-btn" bindtap="removeQuestion" data-index="{{index}}">删除</view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部按钮 -->
+  <view class="footer">
+    <button 
+      class="action-btn generate-btn" 
+      bindtap="onGenerate" 
+      disabled="{{isSubmitting}}"
+    >
+      一键生成
+    </button>
+    <button 
+      class="action-btn submit-btn" 
+      bindtap="onSubmit" 
+      disabled="{{isSubmitting}}"
+      loading="{{isSubmitting}}"
+    >
+      {{isSubmitting ? '正在处理 (' + progress + '/' + total + ')' : '确认布置'}}
+    </button>
+  </view>
+</view>

@@ -275,7 +275,7 @@
 }
 
 .form-input, .form-textarea {
-  width: 100%;
+  /* width: 80%; */
   border: 2rpx solid #e8e8e8;
   border-radius: 10rpx;
   padding: 30rpx;
@@ -383,4 +383,18 @@
 
 .confirm-btn:active {
   background: #096dd9;
+}
+
+.textarea-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.word-count {
+  position: absolute;
+  right: 20rpx;
+  bottom: 10rpx;
+  font-size: 22rpx;
+  color: #999;
+  z-index: 1;
 }

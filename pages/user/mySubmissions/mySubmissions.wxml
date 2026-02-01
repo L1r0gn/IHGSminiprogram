@@ -28,7 +28,7 @@
         </view>
 
         <!-- 查看详情按钮 -->
-        <button class="detail-btn" size="mini" bindtap="goToDetail" data-id="{{item.id}}">
+        <button class="detail-btn" size="mini" bindtap="goToDetail"  data-id="{{item.id}}">
           查看详情
         </button>
       </view>

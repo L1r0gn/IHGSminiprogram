@@ -82,18 +82,23 @@
             placeholder="请输入班级名称" 
             value="{{newClassName}}"
             bindinput="onClassNameInput"
+            style="width: 88%;"
           />
         </view>
         
         <view class="form-group">
           <text class="form-label">班级描述</text>
+          <view class="textarea-wrapper">
           <textarea 
             class="form-textarea" 
             placeholder="请输入班级描述（可选）" 
             value="{{newClassDesc}}"
             bindinput="onClassDescInput"
             maxlength="100"
+            style="width: 88%;"
           />
+          <text class="word-count">{{newClassDesc.length}}/100</text>
+          </view>
         </view>
       </view>
       

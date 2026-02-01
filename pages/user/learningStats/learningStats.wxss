@@ -10,8 +10,9 @@ page {
 /* 头部卡片 */
 .overview-card {
   background: linear-gradient(135deg, #1890ff 0%, #0050b3 100%);
-  padding: 40rpx 40rpx 80rpx 40rpx; /* 底部留白给下层内容 */
+  padding: 40rpx 40rpx 40rpx 40rpx; /* 底部留白给下层内容 */
   color: #fff;
+  width: 70%;
   border-bottom-left-radius: 40rpx;
   border-bottom-right-radius: 40rpx;
   box-shadow: 0 10rpx 20rpx rgba(24, 144, 255, 0.2);
@@ -46,6 +47,8 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-left: 60rpx;
+  padding-right: 60rpx;
 }
 
 .stat-num {
@@ -57,6 +60,12 @@ page {
 .stat-label {
   font-size: 24rpx;
   opacity: 0.9;
+}
+
+.stat-title {
+  font-size: 42rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
 }
 
 .stat-divider {
@@ -82,6 +91,7 @@ page {
 .list-container {
   padding: 0 30rpx;
   box-sizing: border-box;
+  width: 90%;
 }
 
 .kp-item {

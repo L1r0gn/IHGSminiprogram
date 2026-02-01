@@ -43,7 +43,7 @@ Page({
       return;
     }
 
-    // 模拟数据
+    // 获取数据
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,
       method: 'GET',

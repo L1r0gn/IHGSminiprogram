@@ -38,5 +38,17 @@
         <image src="" class="arrow-image"></image>
       </view>
     </view>
+
+    <view class="option-card manual-card" bindtap="navigateToSelectQuestions">
+      <view class="card-left">
+        <view class="option-content">
+          <text class="option-title">从题库选择题目（测试中）</text>
+          <text class="option-desc">搜索并选择现有题目布置作业，支持批量布置</text>
+        </view>
+      </view>
+      <view class="arrow">
+        <image src="" class="arrow-image"></image>
+      </view>
+    </view>
   </view>
 </view>

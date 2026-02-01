@@ -259,10 +259,14 @@ Page({
   // 辅助函数：获取状态文本
   getStatusText(status) {
     const statusMap = {
-      'PENDING': '待提交',
+      'PENDING': '待完成',
+      'GRADING': '批改中',
       'SUBMITTED': '已提交',
-      'OVERDUE': '已逾期',
-      'GRADED': '已批改'
+      'GRADED': '已批改',
+      'ACCEPTED': '答案正确',
+      'WRONG_ANSWER': '答案错误',
+      'COMPILE_ERROR': '编译错误',
+      'RUNTIME_ERROR': '运行错误'
     };
     return statusMap[status] || '未知状态';
   },

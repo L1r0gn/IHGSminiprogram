@@ -152,7 +152,8 @@ Page({
       return { canRedo: false, reason: '已超过截止时间，无法重做' };
     }
     // 检查是否允许重做（可以根据业务需求调整条件）
-    if (homeworkDetail.status == 'GRADED'||'SUBMITTED'||'ACCEPT'||'WRONG_ANSWER') {
+    const finishedStatuses = ['GRADED', 'SUBMITTED', 'ACCEPTED', 'WRONG_ANSWER', 'COMPILE_ERROR', 'RUNTIME_ERROR'];
+    if (finishedStatuses.includes(homeworkDetail.status)) {
       return { canRedo: true };
     }
     return { canRedo: false, reason: '当前状态不允许重做' };

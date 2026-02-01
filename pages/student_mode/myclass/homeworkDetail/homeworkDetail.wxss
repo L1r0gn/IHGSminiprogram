@@ -1,0 +1,114 @@
+/* 全局背景 */
+page {
+  background-color: #f7f8fa;
+  padding-bottom: 40rpx;
+}
+
+.container {
+  padding: 30rpx;
+}
+
+/* 卡片通用样式 */
+.card {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  width: 80%;
+}
+
+.card-header {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24rpx;
+  border-left: 8rpx solid #07c160;
+  padding-left: 16rpx;
+}
+
+/* 头部卡片 */
+.problem-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx dashed #eee;
+}
+
+.time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.status-badge {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+.status-badge.success { background: #e6f7ff; color: #1890ff; }
+.status-badge.warning { background: #fffbe6; color: #faad14; }
+
+.score-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20rpx;
+}
+.score-label { font-size: 24rpx; color: #666; }
+.score-value { font-size: 64rpx; font-weight: bold; color: #07c160; }
+
+/* 内容区域 */
+.answer-box {
+  background: #f9f9f9;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
+.image-box {
+  margin-top: 20rpx;
+  text-align: center;
+}
+
+.submitted-img {
+  width: 100%;
+  border-radius: 8rpx;
+  border: 1rpx solid #eee;
+}
+
+.tip {
+  font-size: 20rpx;
+  color: #ccc;
+  margin-top: 10rpx;
+}
+
+/* 反馈区域 */
+.feedback-item {
+  margin-bottom: 20rpx;
+}
+.feedback-item .label {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  font-weight: bold;
+}
+.feedback-item .content {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+  background-color: #fafafa;
+  padding: 15rpx;
+  display: block;
+  border-radius: 8rpx;
+}

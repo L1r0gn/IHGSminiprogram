@@ -1,0 +1,54 @@
+<!-- pages/teacher_mode/questionDetail/questionDetail.wxml -->
+<view class="container">
+  
+  <!-- 题目卡片 -->
+  <view class="card question-card">
+    <view class="header-info">
+      <view class="tags">
+        <text class="tag type">{{problem_type}}</text>
+        <text class="tag diff">{{difficulty}}</text>
+      </view>
+      <text class="id">#{{questionId}}</text>
+    </view>
+
+    <view class="question-content">
+      <rich-text nodes="{{resolvedQuestionContent}}"></rich-text>
+    </view>
+
+    <!-- 选择题选项 -->
+    <block wx:if="{{options && options.length > 0}}">
+      <view class="options-list">
+        <view class="option-item" wx:for="{{options}}" wx:key="key">
+          <view class="opt-key">{{item.key}}</view>
+          <view class="opt-val">
+            <rich-text nodes="{{item.value}}"></rich-text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 参考答案区 -->
+  <view class="card answer-card">
+    <view class="card-header">
+      <view class="section-title">
+        <text class="icon-text">参考答案</text>
+      </view>
+    </view>
+    <view class="answer-content">
+      <rich-text nodes="{{resolvedAnswer}}"></rich-text>
+    </view>
+  </view>
+
+  <!-- 解析区 -->
+  <view class="card analysis-card">
+    <view class="card-header">
+      <view class="section-title">
+        <text class="icon-text">题目解析</text>
+      </view>
+    </view>
+    <view class="analysis-content">
+      <rich-text nodes="{{resolvedAnalysis}}"></rich-text>
+    </view>
+  </view>
+</view>

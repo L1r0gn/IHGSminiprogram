@@ -13,6 +13,7 @@
     "pages/student_mode/question/search/search",
     "pages/student_mode/myclass/doHomework/doHomework",
     "pages/student_mode/myclass/showHomework/showHomework",
+    "pages/student_mode/myclass/homeworkDetail/homeworkDetail",
     "pages/classFunction/classManage/classManage",
     "pages/classFunction/classDetail/classDetail",
     "pages/classMembers/classMembers",
@@ -20,7 +21,10 @@
     "pages/teacher_mode/manualInput/manualInput",
     "pages/teacher_mode/classHomeworkManagement/classHomeworkManagement",
     "pages/teacher_mode/homeworkDetail/homeworkDetail",
-    "pages/teacher_mode/editHomework/editHomework"
+    "pages/teacher_mode/editHomework/editHomework",
+    "pages/teacher_mode/selectQuestions/selectQuestions",
+    "pages/teacher_mode/batchAssign/batchAssign",
+    "pages/teacher_mode/questionDetail/questionDetail"
   ],
   "window": {
     "navigationBarTextStyle": "black",

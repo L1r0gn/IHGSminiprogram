@@ -1,26 +1,25 @@
-<!--pages/user/submissionDetail/submissionDetail.wxml-->
 <view class="container">
-  <!-- 加载状态 -->
   <view wx:if="{{loading}}" class="loading-container">
     <view class="loading-spinner"></view>
     <text>加载中...</text>
   </view>
 
-  <!-- 错误状态 -->
   <view wx:elif="{{error}}" class="error-container">
     <text class="error-text">{{error}}</text>
     <button class="retry-btn" bindtap="onRetry">重新加载</button>
   </view>
 
-  <!-- 详情内容 -->
   <view wx:elif="{{submissionDetail}}" class="detail-container">
-    <!-- 头部信息 -->
     <view class="header">
-      <text class="problem-title">{{submissionDetail.question_title}}</text>
+      <view class="title-row">
+        <view class="type-tag" wx:if="{{submissionDetail.problem_type}}">
+          {{submissionDetail.problem_type}}
+        </view>
+        <text class="problem-title">{{submissionDetail.question_title}}</text>
+      </view>
       <text class="submit-time">{{submissionDetail.created_at}}</text>
     </view>
 
-    <!-- 状态和分数 -->
     <view class="status-section {{submissionDetail.is_correct ? 'bg-correct' : ''}}">
       <view class="status-item">
         <text class="label">状态：</text>
@@ -32,7 +31,6 @@
       </view>
     </view>
 
-    <!-- 用户答案 (文本/代码) -->
     <view wx:if="{{submissionDetail.user_answer}}" class="answer-section">
       <view class="section-header">
         <text class="section-title">我的答案</text>
@@ -43,7 +41,6 @@
       </view>
     </view>
 
-    <!-- 提交图片 -->
     <view wx:if="{{submissionDetail.submitted_image}}" class="image-section">
       <text class="section-title">提交图片</text>
       <image 
@@ -55,7 +52,6 @@
       <text class="image-tip">点击图片预览大图</text>
     </view>
 
-    <!-- 批改反馈 -->
     <view wx:if="{{submissionDetail.feedback}}" class="feedback-section">
       <view class="section-header">
         <text class="section-title">批改反馈</text>
@@ -66,7 +62,6 @@
       </view>
     </view>
 
-    <!-- 理由说明 -->
     <view wx:if="{{submissionDetail.justification}}" class="justification-section">
       <text class="section-title">理由说明</text>
       <view class="justification-content">
@@ -74,7 +69,6 @@
       </view>
     </view>
 
-    <!-- 无反馈信息 -->
     <view wx:if="{{!submissionDetail.feedback && !submissionDetail.justification}}" class="no-data">
       <text>暂无详细反馈信息</text>
     </view>

@@ -18,7 +18,7 @@ Page({
     problemTypes: [],
     content: '',
     contentImages: [], // 图片URL列表
-    
+
     // 动态区域
     isChoice: false,
     options: [
@@ -42,14 +42,14 @@ Page({
       this.setData({ assignmentId: options.id });
       this.loadAssignmentData(options.id);
     }
-    
+
     // 加载元数据和班级列表
     this.loadMetaData();
     this.loadClassList();
   },
 
   // 加载元数据（科目、题型等）
-  loadMetaData: function() {
+  loadMetaData: function () {
     const token = wx.getStorageSync('accessToken');
     wx.request({
       url: `${app.globalData.globalUrl}/assignment/wx/get_problem_meta_data/`,
@@ -68,10 +68,10 @@ Page({
   },
 
   // 加载班级列表
-  loadClassList: function() {
+  loadClassList: function () {
     const userId = wx.getStorageSync('userId');
     const token = wx.getStorageSync('accessToken');
-    
+
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,
       method: 'GET',
@@ -87,51 +87,63 @@ Page({
   },
 
   // 加载作业详情（编辑模式）
-  loadAssignmentData: function(id) {
+  loadAssignmentData: function (id) {
     // TODO: 实现编辑模式的数据回显，需请求后端获取作业详情
     console.log('Edit mode for assignment:', id);
   },
 
   // --- 基础信息交互 ---
-  onTitleInput: function(e) {
+  onTitleInput: function (e) {
     this.setData({ title: e.detail.value });
   },
 
-  onClassChange: function(e) {
+  onClassChange: function (e) {
     this.setData({ classIndex: Number(e.detail.value) });
   },
 
-  onDateChange: function(e) {
+  onDateChange: function (e) {
     this.setData({ deadlineDate: e.detail.value });
   },
 
-  onTimeChange: function(e) {
+  onTimeChange: function (e) {
     this.setData({ deadlineTime: e.detail.value });
   },
 
   // --- 题目详情交互 ---
-  onSubjectChange: function(e) {
+  onSubjectChange: function (e) {
     this.setData({ subjectIndex: Number(e.detail.value) });
   },
 
-  onProblemTypeChange: function(e) {
+  onProblemTypeChange: function (e) {
     const index = Number(e.detail.value);
     const type = this.data.problemTypes[index];
     // 假设题型名称包含"选择"或者ID为2表示选择题
     const isChoice = type.name.includes('选择') || type.id === 2;
-    
-    this.setData({ 
+
+    this.setData({
       problemTypeIndex: index,
       isChoice: isChoice
     });
   },
 
-  onContentInput: function(e) {
+  onDifficultyChange: function (e) {
+    this.setData({ difficulty: e.detail.value });
+  },
+
+  onPointsInput: function (e) {
+    this.setData({ points: Number(e.detail.value) });
+  },
+
+  onTimeInput: function (e) {
+    this.setData({ estimated_time: Number(e.detail.value) });
+  },
+
+  onContentInput: function (e) {
     this.setData({ content: e.detail.value });
   },
 
   // 图片上传
-  uploadImage: function() {
+  uploadImage: function () {
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -143,10 +155,10 @@ Page({
     });
   },
 
-  uploadFileToServer: function(filePath) {
+  uploadFileToServer: function (filePath) {
     const token = wx.getStorageSync('accessToken');
     wx.showLoading({ title: '上传中...' });
-    
+
     // 使用通用上传接口或专门的作业图片上传接口
     wx.uploadFile({
       url: `${app.globalData.globalUrl}/common/wx/upload/image/`, // 假设的上传接口
@@ -179,14 +191,14 @@ Page({
     });
   },
 
-  removeImage: function(e) {
+  removeImage: function (e) {
     const index = e.currentTarget.dataset.index;
     const images = [...this.data.contentImages];
     images.splice(index, 1);
     this.setData({ contentImages: images });
   },
 
-  previewImage: function(e) {
+  previewImage: function (e) {
     const url = e.currentTarget.dataset.url;
     wx.previewImage({
       current: url,
@@ -195,14 +207,14 @@ Page({
   },
 
   // --- 动态选项交互 ---
-  addOption: function() {
+  addOption: function () {
     const options = this.data.options;
     const nextKey = String.fromCharCode(65 + options.length); // A, B, C...
     options.push({ key: nextKey, value: '' });
     this.setData({ options });
   },
 
-  removeOption: function(e) {
+  removeOption: function (e) {
     const index = e.currentTarget.dataset.index;
     const options = this.data.options;
     options.splice(index, 1);
@@ -213,7 +225,7 @@ Page({
     this.setData({ options });
   },
 
-  onOptionInput: function(e) {
+  onOptionInput: function (e) {
     const index = e.currentTarget.dataset.index;
     const value = e.detail.value;
     const options = this.data.options;
@@ -221,16 +233,16 @@ Page({
     this.setData({ options });
   },
 
-  onAnswerChange: function(e) {
+  onAnswerChange: function (e) {
     this.setData({ answerIndex: Number(e.detail.value) });
   },
 
-  onAnswerInput: function(e) {
+  onAnswerInput: function (e) {
     this.setData({ answer: e.detail.value });
   },
 
   // --- 提交逻辑 ---
-  validateForm: function() {
+  validateForm: function () {
     const { title, classIndex, deadlineDate, deadlineTime, subjectIndex, problemTypeIndex, content } = this.data;
     if (!title) return '请输入标题';
     if (classIndex < 0) return '请选择目标班级';
@@ -238,7 +250,7 @@ Page({
     if (subjectIndex < 0) return '请选择科目';
     if (problemTypeIndex < 0) return '请选择题型';
     if (!content) return '请输入题目描述';
-    
+
     if (this.data.isChoice) {
       if (this.data.answerIndex < 0) return '请选择正确答案';
       // 检查选项是否为空
@@ -251,9 +263,9 @@ Page({
     return null;
   },
 
-  collectFormData: function(status) {
-    const { 
-      title, classList, classIndex, deadlineDate, deadlineTime, 
+  collectFormData: function (status) {
+    const {
+      title, classList, classIndex, deadlineDate, deadlineTime,
       problemTypes, problemTypeIndex, content, contentImages,
       options, isChoice, answerIndex, answer
     } = this.data;
@@ -271,9 +283,16 @@ Page({
       title: title,
       status: status,
       problem_type: problemTypes[problemTypeIndex].id,
+      subject: subjects[subjectIndex].id,
       content: content,
       content_data: contentData, // 结构化数据
-      deadline: `${deadlineDate} ${deadlineTime}:00` // 拼接时间
+      deadline: `${deadlineDate} ${deadlineTime}:00`, // 拼接时间
+      difficulty: this.data.difficulty,
+      points: this.data.points,
+      estimated_time: this.data.estimated_time,
+      tags: [], // 暂无标签选择
+      knowledge_points: [], // 暂无知识点选择
+      explanation: '无' // 暂无解析输入
     };
 
     if (isChoice) {
@@ -285,7 +304,7 @@ Page({
     return payload;
   },
 
-  submit: function(status) {
+  submit: function (status) {
     const error = this.validateForm();
     if (error) {
       wx.showToast({ title: error, icon: 'none' });
@@ -294,16 +313,16 @@ Page({
 
     const payload = this.collectFormData(status);
     const token = wx.getStorageSync('accessToken');
-    const url = this.data.assignmentId 
-      ? `${app.globalData.globalUrl}/api/wx/update_assignment/${this.data.assignmentId}/`
-      : `${app.globalData.globalUrl}/api/wx/push_assignment/`;
+    const url = this.data.assignmentId
+      ? `${app.globalData.globalUrl}/assignment/wx/update_assignment/${this.data.assignmentId}/`
+      : `${app.globalData.globalUrl}/assignment/wx/push_assignment/`;
 
     wx.showLoading({ title: '提交中...' });
 
     wx.request({
       url: url,
       method: 'POST',
-      header: { 
+      header: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
@@ -311,17 +330,17 @@ Page({
       success: (res) => {
         wx.hideLoading();
         if (res.statusCode === 200 || res.statusCode === 201) {
-          wx.showToast({ 
-            title: status === 'PUBLISHED' ? '发布成功' : '已存草稿', 
-            icon: 'success' 
+          wx.showToast({
+            title: status === 'PUBLISHED' ? '发布成功' : '已存草稿',
+            icon: 'success'
           });
           setTimeout(() => {
             wx.navigateBack();
           }, 1500);
         } else {
-          wx.showToast({ 
-            title: res.data.message || '提交失败', 
-            icon: 'none' 
+          wx.showToast({
+            title: res.data.message || '提交失败',
+            icon: 'none'
           });
         }
       },
@@ -332,17 +351,17 @@ Page({
     });
   },
 
-  onSaveDraft: function() {
+  onSaveDraft: function () {
     this.submit('DRAFT');
   },
 
-  onPublish: function() {
+  onPublish: function () {
     this.submit('PUBLISHED');
   },
 
-  onDelete: function() {
+  onDelete: function () {
     if (!this.data.assignmentId) return;
-    
+
     wx.showModal({
       title: '确认删除',
       content: '确定要删除该作业吗？删除后无法恢复。',
@@ -351,7 +370,7 @@ Page({
           const token = wx.getStorageSync('accessToken');
           wx.showLoading({ title: '删除中...' });
           wx.request({
-            url: `${app.globalData.globalUrl}/api/wx/delete_assignment/${this.data.assignmentId}/`,
+            url: `${app.globalData.globalUrl}/assignment/wx/delete_assignment/${this.data.assignmentId}/`,
             method: 'DELETE',
             header: { 'Authorization': `Bearer ${token}` },
             success: (res) => {

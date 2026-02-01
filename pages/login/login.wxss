@@ -1,62 +1,229 @@
-/**index.wxss**/
+/** login.wxss **/
 page {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.scrollarea {
-  flex: 1;
-  overflow-y: hidden;
+  background-color: #f7f8fa; /* 浅灰背景 */
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
+    sans-serif;
 }
 
-.userinfo {
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #aaa;
-  width: 80%;
+  min-height: 100vh;
+  padding: 0 40rpx;
 }
 
-.userinfo-avatar {
-  overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+/* --- 1. 头部样式 --- */
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 60rpx;
+  margin-top: 60rpx;
+  animation: fadeInDown 0.8s ease;
 }
 
-.usermotto {
-  margin-top: 200px;
+.app-logo {
+  width: 140rpx;
+  height: 140rpx;
+  margin-bottom: 20rpx;
+}
+
+.app-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+}
+
+.app-slogan {
+  font-size: 24rpx;
+  color: #999;
+  letter-spacing: 6rpx;
+  text-transform: uppercase;
+}
+
+/* --- 2. 卡片样式 --- */
+.login-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 50rpx 40rpx;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInUp 0.8s ease;
+}
+
+/* 头像包装器 */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50rpx;
+  position: relative;
 }
 
 .avatar-wrapper {
   padding: 0;
-  width: 56px !important;
-  border-radius: 8px;
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.avatar {
-  display: block;
-  width: 56px;
-  height: 56px;
-}
-
-.nickname-wrapper {
+  width: 140rpx !important;
+  height: 140rpx !important;
+  border-radius: 50%;
+  background: #f0f2f5;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
   display: flex;
-  width: 100%;
-  padding: 16px;
-  box-sizing: border-box;
-  border-top: .5px solid rgba(0, 0, 0, 0.1);
-  border-bottom: .5px solid rgba(0, 0, 0, 0.1);
-  color: black;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16rpx;
+  position: relative;
 }
 
-.nickname-label {
-  width: 105px;
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* 编辑小图标 */
+.edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #07c160;
+  color: #fff;
+  width: 40rpx;
+  height: 40rpx;
+  font-size: 24rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid #fff;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 输入框组 */
+.input-group {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: #f7f8fa;
+  border-radius: 16rpx;
+  padding: 24rpx 30rpx;
+  margin-bottom: 60rpx;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  transition: all 0.3s;
+}
+
+.input-group:focus-within {
+  background: #fff;
+  border-color: #07c160;
+  box-shadow: 0 0 0 4rpx rgba(7, 193, 96, 0.1);
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+  margin-right: 30rpx;
+  min-width: 60rpx;
 }
 
 .nickname-input {
   flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  height: 100%;
+}
+
+.placeholder-style {
+  color: #ccc;
+}
+
+/* 按钮区域 */
+.btn-area {
+  width: 100%;
+}
+
+.btn-primary, .btn-login {
+  width: 100% !important;
+  height: 88rpx;
+  line-height: 56rpx; /* 调整行高配合padding */
+  background: linear-gradient(135deg, #07c160, #10ad56);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  border-radius: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(7, 193, 96, 0.3);
+  margin-bottom: 24rpx;
+  border: none;
+}
+
+/* 登录按钮的特殊样式（如果需要区分） */
+.btn-login {
+  background: #333; /* 黑色风格，或者用上面的绿色 */
+  background: linear-gradient(135deg, #07c160, #10ad56); 
+  margin-top: 20rpx;
+}
+
+.btn-hover {
+  opacity: 0.9;
+  transform: scale(0.98);
+}
+
+/* 已登录状态样式 */
+.logged-in-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.userinfo-avatar-large {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  margin-bottom: 30rpx;
+  border: 6rpx solid #f0f2f5;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.1);
+}
+
+.welcome-text {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 60rpx;
+}
+
+/* --- 3. 底部样式 --- */
+.footer {
+  margin-top: 80rpx;
+}
+
+.footer text {
+  font-size: 20rpx;
+  color: #ccc;
+}
+
+/* 动画关键帧 */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

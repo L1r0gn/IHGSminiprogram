@@ -80,7 +80,6 @@
         <text class="homework-desc">{{item.description}}</text>
       </view>
       
-      <view class="homework-meta">
         <view class="meta-item">
           <text class="meta-icon">📅DDL:</text>
           <text class="meta-text">{{item.deadline}}</text>
@@ -97,7 +96,6 @@
           <text class="meta-icon">📝:</text>
           <text class="meta-text">分数：{{item.score}}分</text>
         </view>
-      </view>
 
       <!-- 操作按钮 -->
       <view class="homework-actions">
@@ -109,29 +107,32 @@
         >
           开始作业
         </button>
+      
         <button 
-          wx:if="{{item.status != 'PENDING'}}" 
+          wx:if="{{item.status === 'GRADED'}}" 
           class="btn-secondary" 
           bindtap="viewSubmission"
           data-id="{{item.id}}"
         >
-          查看提交(暂不可用)
+          查看提交
         </button>
         <button 
-          wx:if="{{item.status == 'GRADED'||'WRONG_ANSWER'||'ACCEPT'}}" 
-          class="btn-secondary" 
-          bindtap="doHomework"
-          data-id="{{item.id}}"
-        >
-          重新作答
-        </button>
-        <button 
-          wx:if="{{item.status === 'GRADED'}}" 
+          wx:if="{{item.status === 'ACCEPTED'}}" 
           class="btn-success" 
           bindtap="viewGrade"
           data-id="{{item.id}}"
         >
           查看成绩
+        </button>
+        <button 
+          wx:if="{{item.status == 'GRADED'||'WRONG_ANSWER'||'ACCEPTED'}}" 
+          class="btn-secondary" 
+          bindtap="doHomework"
+          data-id="{{item.id}}"
+          style="margin-left: 20rpx"
+          disabled="true"
+        >
+          重新作答(不可用)
         </button>
         <button 
           wx:if="{{item.status === 'expired'}}" 

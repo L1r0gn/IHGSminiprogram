@@ -1,0 +1,170 @@
+/* pages/teacher_mode/questionDetail/questionDetail.wxss */
+page {
+  background-color: #f7f8fa;
+}
+
+.container {
+  padding: 15px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 卡片通用样式 */
+.card {
+  flex: 1;
+  width: 90%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+/* 头部信息 */
+.header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.tag.type {
+  background: #e6f7ff;
+  color: #1890ff;
+  border: 1px solid #91d5ff;
+}
+
+.tag.diff {
+  background: #fff7e6;
+  color: #fa8c16;
+  border: 1px solid #ffd591;
+}
+
+.id {
+  font-size: 12px;
+  color: #999;
+  font-family: monospace;
+}
+
+/* 题目内容 */
+.question-content {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+}
+
+/* 选项列表 */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.opt-key {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  color: #666;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.opt-val {
+  flex: 1;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.6;
+  padding-top: 1px;
+}
+
+/* 答案与解析卡片 */
+.card-header {
+  margin-bottom: 12px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+}
+
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 16px;
+  background: #1890ff;
+  border-radius: 2px;
+  margin-right: 8px;
+}
+
+.analysis-card .section-title::before {
+  background: #fa8c16;
+}
+
+.answer-content {
+  background: #f0f9ff;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px dashed #91d5ff;
+}
+
+.answer-text {
+  font-size: 16px;
+  color: #1890ff;
+  font-weight: bold;
+}
+
+.analysis-content {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+/* Katex 公式样式 */
+.katex {
+  font-size: 1.1em;
+}
+.katex-display {
+  display: block;
+  text-align: center;
+  margin: 10px 0;
+  overflow-x: auto;
+}
+.katex-inline {
+  display: inline-block;
+}

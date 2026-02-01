@@ -155,8 +155,8 @@
 }
 
 .score-section {
-  margin-bottom: 32rpx; /* 增加下边距 */
-  padding-right: 20rpx; /* 右侧留白 */
+  margin-bottom: 24rpx; /* 增加下边距 */
+  padding-right: 20rpx; /*右侧留白*/
 }
 
 .score {

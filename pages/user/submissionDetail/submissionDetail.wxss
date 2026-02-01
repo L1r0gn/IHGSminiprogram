@@ -57,7 +57,8 @@
   border-radius: 20rpx;
   padding: 30rpx;
   margin-bottom: 20rpx;
-  width: 80%;
+  width: 100%; /* 修改为100%或者配合 box-sizing */
+  box-sizing: border-box; /* 建议加上这个以防padding撑破布局 */
 }
 
 /* 头部信息 */
@@ -67,17 +68,39 @@
   padding-bottom: 20rpx;
 }
 
+/* 新增：标题行布局 */
+.title-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15rpx;
+  flex-wrap: wrap;
+}
+
+/* 新增：题型标签样式 */
+.type-tag {
+  background-color: #e6f7ff;
+  color: #007AFF;
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+  border: 1rpx solid #91caff;
+  margin-right: 15rpx;
+  margin-top: 6rpx; /* 视觉对齐 */
+  white-space: nowrap;
+}
+
 .problem-title {
   font-size: 36rpx;
   font-weight: bold;
   color: #333;
-  display: block;
-  margin-bottom: 15rpx;
+  flex: 1; /* 让标题占据剩余空间 */
+  line-height: 1.4;
 }
 
 .submit-time {
   font-size: 24rpx;
   color: #999;
+  display: block;
 }
 
 /* 状态区域 */

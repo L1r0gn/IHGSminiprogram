@@ -1,24 +1,56 @@
-<!--login.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-        <button bindtap="loginToServer" disabled="true">点击此处以登录</button>
-      </block>
-      <block wx:else>
-        <image bindtap="getUserProfile" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-        <button bindtap="loginToServer" >点击此处以登录</button>
-      </block>
-    </view>
+<view class="login-container">
+  <view class="header-section">
+    <view class="app-title">智能作业批改系统</view>
+    <view class="app-slogan">智 能 · 高 效 · 便 捷</view>
   </view>
-</scroll-view>
+
+  <view class="login-card">
+    <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
+      
+      <view class="avatar-section">
+        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+          <image class="avatar-img" src="{{userInfo.avatarUrl || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"></image>
+          <view class="edit-icon">📷</view>
+        </button>
+        <text class="tip-text">点击上方图标设置头像</text>
+      </view>
+
+      <view class="input-group">
+        <text class="input-label">昵称</text>
+        <input type="nickname" class="nickname-input" placeholder="请输入您的昵称" placeholder-class="placeholder-style" bind:change="onInputChange" />
+      </view>
+
+      <view class="btn-area">
+        <!-- <button 
+          wx:if="{{canIUseGetUserProfile}}" 
+          bindtap="getUserProfile" 
+          class="btn-primary" 
+          hover-class="btn-hover"
+        >
+          授权并登录
+        </button> -->
+        
+        <button 
+          class="btn-login"
+          bindtap="loginToServer" 
+          hover-class="btn-hover"
+        >
+          进入系统
+        </button>
+      </view>
+
+    </block>
+
+    <block wx:else>
+      <view class="logged-in-view">
+        <image class="userinfo-avatar-large" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="welcome-text">欢迎回来，{{userInfo.nickName}}</text>
+        <button class="btn-primary" bindtap="loginToServer" hover-class="btn-hover">立即进入</button>
+      </view>
+    </block>
+  </view>
+
+  <view class="footer">
+    <text>© 2026 Intelligent Homework System</text>
+  </view>
+</view>

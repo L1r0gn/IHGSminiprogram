@@ -91,6 +91,24 @@
       </picker>
     </view>
 
+    <!-- 难度 -->
+    <view class="form-item">
+      <text class="label">难度</text>
+      <slider class="slider" min="1" max="5" value="{{difficulty}}" show-value bindchange="onDifficultyChange" style="flex: 1; margin-left: 20rpx;" />
+    </view>
+
+    <!-- 分值 -->
+    <view class="form-item">
+      <text class="label">分值</text>
+      <input class="input" type="number" value="{{points}}" bindinput="onPointsInput" placeholder="默认10分" />
+    </view>
+
+    <!-- 预计时间 -->
+    <view class="form-item">
+      <text class="label">预计用时(分)</text>
+      <input class="input" type="number" value="{{estimated_time}}" bindinput="onTimeInput" placeholder="分钟" />
+    </view>
+
     <!-- 题目描述 -->
     <view class="form-item-vertical">
       <text class="label">题目描述</text>

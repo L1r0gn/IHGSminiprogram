@@ -61,10 +61,10 @@
               <text class="status-text">{{item.status_text}}</text>
             </view>
           </view>
-          <text class="homework-desc">{{item.description}}</text>
+          <text class="homework-desc">详情：{{item.description}}</text>
           <view class="homework-meta">
             <text class="meta-item">截止: {{item.deadline}}</text>
-            <text class="meta-item">提交: {{item.submit_count}}/{{classInfo.student_count}}</text>
+            <text class="meta-item">提交: {{item.submit_count}}/{{item.student_count}}</text>
           </view>
         </view>
       </view>

@@ -192,18 +192,12 @@
   overflow: hidden;
 }
 
-.homework-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20rpx;
-  margin-bottom: 20rpx;
-}
-
 .meta-item {
   display: flex;
   align-items: center;
   font-size: 22rpx;
   color: #8c8c8c;
+  margin-bottom: 10rpx;
 }
 
 .meta-icon {
@@ -231,11 +225,10 @@
 .btn-secondary {
   background: #f0f0f0;
   color: rgb(31, 31, 31);
-  
 }
 
 .btn-success {
-  background: #52c41a;
+  background: #34c0b4;
   color: white;
 }
 

@@ -48,7 +48,7 @@ Page({
           classIndex: classIndex >= 0 ? classIndex : -1
         });
         console.log('收到用户数据：',this.data.userInfo);
-        console.log('收到班级数据：',res.data.classNameList);
+        // console.log('收到班级数据：',res.data.classNameList);
       },
       fail: (err) => {
         console.error('获取用户信息失败', err);
