@@ -19,11 +19,15 @@
   <view class="card content-card">
     <view class="card-header" style="font-size: large;">我的作答</view>
     
+    <view class="answer-box" wx:if="{{submission.problem_type === '选择' && submission.choose_answer}}">
+      <text>选择选项：{{submission.choose_answer}}</text>
+    </view>
+    
     <view class="answer-box" wx:if="{{submission.submitted_text}}">
       <text>{{submission.submitted_text}}</text>
     </view>
 
-    <view class="image-box" wx:if="{{submission.submitted_image}}">
+    <view class="image-box" wx:if="{{submission.submitted_image !== 'http://127.0.0.1:8000/media/default_submissionImage.png'}}">
       <image 
         src="{{submission.submitted_image}}" 
         mode="widthFix" 
@@ -33,7 +37,7 @@
       <view class="tip">点击图片可预览大图</view>
     </view>
 
-    <view wx:if="{{!submission.submitted_text && !submission.submitted_image}}" class="empty-tip">
+    <view wx:if="{{! submission.choose_answer && !submission.submitted_text && (submission.submitted_image === 'http://127.0.0.1:8000/media/default_submissionImage.png')}}" class="empty-tip">
       (未检测到提交内容)
     </view>
   </view>

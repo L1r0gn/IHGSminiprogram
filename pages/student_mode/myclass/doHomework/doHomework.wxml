@@ -60,12 +60,12 @@
     </view>
     <view class="card-body">
       <view class="problem-content">
-        <text selectable="true">{{homeworkDetail.problem_content}}</text>
+        <rich-text nodes="{{resolvedProblemContent}}"></rich-text>
       </view>
     </view>
   </view>
   <!-- 做题页面 -->
-  <block wx:if="{{(homeworkDetail.status === 'PENDING' && !isOverdue) || (homeworkDetail !== 'GRADING' && !isOverdue && isRedo) }}">
+  <block wx:if="{{homeworkDetail.status === 'PENDING' && !isOverdue}}">
     <block wx:if="{{homeworkDetail.problem_type === '选择'}}">
       <view class="card answer-card">
         <view class="card-header">
@@ -80,31 +80,20 @@
         </view>
       </view>
     </block>
+    <!-- 简答填空 -->
     <block wx:elif="{{homeworkDetail.problem_type === '简答' || homeworkDetail.problem_type === '填空'}}">
-      <view class="card answer-card">
-        <view class="card-header">
-          <text class="card-title-text">请作答</text>
-        </view>
-        <view class="card-body">
-          <textarea class="answer-textarea" placeholder="请输入你的答案..." placeholder-class="textarea-placeholder" value="{{studentAnswerContent}}" bindinput="onAnswerInput" maxlength="{{-1}}"></textarea>
-        </view>
-      </view>
-    </block>
-    <!-- 未处理 -->
-    <block wx:elif="{{homeworkDetail.problem_type === '简答' || homeworkDetail.problem_type === '填空'}}"></block>
-    <!-- 暂时未用到 -->
-    <block wx:elif="{{homeworkDetail.problem_type === '图片' || homeworkDetail.problem_type === '拍照'}}">
       <view class="card answer-card">
         <view class="card-header">
           <text class="card-title-text">请作答</text>
         </view>
         <view class="subjective-container">
           <view class="image-preview-container">
-            <image wx:if="{{SUBMITTED_image_path}}" class="image-preview" src="{{SUBMITTED_image_path}}" mode="aspectFit" bindtap="previewImage"></image>
+            <!-- previewImage -->
+            <image wx:if="{{submitted_image_path}}" class="image-preview" src="{{submitted_image_path}}" mode="aspectFit" bindtap="previewImage"></image>
             <text wx:else class="upload-tip">暂无图片</text>
           </view>
           <button class="upload-button" bindtap="uploadImage">
-            {{ SUBMITTED_image_path ? '重新上传' : '拍照 / 选择图片上传' }}
+            {{ submitted_image_path ? '重新上传' : '拍照 / 选择图片上传' }}
           </button>
           <view class="upload-tip">请将手写答案拍照上传</view>
         </view>
@@ -138,7 +127,7 @@
 <view class="footer-bar-placeholder"></view>
 <view class="footer-bar safe-area-bottom" wx:if="{{!isLoading}}">
   <button class="action-btn primary-btn" hover-class="btn-hover" bindtap="onSubmit"
-    wx:if="{{(homeworkDetail.status === 'PENDING' && !isOverdue) || (isRedo && !isOverdue && homeworkDetail.status !== 'GRADING')}}"
+    wx:if="{{homeworkDetail.status === 'PENDING' && !isOverdue}}"
   >
     提交作业
   </button>

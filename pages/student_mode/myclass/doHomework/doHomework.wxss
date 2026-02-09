@@ -1,4 +1,19 @@
 /* pages/doHomework/doHomework.wxss */
+
+/* Katex 公式样式 */
+.katex {
+  font-size: 1.1em;
+}
+.katex-display {
+  display: block;
+  text-align: center;
+  margin: 20rpx 0;
+  overflow-x: auto;
+}
+.katex-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
 page {
   background-color: #f5f7fa; /* 更清爽的浅灰蓝背景 */
   color: #333;

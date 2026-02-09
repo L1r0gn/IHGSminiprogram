@@ -98,9 +98,6 @@ Page({
     return true;
   },
 
-  // ... 保留你的 parseLatexContent, submitAnswer 等其他函数不变 ...
-  
-  // (只需将原文件中的重复逻辑替换为上述 renderQuestion 即可)
   parseLatexContent(content) {
       // ... 你原有的解析代码 ...
       let processedContent = content || ''; // 防止 null 报错
@@ -157,11 +154,6 @@ Page({
       });
   },
 
-  // ... 提交逻辑 submitAnswer 等保持不变 ...
-  // 注意：submitAnswer 里面用到的 wx.request，成功后调用 getRandomQuestion
-  // 如果是指定题目练习，做完后是否自动跳转下一题？
-  // 建议在 handleSubmitSuccess 中修改：
-  
   handleSubmitSuccess(res) {
     // ... 检查 code ...
     if (res.statusCode >= 200 && res.statusCode < 300) {
@@ -193,6 +185,13 @@ Page({
   },
   
   // 提交主逻辑
+  /**
+   * 提交答案
+   * 根据题目类型调用不同的提交方法
+   * - 检查用户token和userId，未登录则跳转登录页
+   * - 选择题调用submitChoiceAnswer()
+   * - 主观题调用submitSubjectiveAnswer()
+   */
   submitAnswer() {
       const token = wx.getStorageSync('accessToken');
       const userId = wx.getStorageSync('userId');

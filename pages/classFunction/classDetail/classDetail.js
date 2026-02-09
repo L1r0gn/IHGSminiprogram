@@ -105,7 +105,7 @@ Page({
   viewHomework(e) {
     const homework = e.currentTarget.dataset.homework;
     wx.navigateTo({
-      url: `/pages/homeworkDetail/homeworkDetail?homeworkId=${homework.id}&classId=${this.data.classId}`
+      url: `/pages/student_mode/myclass/homeworkDetail/homeworkDetail?id=${homework.id}&classId=${this.data.classId}`
     });
   },
   // 跳转到作业列表

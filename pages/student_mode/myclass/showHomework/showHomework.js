@@ -11,7 +11,7 @@ Page({
     homeworks: [],
     currentFilter: 'all',
     filteredHomeworks: [],
-    redo: false,
+
   },
 
   onLoad: function (options) {
@@ -36,7 +36,7 @@ Page({
   loadClassData: function (classId) {
     const app = getApp();
     const token = wx.getStorageSync('accessToken');
-    // 调用API获取班级信息和作业列表
+    // 调用API获取班级信息和作业列表 - assignments
     wx.request({
       url: `${app.globalData.globalUrl}/assignment/wx/show_assignment/`,
       method: 'GET',
@@ -122,11 +122,9 @@ Page({
   // 开始做作业
   doHomework: function (e) {
     const homeworkId = e.currentTarget.dataset.id;
-    // const isRedo = this.data.currentFilter === 'SUBMITTED' || this.data.currentFilter === 'GRADED';
-    const isRedo = true;
-    console.log("选择的作业ID:", homeworkId, "重做模式:", isRedo);
+    console.log("选择的作业ID:", homeworkId);
     wx.navigateTo({
-      url: `/pages/student_mode/myclass/doHomework/doHomework?id=${homeworkId}&isRedo=${isRedo}`
+      url: `/pages/student_mode/myclass/doHomework/doHomework?id=${homeworkId}`
     });
   },
 
@@ -134,7 +132,7 @@ Page({
   viewGrade: function (e) {
     const homeworkId = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/GRADEDetail/GRADEDetail?id=${homeworkId}`
+      url: `/pages/student_mode/myclass/homeworkDetail/homeworkDetail?id=${homeworkId}`
     });
   },
 

@@ -16,7 +16,8 @@
     </view>
     
     <!-- 知识点筛选 Picker -->
-    <picker 
+      <!-- 暂时不用，用输入搜索 -->
+    <!-- <picker 
       mode="selector" 
       range="{{knowledgePoints}}" 
       range-key="name" 
@@ -26,7 +27,7 @@
         {{selectedKp ? selectedKp.name : '按知识点筛选'}}
         <text class="arrow">▼</text>
       </view>
-    </picker>
+    </picker> -->
   </view>
 
   <!-- 随机练习入口 -->

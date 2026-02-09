@@ -20,10 +20,7 @@ Page({
     
     wx.showLoading({ title: '加载中...' });
 
-    // ⚠️ 注意：请根据你的 urls.py 确认这里的路径前缀
-    // 你的 urls.py 中定义的是 path('wx/submissions/<int:submission_id>/', ...)
-    // 假设你的 app 路由前缀是 /grading
-    const url = `${app.globalData.globalUrl}/grading/wx/submissions/${id}/`;
+    const url = `${app.globalData.globalUrl}/grading/wx/submissions/assignment_id=${id}/`;
 
     wx.request({
       url: url,
@@ -36,7 +33,7 @@ Page({
         if (res.statusCode === 200) {
           // 这里的 res.data 结构对应 views.py 中 getASubmission 返回的 JsonResponse
           this.setData({
-            submission: res.data,
+            submission: res.data[0],
             loading: false
           });
         } else {

@@ -1,4 +1,6 @@
 // pages/myclass/doHomework/doHomework.js
+const katexLib = require('../../../../miniprogram_npm/@rojer/katex-mini/index.js');
+const katex = katexLib.default;
 const app = getApp();
 
 Page({
@@ -7,8 +9,9 @@ Page({
     assignmentStatusId: null,
     isLoading: true,
     isOverdue: false,
-    isRedo: false, // 新增：是否为重做模式
+
     homeworkDetail: {},
+    resolvedProblemContent: '', // 解析后的题目内容
     studentAnswerContent: '',
     // 选择题相关
     options: [{ id: 'A', selected: false },
@@ -17,7 +20,7 @@ Page({
               { id: 'D', selected: false }],
     selectedAnswer: '',
     // 图片题相关
-    SUBMITTED_image_path: '',
+    submitted_image_path: '',
     // 显示历史分数和反馈
     previousScore: null,
     previousFeedback: '',
@@ -33,12 +36,9 @@ Page({
       });
       return;
     }
-    
-    const isRedo = options.redo === 'true';
-    
+
     this.setData({
-      assignmentId: options.id,
-      isRedo: isRedo
+      assignmentId: options.id
     });
     
     this.loadHomeworkDetail();
@@ -73,12 +73,16 @@ Page({
               isOverdue = true;
             }
           }
+          
+          // 解析题目内容中的LaTeX公式
+          const resolvedProblemContent = this.parseLatexContent(detail.problem_content);
 
           this.setData({
             homeworkDetail: detail,
             assignmentStatusId: detail.assignment_status_id,
             isOverdue: isOverdue,
             isLoading: false,
+            resolvedProblemContent: resolvedProblemContent,
             // 保存历史分数和反馈
             previousScore: detail.score || null,
             previousFeedback: detail.feedback || ''
@@ -124,7 +128,7 @@ Page({
       });
     } else if (type === '图片' || type === '拍照') {
       this.setData({
-        SUBMITTED_image_path: answer
+        submitted_image_path: answer
       });
     } else if (type === '主观' || type === '简答' || type === '填空') {
       this.setData({
@@ -133,38 +137,20 @@ Page({
     }
   },
 
-  /* 检查是否可以重做*/
-  canRedo: function() {
-    const { homeworkDetail, isRedo, isOverdue } = this.data;
-    // 如果不是重做模式，按正常逻辑处理
-    if (!isRedo) {
-      if (isOverdue) {
-        return { canRedo: false, reason: '已超过截止时间，无法提交' };
-      }
-      if (homeworkDetail.status !== 'PENDING') {
-        return { canRedo: false, reason: '作业已提交，无法重复提交' };
-      }
-      return { canRedo: true };
-    }
-    
-    // 重做模式的特殊逻辑
-    if (isOverdue) {
-      return { canRedo: false, reason: '已超过截止时间，无法重做' };
-    }
-    // 检查是否允许重做（可以根据业务需求调整条件）
-    const finishedStatuses = ['GRADED', 'SUBMITTED', 'ACCEPTED', 'WRONG_ANSWER', 'COMPILE_ERROR', 'RUNTIME_ERROR'];
-    if (finishedStatuses.includes(homeworkDetail.status)) {
-      return { canRedo: true };
-    }
-    return { canRedo: false, reason: '当前状态不允许重做' };
-  },
 
   /* 提交作业 (校验)*/
   onSubmit: function () {
-    const checkResult = this.canRedo();
-    if (!checkResult.canRedo) {
+    const { homeworkDetail, isOverdue } = this.data;
+    if (isOverdue) {
       wx.showToast({
-        title: checkResult.reason,
+        title: '已超过截止时间，无法提交',
+        icon: 'none'
+      });
+      return;
+    }
+    if (homeworkDetail.status !== 'PENDING') {
+      wx.showToast({
+        title: '作业已提交，无法重复提交',
         icon: 'none'
       });
       return;
@@ -179,18 +165,12 @@ Page({
         isValid = true;
       }
       errorMsg = '请选择一个选项';
-    } else if (type === '图片' || type === '拍照') {
-      if (this.data.SUBMITTED_image_path) {
+    } else if (type === '简答' || type === '填空') {
+      if (this.data.submitted_image_path) {
         isValid = true;
       }
       errorMsg = '请上传图片';
-    } else if (type === '主观' || type === '简答' || type === '填空') {
-      if (this.data.studentAnswerContent.trim() !== '') {
-        isValid = true;
-      }
-      errorMsg = '答案不能为空';
-    }
-
+    } 
     if (!isValid) {
       wx.showToast({
         title: errorMsg,
@@ -199,11 +179,8 @@ Page({
       return;
     }
 
-    // 根据是否为重做模式显示不同的提示
-    const modalTitle = this.data.isRedo ? '确认重做提交' : '确认提交';
-    const modalContent = this.data.isRedo ? 
-      '确定要重新提交作业吗？这将覆盖之前的答案。' : 
-      '提交后将无法修改，确定要提交吗？';
+    const modalTitle = '确认提交';
+    const modalContent = '提交后将无法修改，确定要提交吗？';
 
     wx.showModal({
       title: modalTitle,
@@ -219,6 +196,14 @@ Page({
   /* 执行提交*/
   performSubmit: function () {
     const token = wx.getStorageSync('accessToken');
+    const userId = wx.getStorageSync('userId');
+    
+    if (!token || !userId) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      setTimeout(() => wx.navigateTo({ url: '/pages/login/login' }), 1500);
+      return;
+    }
+
     if (!token) {
       app.handleTokenExpired();
       return;
@@ -226,85 +211,109 @@ Page({
 
     // 根据题目类型准备答案数据
     const type = this.data.homeworkDetail.problem_type;
-    let answerData = {};
     
     if (type === '选择') {
-      answerData = { answer_content: this.data.selectedAnswer };
-    } else if (type === '图片' || type === '拍照') {
-      answerData = { answer_content: this.data.SUBMITTED_image_path };
-    } else if (type === '主观' || type === '简答' || type === '填空') {
-      answerData = { answer_content: this.data.studentAnswerContent };
-    }
-
-    // 如果是重做模式，添加重做标识
-    if (this.data.isRedo) {
-      answerData.is_redo = true;
-    }
-
-    wx.showLoading({ title: '提交中...' });
-    
-    console.log('提交的答案数据为：', answerData);
-    
-    wx.request({
-      url: `${app.globalData.globalUrl}/assignment/wx/homeworkGradingProcess/${this.data.assignmentId}/`,
-      method: 'POST',
-      header: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      data: answerData,
-      success: (res) => {
-        wx.hideLoading();
-        if (res.statusCode === 200 && res.data.success) {
-          const successMessage = this.data.isRedo ? '重做提交成功' : '提交成功';
+      // 选择题提交
+      const postData = {
+        questionId: this.data.homeworkDetail.question_id || this.data.assignmentId, // 优先使用question_id，否则使用assignmentId
+        selectedAnswer: this.data.selectedAnswer,
+        userId: userId,
+      };
+      
+      console.log('提交的选择题数据：', postData);
+      
+      wx.showLoading({ title: '提交中...' });
+      
+      wx.request({
+        url: `${app.globalData.globalUrl}/grading/wx/submit/`,
+        method: 'POST',
+        header: {
+          'Authorization': `Bearer ${token}`,
+        },
+        data: postData,
+        success: (res) => {
+          wx.hideLoading();
+          if (res.statusCode === 200 && res.data.success) {
+            wx.showToast({
+              title: '提交成功',
+              icon: 'success'
+            });
+            setTimeout(() => {
+              wx.navigateBack();
+            }, 1500);
+          } else if (res.statusCode === 401) {
+            app.handleTokenExpired();
+            return;
+          } else {
+            wx.showToast({
+              title: res.data.error || '提交失败',
+              icon: 'none'
+            });
+          }
+        },
+        fail: (err) => {
+          wx.hideLoading();
           wx.showToast({
-            title: successMessage,
-            icon: 'success'
-          });
-          setTimeout(() => {
-            wx.navigateBack();
-          }, 1500);
-        } else if (res.statusCode === 401) {
-          app.handleTokenExpired();
-          return;
-        } else {
-          wx.showToast({
-            title: res.data.error || '提交失败',
+            title: '网络错误',
             icon: 'none'
           });
         }
-      },
-      fail: (err) => {
-        wx.hideLoading();
-        wx.showToast({
-          title: '网络错误',
-          icon: 'none'
-        });
+      });
+    } else if (type === '简答' || type === '填空') {
+      // 主观题提交（图片）
+      if (!this.data.submitted_image_path) {
+        wx.showToast({ title: '请先上传答案图片', icon: 'none' });
+        return;
       }
-    });
-  },
-
-  /* 清空答案（重做时使用）*/
-  clearAnswer: function() {
-    wx.showModal({
-      title: '清空答案',
-      content: '确定要清空当前答案吗？',
-      success: (res) => {
-        if (res.confirm) {
-          this.setData({
-            studentAnswerContent: '',
-            selectedAnswer: '',
-            options: this.data.options.map(opt => ({ ...opt, selected: false })),
-            SUBMITTED_image_path: ''
-          });
+      
+      wx.showLoading({ title: '提交中...' });
+      
+      wx.uploadFile({
+        url: `${app.globalData.globalUrl}/grading/wx/submit/`,
+        filePath: this.data.submitted_image_path,
+        name: 'submitted_image',
+        header: { 'Authorization': `Bearer ${token}` },
+        formData: {
+          questionId: this.data.homeworkDetail.question_id || this.data.assignmentId, // 优先使用question_id，否则使用assignmentId
+          userId: userId,
+        },
+        success: (res) => {
+          wx.hideLoading();
+          try {
+            const parsedData = JSON.parse(res.data);
+            if (res.statusCode === 200 && parsedData.success) {
+              wx.showToast({
+                title: '提交成功',
+                icon: 'success'
+              });
+              setTimeout(() => {
+                wx.navigateBack();
+              }, 1500);
+            } else {
+              wx.showToast({
+                title: parsedData.error || '提交失败',
+                icon: 'none'
+              });
+            }
+          } catch (e) {
+            wx.showToast({
+              title: '服务器返回格式错误',
+              icon: 'none'
+            });
+          }
+        },
+        fail: (err) => {
+          wx.hideLoading();
           wx.showToast({
-            title: '答案已清空',
-            icon: 'success'
+            title: '网络错误',
+            icon: 'none'
           });
         }
-      }
-    });
+      });
+    }
   },
+
+
   
   /*返回列表*/
   onBack: function() {
@@ -325,5 +334,42 @@ Page({
     this.setData({
       options: updatedOptions
     });
-  }
+  },
+  uploadImage() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      sourceType: ['album', 'camera'],
+      camera: 'back',
+      success: (res) => {
+        this.setData({
+          submitted_image_path: res.tempFiles[0].tempFilePath
+        });
+      }
+    })
+  },
+  
+  // LaTeX公式解析函数
+  parseLatexContent(content) {
+    if (!content) return content;
+    
+    // 使用katex-mini的renderMathInText功能来解析文本中的数学公式
+    try {
+      const result = katexLib.renderMathInText(content, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });
+      
+      // 如果返回的是节点数组，直接返回；否则返回原始内容
+      return Array.isArray(result) ? result : content;
+    } catch (error) {
+      console.error('LaTeX解析失败:', error);
+      return content; // 解析失败时返回原始内容
+    }
+  },
 });

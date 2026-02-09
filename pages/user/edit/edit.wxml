@@ -83,7 +83,7 @@
 </view>
 
 <!-- ✅ 修复：弹窗移到最外层，带遮罩 -->
-<view class="modal-mask" wx:if="{{showCreateModal}}" bindtap="hideCreateClassModal">
+<!-- <view class="modal-mask" wx:if="{{showCreateModal}}" bindtap="hideCreateClassModal">
   <view class="modal-content" catchtap="noop">
     <input 
       class="modal-input" 
@@ -97,4 +97,4 @@
       <button size="mini" type="primary" bindtap="createNewClass">创建</button>
     </view>
   </view>
-</view>
+</view> -->
