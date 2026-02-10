@@ -19,6 +19,35 @@
     </view>
   </view>
 
+  <!-- BKT知识画像入口 -->
+  <view class="bkt-entry-card">
+    <view class="bkt-header">
+      <text class="bkt-title">🎯 BKT知识画像</text>
+      <text class="bkt-subtitle">基于贝叶斯知识追踪算法的个性化学习分析</text>
+    </view>
+    
+    <view class="bkt-stats">
+      <view class="bkt-stat-item">
+        <text class="bkt-stat-num">{{bktStats.knowledgeCount || 0}}</text>
+        <text class="bkt-stat-label">知识点数</text>
+      </view>
+      <view class="bkt-stat-divider"></view>
+      <view class="bkt-stat-item">
+        <text class="bkt-stat-num">{{bktStats.avgMastery}}%</text>
+        <text class="bkt-stat-label">平均掌握度</text>
+      </view>
+      <view class="bkt-stat-divider"></view>
+      <view class="bkt-stat-item">
+        <text class="bkt-stat-num">{{bktStats.learningDays || 0}}</text>
+        <text class="bkt-stat-label">学习天数</text>
+      </view>
+    </view>
+    
+    <button class="bkt-view-btn" bindtap="viewBKTProfile">
+      查看我的知识画像
+    </button>
+  </view>
+
   <!-- 知识点列表区域 -->
   <view class="section-title">
     <text class="icon">📊</text> 

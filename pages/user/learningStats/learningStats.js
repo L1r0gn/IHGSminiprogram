@@ -1,12 +1,19 @@
 const app = getApp();
+const bktService = require('../../../utils/bktService');
 
 Page({
   data: {
     userInfo: {},
+    profileData:[],
     stats: {
       total_questions: 0,
       avg_mastery: 0,
       stats_list: []
+    },
+    bktStats: {
+      knowledgeCount: 0,
+      avgMastery: '0.0',
+      learningDays: 0
     },
     loading: true
   },
@@ -17,7 +24,6 @@ Page({
     if (userInfo) {
       this.setData({ userInfo });
     }
-    
     this.fetchStats();
   },
   
@@ -44,6 +50,9 @@ Page({
             stats: res.data.data,
             loading: false
           });
+          
+          // 在获取到统计数据后，尝试获取BKT统计数据
+          this.fetchBKTStats();
         }
       },
       fail: (err) => {
@@ -53,6 +62,41 @@ Page({
       complete: () => {
         if (callback) callback();
       }
+    });
+  },
+  
+  // 获取BKT统计数据 - 后端已经计算好平均掌握度,直接使用
+  async fetchBKTStats() {
+    try {
+      const token = wx.getStorageSync('accessToken');
+      const userId = wx.getStorageSync('userId');
+      
+      if (!token || !userId) {
+        return;
+      }
+      
+      // 后端返回的数据已包含统计信息,直接使用
+      const profileData = await bktService.getStudentProfile(userId);
+      console.log('后端返回的BKT统计数据:', profileData);
+
+      if (profileData) {
+        this.setData({
+          bktStats: {
+            knowledgeCount: profileData.total_knowledge_points || 0,
+            avgMastery: (profileData.summary.average_mastery * 100).toFixed(1),
+            learningDays: profileData.learning_days || 0
+          }
+        });
+      }
+    } catch (error) {
+      console.error("获取BKT统计数据失败", error);
+      // 静默处理,不影响主功能
+    }
+  },
+  
+  viewBKTProfile() {
+    wx.navigateTo({
+      url: '/pages/student_mode/learningInsights/knowledgeProfile'
     });
   }
 });

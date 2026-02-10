@@ -1,0 +1,118 @@
+<!-- pages/student_mode/learningInsights/knowledgeProfile.wxml -->
+<view class="container" wx:if="{{!isLoading}}">
+  
+  <!-- 顶部概览卡片 -->
+  <view class="overview-card">
+    <view class="overview-header">
+      <text class="overview-title">知识掌握概览</text>
+      <!-- <text class="refresh-btn" bindtap="loadKnowledgeProfile">🔄</text> -->
+    </view>
+    
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-number">{{profileData.total_knowledge_points || 0}}</text>
+        <text class="stat-label">知识点总数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number">{{formattedAvgMastery}}%</text>
+        <text class="stat-label">平均掌握度</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类筛选 -->
+  <!-- <view class="category-filter">
+    <view class="filter-label">筛选：</view>
+    <scroll-view class="category-scroll" scroll-x>
+      <view class="category-list">
+        <block wx:for="{{categories}}" wx:key="id">
+          <view 
+            class="category-item {{selectedCategory === item.id ? 'active' : ''}}"
+            bindtap="onCategoryChange"
+            data-category="{{item.id}}"
+          >
+            <text class="category-name">{{item.name}}</text>
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+  </view> -->
+
+  <!-- 知识点列表 -->
+  <view class="knowledge-list">
+    <block wx:if="{{knowledgePoints}}">
+      <block wx:for="{{knowledgePoints}}" wx:key="id">
+        <view 
+          class="knowledge-item"
+          bindtap="onKnowledgePointTap"
+          data-id="{{item.id}}"
+        >
+          <view class="item-header">
+            <text class="knowledge-name">{{item.name}}</text>
+            <!-- <view class="mastery-badge" style="background-color: {{item.mastery_color}}">
+              {{item.formatted_mastery}}
+            </view> -->
+          </view>
+          
+          <view class="item-content">
+            <view class="progress-container">
+              <view 
+                class="progress-bar {{item.mastery_probability_formatted >= 85 ? 'bg-green' : (item.mastery_probability_formatted >= 60 ? 'bg-orange' : 'bg-red')}}" 
+                style="width: {{item.mastery_probability_formatted}}%"
+              ></view>
+            </view>
+            
+            <view class="item-meta">
+              <text class="attempts">答题 {{item.total_attempts}} 次</text>
+              <text class="category-tag">{{item.subject}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </block>
+    
+    <block wx:else>
+      <view class="empty-state">
+        <text class="empty-icon">📚</text>
+        <text class="empty-text">
+          {{selectedCategory === 'all' ? '暂无知识点数据' : '该分类下暂无知识点'}}
+        </text>
+      </view>
+    </block>
+  </view>
+
+  <!-- 学习建议 -->
+  <view class="suggestions-section">
+    <view class="section-header" bindtap="toggleSuggestions">
+      <text class="section-title">学习建议</text>
+      <text class="toggle-icon">{{showSuggestions ? '▲' : '▼'}}</text>
+    </view>
+    
+    <view class="suggestions-content" wx:if="{{showSuggestions}}">
+      <block wx:if="{{profileData.suggestions && profileData.suggestions.length > 0}}">
+        <view class="suggestion-item" wx:for="{{profileData.suggestions}}" wx:key="index">
+          💡 {{item}}
+        </view>
+      </block>
+      <block wx:else>
+        <text class="no-suggestions">暂无学习建议</text>
+      </block>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <button class="action-btn primary" bindtap="goToPractice">
+      🎯 前往练习
+    </button>
+    <button class="action-btn secondary" bindtap="goToLearningStats">
+      🔙  返回
+    </button>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{isLoading}}">
+  <view class="loading-spinner"></view>
+  <text class="loading-text">正在加载知识画像...</text>
+</view>

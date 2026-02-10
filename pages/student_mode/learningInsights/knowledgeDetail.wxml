@@ -1,0 +1,113 @@
+<!-- pages/student_mode/learningInsights/knowledgeDetail.wxml -->
+<view class="container" wx:if="{{!isLoading}}">
+  
+  <!-- 顶部信息卡片 -->
+  <view class="header-card">
+    <view class="knowledge-header">
+      <text class="knowledge-name">{{knowledgePointName}}</text>
+    </view>
+    
+    <!-- 掌握度概览 -->
+    <view class="mastery-overview">
+      <view class="mastery-circle">
+        <text class="mastery-percent">{{currentMasteryPercent}}%</text>
+        <text class="mastery-label">掌握度</text>
+      </view>
+      
+      <view class="stats-grid">
+        <view class="stat-item">
+          <text class="stat-value">{{totalAttempts}}</text>
+          <text class="stat-label">答题次数</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{correctRate}}%</text>
+          <text class="stat-label">正确率</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{masteryLevel}}</text>
+          <text class="stat-label">掌握等级</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- BKT参数信息 -->
+  <view class="section-card">
+    <view class="section-header">
+      <text class="section-title">模型参数</text>
+      <text class="view-btn" bindtap="viewParameters">查看详情</text>
+    </view>
+    
+    <view class="parameters-grid" wx:if="{{bktParameters && bktParameters.bkt_parameters}}">
+      <view class="param-item">
+        <text class="param-label">初始掌握(p_L0)</text>
+        <text class="param-value">{{formattedParams.p_L0}}%</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">学习转移(p_T)</text>
+        <text class="param-value">{{formattedParams.p_T}}%</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">猜测概率(p_G)</text>
+        <text class="param-value">{{formattedParams.p_G}}%</text>
+      </view>
+      <view class="param-item">
+        <text class="param-label">失误概率(p_S)</text>
+        <text class="param-value">{{formattedParams.p_S}}%</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 学习轨迹 -->
+  <view class="section-card">
+    <view class="section-header">
+      <text class="section-title">学习轨迹</text>
+      <text class="subtitle">最近答题记录</text>
+    </view>
+    
+    <view class="traces-list">
+      <block wx:if="{{learningTraces.length > 0}}">
+        <block wx:for="{{learningTraces}}" wx:key="id">
+          <view class="trace-item">
+            <view class="trace-header">
+              <text class="outcome-icon">{{item.outcome_icon}}</text>
+              <text class="outcome-text">{{item.outcome_text}}</text>
+              <text class="trace-time">{{item.formatted_time || item.attempt_time}}</text>
+            </view>
+            
+            <view class="trace-details">
+              <view class="mastery-change">
+                <text class="before">之前: {{item.formatted_mastery_before}}%</text>
+                <text class="arrow">→</text>
+                <text class="after">之后: {{item.formatted_mastery_after}}%</text>
+              </view>
+            </view>
+          </view>
+        </block>
+      </block>
+      
+      <block wx:else>
+        <view class="empty-traces">
+          <text class="empty-icon">📋</text>
+          <text class="empty-text">暂无学习记录</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="action-buttons">
+    <button class="action-btn primary" bindtap="predictNext">
+      🔮 预测下次表现
+    </button>
+    <button class="action-btn secondary" bindtap="generateStudyAdvice">
+      💡 学习建议
+    </button>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{isLoading}}">
+  <view class="loading-spinner"></view>
+  <text class="loading-text">正在加载知识点详情...</text>
+</view>

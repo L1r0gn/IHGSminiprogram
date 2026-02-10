@@ -176,3 +176,75 @@ page {
   font-size: 26rpx;
   color: #1890ff;
 }
+
+/* BKT入口卡片 */
+.bkt-entry-card {
+  background: white;
+  margin: 30rpx 40rpx;
+  padding: 30rpx;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  width: 70%;
+}
+
+.bkt-header {
+  margin-bottom: 30rpx;
+}
+
+.bkt-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.bkt-subtitle {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.bkt-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #f9f9f9;
+  border-radius: 16rpx;
+  padding: 20rpx 0;
+  margin-bottom: 30rpx;
+}
+
+.bkt-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bkt-stat-num {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1890ff;
+  margin-bottom: 8rpx;
+}
+
+.bkt-stat-label {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.bkt-stat-divider {
+  width: 2rpx;
+  height: 40rpx;
+  background: #e8e8e8;
+}
+
+.bkt-view-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}

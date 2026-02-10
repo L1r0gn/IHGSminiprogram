@@ -1,19 +1,35 @@
 <view class="page-container">
   <view class="header-bg"></view>
   
+  <!-- header -->
   <view class="content-wrapper">
     <view class="user-profile">
-      <image class="avatar" bindtap="handleUserProfile" src="{{userInfo.wx_avatar || defaultAvatarUrl}}" mode="aspectFill"></image>
+      <image 
+        class="avatar" 
+        bindtap="handleUserProfile" 
+        src="{{userInfo.wx_avatar || defaultAvatarUrl}}" 
+        mode="aspectFill"
+      ></image>
       <view class="user-info">
         <text class="greeting">下午好, {{userInfo.wx_nickName || '朋友'}}!</text>
         <text class="sub-greeting">开始您今天的学习吧</text>
       </view>
     </view>
 
+    <!-- 快捷功能 -->
     <view class="action-section">
       <view class="section-title">快捷功能</view>
-      <view class="action-grid">
 
+      <!-- <view class="action-grid" wx:if="{{!userId}}">
+        <navigator url="/pages/login/login" class="action-card">
+          <view class="card-content">
+            <text class="card-title">去登陆</text>
+            <text class="card-desc">登录系统</text>
+          </view>
+        </navigator>
+      </view> -->
+
+      <view class="action-grid">
         <navigator url="/pages/user/list/userList" class="action-card">
           <view class="card-content">
             <text class="card-title">信息管理</text>
@@ -21,7 +37,7 @@
           </view>
         </navigator>
 
-        <navigator wx:if="{{isStudent}}"  url="/pages/student_mode/question/search/search" class="action-card">
+        <navigator wx:if="{{isStudent}}" url="/pages/student_mode/question/search/search" class="action-card">
           <view class="card-content">
             <text class="card-title">开始做题</text>
             <text class="card-desc">挑战今日份的题目</text>
@@ -35,14 +51,6 @@
           </view>
         </navigator>
 
-        <!--先不要弃用-->
-        <!-- <view class="action-card">
-          <view class="card-content">
-            <text class="card-title">系统设置</text>
-            <text class="card-desc">个性化您的系统</text>
-          </view> -->
-
-        <!--教师进行班级管理-->
         <navigator wx:if="{{isTeacher}}" url="/pages/classFunction/classManage/classManage" class="action-card">
           <view class="card-content">
             <text class="card-title">班级管理</text>
@@ -50,14 +58,12 @@
           </view>
         </navigator>
 
-        <!--学生加入班级-->
         <navigator wx:if="{{isStudent}}" url="/pages/student_mode/myclass/myclass" class="action-card">
           <view class="card-content">
             <text class="card-title">我的班级</text>
             <text class="card-desc">加入班级，班级事务</text>
           </view>
         </navigator>
-
       </view>
     </view>
   </view>

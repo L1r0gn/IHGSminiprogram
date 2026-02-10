@@ -1,0 +1,329 @@
+/* pages/student_mode/learningInsights/knowledgeDetail.wxss */
+
+.container {
+  padding: 20rpx;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* 顶部信息卡片 */
+.header-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.knowledge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.knowledge-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.toggle-btn {
+  font-size: 24rpx;
+  color: #1890ff;
+  background: #e6f7ff;
+  padding: 10rpx 20rpx;
+  border-radius: 50rpx;
+}
+
+/* 掌握度概览 */
+.mastery-overview {
+  display: flex;
+  align-items: center;
+}
+
+.mastery-circle {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: conic-gradient(#1890ff 0%, #1890ff 65%, #f0f2f5 65%, #f0f2f5 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: 40rpx;
+  position: relative;
+}
+
+.mastery-circle::before {
+  content: '';
+  position: absolute;
+  width: 130rpx;
+  height: 130rpx;
+  border-radius: 50%;
+  background: white;
+}
+
+.mastery-percent {
+  position: relative;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1890ff;
+  z-index: 1;
+}
+
+.mastery-label {
+  position: relative;
+  font-size: 20rpx;
+  color: #999;
+  z-index: 1;
+}
+
+.stats-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 20rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+}
+
+.stat-value {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 章节卡片 */
+.section-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.subtitle {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.view-btn {
+  font-size: 24rpx;
+  color: #1890ff;
+}
+
+/* 参数网格 */
+.parameters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+
+.param-item {
+  padding: 20rpx;
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  text-align: center;
+}
+
+.param-label {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.param-value {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1890ff;
+}
+
+/* 学习轨迹列表 */
+.traces-list {
+  max-height: 600rpx;
+  overflow-y: auto;
+}
+
+.trace-item {
+  padding: 25rpx;
+  margin-bottom: 20rpx;
+  background: #f9f9f9;
+  border-radius: 16rpx;
+  border-left: 6rpx solid #1890ff;
+}
+
+.trace-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+}
+
+.outcome-icon {
+  font-size: 32rpx;
+  margin-right: 15rpx;
+}
+
+.outcome-text {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.trace-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.trace-details {
+  padding-left: 47rpx;
+}
+
+.mastery-change {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+}
+
+.before {
+  color: #999;
+}
+
+.arrow {
+  margin: 0 10rpx;
+  color: #1890ff;
+}
+
+.after {
+  color: #1890ff;
+  font-weight: 500;
+}
+
+/* 空状态 */
+.empty-traces {
+  text-align: center;
+  padding: 60rpx 0;
+}
+
+.empty-icon {
+  font-size: 60rpx;
+  display: block;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 快捷操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 30rpx;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 30rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  box-shadow: 0 6rpx 20rpx rgba(79, 172, 254, 0.3);
+}
+
+.action-btn.secondary {
+  background: white;
+  color: #1890ff;
+  border: 2rpx solid #1890ff;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-spinner {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #f3f3f3;
+  border-top: 6rpx solid #1890ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 30rpx;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 滚动条样式 */
+.traces-list::-webkit-scrollbar {
+  width: 8rpx;
+}
+
+.traces-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4rpx;
+}
+
+.traces-list::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4rpx;
+}
+
+.traces-list::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

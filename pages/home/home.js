@@ -7,6 +7,7 @@ Page({
     defaultAvatarUrl: defaultAvatarUrl,
     isTeacher: false,
     isStudent: false,
+    userId: null,
   },
   onShow() {
     const app = getApp();
