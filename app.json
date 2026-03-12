@@ -1,6 +1,9 @@
 {
   "pages": [
     "pages/home/home",
+    "pages/courses/courses",
+    "pages/analysis/analysis",
+    "pages/profile/profile",
     "pages/login/login",
     "pages/logs/logs",
     "pages/user/list/userList",
@@ -11,9 +14,8 @@
     "pages/student_mode/question/show/show",
     "pages/student_mode/myclass/myclass",
     "pages/student_mode/question/search/search",
-    "pages/student_mode/myclass/doHomework/doHomework",
     "pages/student_mode/myclass/showHomework/showHomework",
-    "pages/student_mode/myclass/homeworkDetail/homeworkDetail",
+    "pages/homework/homework",
     "pages/student_mode/learningInsights/knowledgeProfile",
     "pages/student_mode/learningInsights/knowledgeDetail",
     "pages/classFunction/classManage/classManage",
@@ -35,6 +37,38 @@
     "enablePullDownRefresh": true,
     "backgroundColor": "#efefef",
     "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4f6cf9",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "/assets/icons/home.png",
+        "selectedIconPath": "/assets/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/courses/courses",
+        "text": "课程",
+        "iconPath": "/assets/icons/courses.png",
+        "selectedIconPath": "/assets/icons/courses-active.png"
+      },
+      {
+        "pagePath": "pages/analysis/analysis",
+        "text": "分析",
+        "iconPath": "/assets/icons/analysis.png",
+        "selectedIconPath": "/assets/icons/analysis-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "/assets/icons/profile.png",
+        "selectedIconPath": "/assets/icons/profile-active.png"
+      }
+    ]
   },
   "style": "v2",
   "componentFramework": "glass-easel",

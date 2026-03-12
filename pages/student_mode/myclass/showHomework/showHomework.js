@@ -1,4 +1,5 @@
-// pages/showHomework/showHomework.js
+const app = getApp();
+
 Page({
   data: {
     classInfo: {
@@ -11,38 +12,32 @@ Page({
     homeworks: [],
     currentFilter: 'all',
     filteredHomeworks: [],
-
+    loading: true
   },
 
   onLoad: function (options) {
-    // 可以从options获取班级ID等信息
     console.log('获取到上一个页面的参数', options);
     this.setData({
       'classInfo.name': options.class_name,
       'classInfo.code': options.class_code,
       'classInfo.id': options.class_id,
-      'classInfo.createTime': options.class_created_time.substr(0, 10),
+      'classInfo.createTime': options.class_created_time ? options.class_created_time.substr(0, 10) : '',
       'classInfo.teacher': options.class_teacher,
-    })
+    });
   },
 
   onShow: function () {
-    // 页面显示时刷新数据
-    this.refreshHomeworkList();
     this.loadClassData(this.data.classInfo.id);
   },
 
-  // 加载班级数据
   loadClassData: function (classId) {
-    const app = getApp();
     const token = wx.getStorageSync('accessToken');
-    // 调用API获取班级信息和作业列表 - assignments
     wx.request({
       url: `${app.globalData.globalUrl}/assignment/wx/show_assignment/`,
       method: 'GET',
       header: {
         'Authorization': `Bearer ${token}`,
-        'ClassId': this.data.classInfo.id,
+        'ClassId': classId,
       },
       success: (res) => {
         if (res.statusCode === 401) {
@@ -50,27 +45,63 @@ Page({
           return;
         }
         if (res.data.success) {
-          console.log('收到后端数据:', res.data);
-          this.setData({
-            homeworks: res.data.data
+          const homeworks = (res.data.data || []).map((hw) => {
+            const deadline = new Date(hw.deadline.replace(/-/g, '/'));
+            const now = new Date();
+            const isOverdue = deadline < now;
+
+            let statusText = '';
+            let statusClass = '';
+
+            switch (hw.status) {
+              case 'PENDING':
+                statusText = isOverdue ? '已截止' : '待完成';
+                statusClass = isOverdue ? 'overdue' : 'pending';
+                break;
+              case 'SUBMITTED':
+                statusText = '已提交';
+                statusClass = 'submitted';
+                break;
+              case 'GRADED':
+                statusText = '已批改';
+                statusClass = 'graded';
+                break;
+              case 'ACCEPTED':
+                statusText = '已完成';
+                statusClass = 'accepted';
+                break;
+              case 'WRONG_ANSWER':
+                statusText = '需修改';
+                statusClass = 'wrong';
+                break;
+              default:
+                statusText = hw.status || '未知';
+                statusClass = 'default';
+            }
+
+            return {
+              ...hw,
+              isOverdue: isOverdue,
+              statusText: statusText,
+              statusClass: statusClass,
+              deadlineFormatted: hw.deadline
+            };
           });
-          console.log('收到作业:', this.data.homeworks);
+
+          this.setData({
+            homeworks: homeworks,
+            loading: false
+          });
           this.filterHomeworks(this.data.currentFilter);
         }
       },
       fail: (err) => {
         console.error('加载班级数据失败:', err);
+        this.setData({ loading: false });
       }
     });
   },
 
-  // 刷新作业列表
-  refreshHomeworkList: function () {
-    // 这里可以重新从服务器获取数据
-    console.log('刷新作业列表');
-  },
-
-  // 切换筛选条件
   switchFilter: function (e) {
     const filter = e.currentTarget.dataset.filter;
     this.setData({
@@ -79,7 +110,6 @@ Page({
     this.filterHomeworks(filter);
   },
 
-  // 筛选作业
   filterHomeworks: function (filter) {
     let filtered = [];
 
@@ -88,17 +118,14 @@ Page({
         filtered = this.data.homeworks;
         break;
       case 'PENDING':
-        // console.log('切换为PENDING');
         filtered = this.data.homeworks.filter(hw => hw.status === 'PENDING');
         break;
       case 'SUBMITTED':
-        // console.log('切换为SUBMITTED');
         filtered = this.data.homeworks.filter(hw =>
           hw.status === 'SUBMITTED' || hw.status === 'WRONG_ANSWER' || hw.status === 'ACCEPTED'
         );
         break;
       case 'GRADED':
-        // console.log('切换为GRADED');
         filtered = this.data.homeworks.filter(hw =>
           hw.status === 'GRADED' || hw.status === 'WRONG_ANSWER' || hw.status === 'ACCEPTED'
         );
@@ -106,50 +133,48 @@ Page({
       default:
         filtered = this.data.homeworks;
     }
+
     this.setData({
       filteredHomeworks: filtered
     });
   },
 
-  // 查看作业详情
   viewHomeworkDetail: function (e) {
     const homework = e.currentTarget.dataset.homework;
     wx.navigateTo({
-      url: `/pages/homeworkDetail/homeworkDetail?id=${homework.id}`
+      url: `/pages/homework/homework?id=${homework.id}&mode=view`
     });
   },
 
-  // 开始做作业
   doHomework: function (e) {
     const homeworkId = e.currentTarget.dataset.id;
-    console.log("选择的作业ID:", homeworkId);
     wx.navigateTo({
-      url: `/pages/student_mode/myclass/doHomework/doHomework?id=${homeworkId}`
+      url: `/pages/homework/homework?id=${homeworkId}&mode=do`
     });
   },
 
-  // 查看成绩
   viewGrade: function (e) {
-    const homeworkId = e.currentTarget.dataset.id;
+    const submissionId = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/student_mode/myclass/homeworkDetail/homeworkDetail?id=${homeworkId}`
+      url: `/pages/homework/homework?id=${submissionId}&mode=grade`
     });
   },
 
-  // 下拉刷新
-  onPullDownRefresh: function () {
-    this.refreshHomeworkList();
-    setTimeout(() => {
-      wx.stopPullDownRefresh();
-    }, 1000);
-  },
-
-  // 查看提交
   viewSubmission: function (e) {
     const submissionId = e.currentTarget.dataset.id;
     wx.navigateTo({
-      // 跳转到新建的详情页，并传递 submission_id
-      url: `/pages/student_mode/myclass/homeworkDetail/homeworkDetail?id=${submissionId}`
+      url: `/pages/homework/homework?id=${submissionId}&mode=grade`
     });
   },
+
+  stopPropagation: function () {
+    // 阻止事件冒泡，避免触发卡片的点击事件
+  },
+
+  onPullDownRefresh: function () {
+    this.loadClassData(this.data.classInfo.id);
+    setTimeout(() => {
+      wx.stopPullDownRefresh();
+    }, 1000);
+  }
 });

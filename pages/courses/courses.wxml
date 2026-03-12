@@ -1,0 +1,145 @@
+<view class="page-container">
+  <view class="content-wrapper">
+    <view class="page-header">
+      <text class="page-title">我的课程</text>
+      <text class="page-subtitle" wx:if="{{userInfo && userInfo.user_attribute === 1}}">查看您正在学习的课程</text>
+      <text class="page-subtitle" wx:if="{{userInfo && userInfo.user_attribute === 2}}">查看您管理的课程</text>
+    </view>
+
+    <!-- 教师端：创建课程按钮 -->
+    <view class="create-btn" wx:if="{{userInfo && userInfo.user_attribute === 2}}" bindtap="showCreateCourseModal">
+      <view class="btn-icon">📚</view>
+      <view class="btn-text">
+        <text class="btn-title">创建课程</text>
+        <text class="btn-desc">创建新的教学课程</text>
+      </view>
+      <view class="btn-arrow">›</view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{empty && !isLoading}}">
+      <text class="empty-icon">📚</text>
+      <text class="empty-text">
+        {{userInfo && userInfo.user_attribute === 2 ? '还没有创建任何课程' : '还没有加入任何课程'}}
+      </text>
+      <button class="join-btn" wx:if="{{userInfo && userInfo.user_attribute === 1}}" bindtap="joinClass">加入课程</button>
+      <text class="empty-tip" wx:if="{{userInfo && userInfo.user_attribute === 2}}">点击上方"创建课程"开始创建</text>
+    </view>
+
+    <!-- 课程列表 -->
+    <view class="course-list" wx:if="{{!empty}}">
+      <!-- 教师端：带操作按钮的卡片 -->
+      <block wx:if="{{userInfo && userInfo.user_attribute === 2}}" wx:for="{{classList}}" wx:key="id" wx:for-index="index">
+        <view class="course-item" data-index="{{index}}">
+          <view class="course-header">
+            <view class="course-info">
+              <text class="course-name">{{item.name}}</text>
+              <text class="course-code">教师：{{item.created_by_name || '未知'}}</text>
+              <text class="course-code">班级码：{{item.code}}</text>
+            </view>
+            <view class="course-stats">
+              <text class="student-count">{{item.studentCount || 0}}人</text>
+            </view>
+          </view>
+
+          <!-- 课程操作 -->
+          <view class="action-buttons">
+            <button
+              class="action-btn student-btn"
+              catchtap="manageStudents"
+              data-course="{{item}}"
+            >
+              <text class="btn-icon">👥</text>
+              学生
+            </button>
+            <button
+              class="action-btn homework-btn"
+              catchtap="manageHomework"
+              data-course="{{item}}"
+            >
+              <text class="btn-icon">📝</text>
+              作业
+            </button>
+            <button
+              class="action-btn detail-btn"
+              catchtap="viewCourseDetail"
+              data-course="{{item}}"
+            >
+              <text class="btn-icon">📊</text>
+              详情
+            </button>
+          </view>
+        </view>
+      </block>
+
+      <!-- 学生端：可点击的卡片 -->
+      <block wx:if="{{userInfo && userInfo.user_attribute === 1}}" wx:for="{{classList}}" wx:key="id">
+        <view
+          class="course-item student-card"
+          bindtap="viewClassDetail"
+          data-class="{{item}}"
+        >
+          <view class="course-info">
+            <view class="course-name">{{item.name}}</view>
+            <view class="course-desc">
+              <text class="teacher">教师：{{item.created_by_name || '未知'}}</text>
+              <text class="count">学生：{{item.studentCount || 0}}人</text>
+            </view>
+          </view>
+
+          <view class="course-arrow">→</view>
+        </view>
+      </block>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{isLoading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+
+  <!-- 创建课程弹窗 -->
+  <view class="modal" wx:if="{{showCreateCourseModal}}">
+    <view class="modal-mask" bindtap="hideCreateCourseModal"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">创建课程</text>
+        <view class="modal-close" bindtap="hideCreateCourseModal">×</view>
+      </view>
+
+      <view class="modal-body">
+        <view class="form-group">
+          <text class="form-label">课程名称</text>
+          <input
+            class="form-input"
+            placeholder="请输入课程名称"
+            value="{{newCourseName}}"
+            bindinput="onCourseNameInput"
+            style="width: 88%;"
+          />
+        </view>
+
+        <view class="form-group">
+          <text class="form-label">课程描述</text>
+          <view class="textarea-wrapper">
+            <textarea
+              class="form-textarea"
+              placeholder="请输入课程描述（可选）"
+              value="{{newCourseDesc}}"
+              bindinput="onCourseDescInput"
+              maxlength="100"
+              style="width: 88%;"
+            />
+            <text class="word-count">{{newCourseDesc.length}}/100</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <button class="modal-btn cancel-btn" bindtap="hideCreateCourseModal">取消</button>
+        <button class="modal-btn confirm-btn" bindtap="createCourse">创建</button>
+      </view>
+    </view>
+  </view>
+</view>

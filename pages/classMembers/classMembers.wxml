@@ -36,7 +36,7 @@
               <view class="role-tag" wx:if="{{item.role === 'teacher'}}">教师</view>
             </view>
             <view class="id-row">
-              <text class="student-id">{{item.student_id ? '学号: ' + item.student_id : '暂无学号'}}</text>
+              <text class="student-id">{{item.uid ? '学号: ' + item.uid : '暂无学号'}}</text>
             </view>
           </view>
         </view>

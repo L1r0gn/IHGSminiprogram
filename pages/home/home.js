@@ -7,27 +7,42 @@ Page({
     defaultAvatarUrl: defaultAvatarUrl,
     isTeacher: false,
     isStudent: false,
+    isLoggedIn: false,
     userId: null,
+    greeting: '',
+    systemName: '智能批改作业系统'
   },
   onShow() {
     const app = getApp();
-    const token = wx.getStorageSync('accessToken');
-    const userId = wx.getStorageSync('userId');
 
-    // 检查登录状态
-    if (!token || !userId) {
-      console.log('未登录或userId缺失，停止请求用户信息');
-      this.setData({
-        userInfo: null,
-        isTeacher: false,
-        isStudent: false
+    // 如果 tab 切换了，重新加载页面
+    if (app.globalData.currentTab !== 'home') {
+      app.globalData.currentTab = 'home';
+      wx.reLaunch({
+        url: '/pages/home/home'
       });
-      // 可以选择跳转登录，或者就在当前页显示未登录状态
-      wx.navigateTo({ url: '/pages/login/login' });
       return;
     }
 
-    // 尝试从本地存储获取用户信息，如果没有则留空，让用户点击头像获取
+    const token = wx.getStorageSync('accessToken');
+    const userId = wx.getStorageSync('userId');
+
+    this.updateGreeting();
+
+    // 检查登录状态
+    if (!token || !userId) {
+      console.log('未登录或userId缺失');
+      this.setData({
+        userInfo: null,
+        isTeacher: false,
+        isStudent: false,
+        isLoggedIn: false
+      });
+      return;
+    }
+
+    this.setData({ isLoggedIn: true });
+
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,
       method: 'GET',
@@ -49,12 +64,46 @@ Page({
       },
     })
   },
+  
+  updateGreeting() {
+    const hour = new Date().getHours();
+    let greeting = '';
+    
+    if (hour >= 6 && hour < 12) {
+      greeting = '早上好';
+    } else if (hour >= 12 && hour < 18) {
+      greeting = '中午好';
+    } else {
+      greeting = '晚上好';
+    }
+    
+    this.setData({ greeting });
+  },
+  
+  handleAvatarTap() {
+    wx.switchTab({
+      url: '/pages/profile/profile'
+    });
+  },
+  
+  handleLogin() {
+    wx.navigateTo({
+      url: '/pages/login/login'
+    });
+  },
+  
+  startPractice() {
+    wx.navigateTo({
+      url: '/pages/student_mode/question/search/search'
+    });
+  },
+
   updateView() {
     const attr = Number(this.data.userInfo?.user_attribute);
     console.log('用户状态是：', attr);
     this.setData({
-      isStudent: attr === 1,    // 根据你的业务定义
-      isTeacher: attr === 2   // 根据你的业务定义
+      isStudent: attr === 1,
+      isTeacher: attr === 2
     });
   }
 })

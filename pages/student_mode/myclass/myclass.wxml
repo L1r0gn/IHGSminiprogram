@@ -1,49 +1,52 @@
 <view class="page-container">
-  <!-- 顶部背景 -->
-  <view class="header-bg">
-    <view class="header-content">
+  <view class="content-wrapper">
+    <view class="page-header">
       <text class="page-title">我的班级</text>
       <text class="page-subtitle">已加入 {{classList.length}} 个班级</text>
     </view>
-  </view>
 
-  <view class="content-wrapper">
     <!-- 加入班级按钮 -->
     <view class="join-section" bindtap="showJoinModal">
-      <view class="join-icon">+</view>
       <view class="join-text">
         <text class="join-title">加入班级</text>
         <text class="join-desc">输入班级码加入新班级</text>
       </view>
-      <view class="join-arrow">›</view>
-    </view>
-
-    <!-- 班级列表 -->
-    <view wx:if="{{classList.length > 0}}" class="class-list">
-      <view class="class-section">
-        <text class="section-title">已加入的班级</text>
-        <view class="class-grid">
-          <view class="class-card" wx:for="{{classList}}" wx:key="id" bindtap="viewClassDetail" data-class="{{item}}">
-            <view class="class-icon" style="background: {{item.color}}">
-              <text class="icon-text">{{item.name[0]}}</text>
-            </view>
-            <view class="class-info">
-              <text class="class-name">{{item.name}}</text>
-              <text class="class-code">班级码:{{item.code}}</text>
-              <view class="class-meta">
-              </view>
-            </view>
-          </view>
-        </view>
-      </view>
+      <view class="class-arrow">→</view>
     </view>
 
     <!-- 空状态 -->
-    <view wx:else class="empty-state">
-      <image class="empty-icon" src="" mode="aspectFit"></image>
+    <view class="empty-state" wx:if="{{empty && !isLoading}}">
+      <text class="empty-icon">📚</text>
       <text class="empty-text">暂未加入任何班级</text>
-      <text class="empty-subtext">加入班级后，可以查看课程安排和作业</text>
       <button class="empty-btn" bindtap="showJoinModal">立即加入</button>
+    </view>
+
+    <!-- 班级列表 -->
+    <view class="class-list" wx:if="{{!empty}}">
+      <view
+        class="class-card"
+        wx:for="{{classList}}"
+        wx:key="id"
+        bindtap="viewClassDetail"
+        data-class="{{item}}"
+      >
+        <view class="class-icon" style="background: {{item.color}}">
+          <text class="icon-text">{{item.name[0]}}</text>
+        </view>
+        <view class="class-info">
+          <view class="class-name">{{item.name}}</view>
+          <view class="class-desc">
+            <text class="class-code">班级码: {{item.code}}</text>
+          </view>
+        </view>
+        <view class="class-arrow">→</view>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{isLoading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
     </view>
   </view>
 
@@ -57,10 +60,10 @@
       <view class="modal-body">
         <view class="form-group">
           <text class="form-label">班级码</text>
-          <input 
-            class="form-input" 
-            type="text" 
-            placeholder="请输入班级码" 
+          <input
+            class="form-input"
+            type="text"
+            placeholder="请输入班级码"
             value="{{classCode}}"
             bindinput="onClassCodeInput"
             maxlength="20"
@@ -72,14 +75,6 @@
         <button class="modal-btn cancel" bindtap="hideJoinModal">取消</button>
         <button class="modal-btn confirm" bindtap="joinClass" disabled="{{!classCode}}">加入</button>
       </view>
-    </view>
-  </view>
-
-  <!-- 加载状态 -->
-  <view wx:if="{{isLoading}}" class="loading-mask">
-    <view class="loading-content">
-      <view class="loading-spinner"></view>
-      <text class="loading-text">加载中...</text>
     </view>
   </view>
 </view>

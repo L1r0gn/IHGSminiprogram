@@ -39,7 +39,7 @@
   </view> -->
 
   <!-- 知识点列表 -->
-  <view class="knowledge-list">
+  <scroll-view class="knowledge-list">
     <block wx:if="{{knowledgePoints}}">
       <block wx:for="{{knowledgePoints}}" wx:key="id">
         <view 
@@ -79,7 +79,7 @@
         </text>
       </view>
     </block>
-  </view>
+  </scroll-view>
 
   <!-- 学习建议 -->
   <view class="suggestions-section">

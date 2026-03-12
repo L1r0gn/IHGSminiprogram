@@ -1,100 +1,98 @@
 <view class="page-container">
-  <!-- 用户头像 & 昵称 -->
-  <view class="user-header">
-        <button 
-      class="avatar-btn" 
-      open-type="chooseAvatar" 
-      bindchooseavatar="onChooseAvatar"
-    >
-    <image class="avatar" src="{{userInfo.wx_avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"></image>
-    </button>
-    <input 
-      class="nickname-input" 
-      type="text" 
-      value="{{userInfo.wx_nickName}}" 
-      placeholder="请输入昵称" 
-      bindinput="onNicknameInput"
-    />
-  </view>
-
-  <!-- 基本信息 -->
-  <view class="info-card">
-    <view class="card-title">基本信息</view>
-    <view class="info-list">
-      
-      <view class="info-item">
-        <view class="info-label">性别</view>
-        <picker 
-          mode="selector" 
-          range="{{genderOptions}}" 
-          value="{{genderIndex >= 0 ? genderIndex : 0}}" 
-          bindchange="onGenderChange"
-        >
-          <view class="info-value">
-            {{ genderIndex >= 0 ? genderOptions[genderIndex] : '未设置' }}
-          </view>
-        </picker>
-      </view>
-      
-      <view class="info-item">
-        <view class="info-label">身份</view>
-        <picker 
-          mode="selector" 
-          range="{{userAttributeOptions}}" 
-          value="{{userAttributeIndex >= 0 ? userAttributeIndex : 0}}" 
-          bindchange="onUserAttributeChange"
-        >
-          <view class="info-value">
-            {{ userAttributeIndex >= 0 ? userAttributeOptions[userAttributeIndex] : '未设置' }}
-          </view>
-        </picker>
-      </view>
-
-      <view class="info-item">
-        <view class="info-label">手机号</view>
-        <input 
-          class="info-input" 
-          type="tel" 
-          value="{{userInfo.phone}}" 
-          placeholder="请输入手机号" 
-          bindinput="onPhoneInput"
+  <!-- 头部编辑卡片 -->
+  <view class="user-edit-card">
+    <view class="card-bg"></view>
+    <view class="card-content">
+      <button
+        class="avatar-btn"
+        open-type="chooseAvatar"
+        bindchooseavatar="onChooseAvatar"
+      >
+        <image
+          class="avatar"
+          src="{{userInfo.wx_avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
+          mode="aspectFill"
+        ></image>
+      </button>
+      <view class="user-info">
+        <input
+          class="nickname-input"
+          type="text"
+          value="{{userInfo.wx_nickName}}"
+          placeholder="请输入昵称"
+          bindinput="onNicknameInput"
+          maxlength="20"
         />
       </view>
     </view>
   </view>
 
-  <!-- 微信信息 -->
-  <view class="info-card">
-    <view class="card-title">微信关联信息</view>
+  <!-- 基本信息卡片 -->
+  <view class="info-section">
+    <view class="section-header">
+      <view class="section-title">基本信息</view>
+      <view class="section-line"></view>
+    </view>
     <view class="info-list">
-      <view class="info-item">
-        <view class="info-label">最后登录</view>
-        <view class="info-value">
-          {{ userInfo.last_login_time }}
+      <view class="info-item item-1">
+        <view class="item-icon">👤</view>
+        <view class="item-content">
+          <view class="item-label">性别</view>
+          <picker
+            mode="selector"
+            range="{{genderOptions}}"
+            value="{{genderIndex >= 0 ? genderIndex : 0}}"
+            bindchange="onGenderChange"
+          >
+            <view class="item-value picker-value">
+              {{ userInfo.genderText || '请选择性别' }}
+              <text class="arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <view class="info-item item-2">
+        <view class="item-icon">📱</view>
+        <view class="item-content">
+          <view class="item-label">手机号</view>
+          <input
+            class="item-input"
+            type="number"
+            value="{{userInfo.phone}}"
+            placeholder="请输入手机号"
+            bindinput="onPhoneInput"
+            maxlength="11"
+          />
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 微信信息卡片 -->
+  <view class="info-section">
+    <view class="section-header">
+      <view class="section-title">微信关联信息</view>
+      <view class="section-line"></view>
+    </view>
+    <view class="info-list">
+      <view class="info-item item-3">
+        <view class="item-icon">⏰</view>
+        <view class="item-content">
+          <view class="item-label">最后登录</view>
+          <view class="item-value">
+            {{ userInfo.last_login_time || '未记录' }}
+          </view>
         </view>
       </view>
     </view>
   </view>
 
   <!-- 保存按钮 -->
-  <view class="save-btn-container">
-    <button class="save-btn" bindtap="saveToServer">保存修改</button>
+  <view class="save-container">
+    <button class="save-btn" bindtap="saveToServer">
+      <text class="save-icon">💾</text>
+      <text>保存修改</text>
+    </button>
   </view>
 </view>
-
-<!-- ✅ 修复：弹窗移到最外层，带遮罩 -->
-<!-- <view class="modal-mask" wx:if="{{showCreateModal}}" bindtap="hideCreateClassModal">
-  <view class="modal-content" catchtap="noop">
-    <input 
-      class="modal-input" 
-      placeholder="请输入班级名称（如：高三1班）" 
-      value="{{newClassName}}" 
-      bindinput="onClassInput" 
-      maxlength="20"
-    />
-    <view class="modal-buttons">
-      <button size="mini" bindtap="hideCreateClassModal">取消</button>
-      <button size="mini" type="primary" bindtap="createNewClass">创建</button>
-    </view>
-  </view>
-</view> -->

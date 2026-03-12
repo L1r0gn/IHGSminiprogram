@@ -1,0 +1,150 @@
+<view class="page-container">
+  <view class="content-wrapper">
+    <!-- 页面头部 -->
+    <view class="page-header">
+      <text class="page-title">学习分析</text>
+      <text class="page-subtitle">掌握您的学习进度</text>
+    </view>
+
+    <!-- Tab切换 -->
+    <view class="tab-container">
+      <view 
+        class="tab-item {{currentTab === item.id ? 'active' : ''}}" 
+        wx:for="{{tabs}}" 
+        wx:key="id"
+        bindtap="switchTab"
+        data-tab="{{item.id}}"
+      >
+        <text class="tab-text">{{item.name}}</text>
+      </view>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">正在加载数据...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{empty && !loading}}">
+      <text class="empty-icon">📊</text>
+      <text class="empty-text">暂无数据</text>
+      <text class="empty-desc">开始做题后即可查看分析报告</text>
+      <button class="start-btn" bindtap="startPractice">开始做题</button>
+    </view>
+
+    <!-- BKT分析内容 -->
+    <view class="analysis-content" wx:if="{{!loading && !empty}}">
+      <block wx:if="{{currentTab === 'bkt'}}">
+        <view class="tab-content slide-in {{slideDirection === 'left' ? 'slide-out-right' : ''}}">
+          <!-- BKT概览卡片 -->
+          <view class="overview-cards">
+            <view class="overview-card">
+              <text class="card-value">{{bktData.knowledgeCount}}</text>
+              <text class="card-label">知识点总数</text>
+            </view>
+            <view class="overview-card">
+              <text class="card-value">{{bktData.avgMastery}}%</text>
+              <text class="card-label">平均掌握度</text>
+            </view>
+            <view class="overview-card">
+              <text class="card-value">{{bktData.learningDays}}</text>
+              <text class="card-label">学习天数</text>
+            </view>
+          </view>
+
+          <!-- 知识点掌握列表 -->
+          <view class="section-header">
+            <text class="section-title">知识点掌握情况</text>
+            <text class="more-btn" bindtap="viewMoreKnowledge">查看全部 →</text>
+          </view>
+
+          <view class="knowledge-list">
+            <view
+              class="knowledge-item"
+              wx:for="{{bktData.knowledgePoints}}"
+              wx:key="id"
+              bindtap="viewKnowledgeDetail"
+              data-item="{{item}}"
+            >
+              <view class="knowledge-header">
+                <text class="knowledge-name">{{item.name}}</text>
+                <view class="mastery-badge mastery-{{(item.mastery_probability_formatted || 0) >= 85 ? 'high' : ((item.mastery_probability_formatted || 0) >= 60 ? 'medium' : 'low')}}">
+                  {{item.mastery_probability_formatted || 0}}%
+                </view>
+              </view>
+
+              <view class="knowledge-progress">
+                <view class="progress-bar-bg">
+                  <view
+                    class="progress-bar-fill mastery-{{(item.mastery_probability_formatted || 0) >= 85 ? 'high' : ((item.mastery_probability_formatted || 0) >= 60 ? 'medium' : 'low')}}"
+                    style="width: {{item.mastery_probability_formatted || 0}}%;"
+                  ></view>
+                </view>
+                <text class="knowledge-meta">答题 {{item.total_attempts || 0}} 次</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 做题记录内容 -->
+      <block wx:if="{{currentTab === 'submission'}}">
+        <view class="tab-content slide-in {{slideDirection === 'right' ? 'slide-out-right' : ''}}">
+          <view class="record-overview">
+            <view class="record-card primary">
+              <text class="record-value">{{submissionData.totalCount || 0}}</text>
+              <text class="record-label">总做题数</text>
+            </view>
+            <view class="record-card secondary">
+              <text class="record-value">{{submissionData.avgAccuracy_formatted || 0}}%</text>
+              <text class="record-label">平均正确率</text>
+            </view>
+          </view>
+
+          <view class="section-header">
+            <text class="section-title">提交记录</text>
+            <text class="more-btn" bindtap="viewSubmissionDetail">查看全部 →</text>
+          </view>
+
+          <block wx:if="{{submissionData.submissions && submissionData.submissions.length > 0}}">
+            <view class="submission-list">
+              <view
+                class="submission-item"
+                wx:for="{{submissionData.submissions}}"
+                wx:key="id"
+                bindtap="goToSubmissionDetail"
+                data-id="{{item.id}}"
+              >
+                <view class="submission-header">
+                  <text class="submission-title">{{item.question_title || '未知题目'}}</text>
+                  <view class="submission-status status-{{item.statusClass}}">
+                    {{item.statusText}}
+                  </view>
+                </view>
+                <view class="submission-meta">
+                  <text class="submission-time">{{item.created_at || '未知时间'}}</text>
+                  <text class="submission-score">{{item.score || 0}} 分</text>
+                </view>
+              </view>
+            </view>
+
+            <!-- 加载更多提示 -->
+            <view class="load-more" wx:if="{{loadingMore}}">
+              <text>加载中...</text>
+            </view>
+            <view class="load-more" wx:elif="{{!hasMore}}">
+              <text>只显示前20条内容</text>
+            </view>
+          </block>
+
+          <block wx:else>
+            <view class="empty-list">
+              <text class="empty-list-text">暂无做题记录</text>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

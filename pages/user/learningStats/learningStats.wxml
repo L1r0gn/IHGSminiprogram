@@ -1,98 +1,65 @@
-<view class="container">
-  <!-- 头部概览卡片 -->
-  <view class="overview-card">
-    <view class="user-info">
-      <view class="greeting">👋 嗨，{{userInfo.nickName || '同学'}}</view>
-      <view class="subtitle">这是你的AI学习能力分析报告</view>
+<view class="page-container">
+  <view class="content-wrapper">
+    <!-- 页面头部 -->
+    <view class="page-header">
+      <text class="page-title">提交记录</text>
     </view>
-    
-    <view class="stats-row">
-      <view class="stat-item">
-        <text class="stat-num">{{stats.avg_mastery || 0}}</text>
-        <text class="stat-label">平均能力值</text>
-      </view>
-      <view class="stat-divider"></view>
-      <view class="stat-item">
-        <text class="stat-num">{{stats.total_questions || 0}}</text>
-        <text class="stat-label">刷题数量</text>
-      </view>
-    </view>
-  </view>
 
-  <!-- BKT知识画像入口 -->
-  <view class="bkt-entry-card">
-    <view class="bkt-header">
-      <text class="bkt-title">🎯 BKT知识画像</text>
-      <text class="bkt-subtitle">基于贝叶斯知识追踪算法的个性化学习分析</text>
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">正在加载数据...</text>
     </view>
-    
-    <view class="bkt-stats">
-      <view class="bkt-stat-item">
-        <text class="bkt-stat-num">{{bktStats.knowledgeCount || 0}}</text>
-        <text class="bkt-stat-label">知识点数</text>
-      </view>
-      <view class="bkt-stat-divider"></view>
-      <view class="bkt-stat-item">
-        <text class="bkt-stat-num">{{bktStats.avgMastery}}%</text>
-        <text class="bkt-stat-label">平均掌握度</text>
-      </view>
-      <view class="bkt-stat-divider"></view>
-      <view class="bkt-stat-item">
-        <text class="bkt-stat-num">{{bktStats.learningDays || 0}}</text>
-        <text class="bkt-stat-label">学习天数</text>
-      </view>
-    </view>
-    
-    <button class="bkt-view-btn" bindtap="viewBKTProfile">
-      查看我的知识画像
-    </button>
-  </view>
 
-  <!-- 知识点列表区域 -->
-  <view class="section-title">
-    <text class="icon">📊</text> 
-    <text class="stat-title">知识点掌握详情</text>
-  </view>
-
-  <scroll-view scroll-y class="list-container">
-    <block wx:if="{{stats.stats_list && stats.stats_list.length > 0}}">
-      <view class="kp-item" wx:for="{{stats.stats_list}}" wx:key="id">
-        <view class="kp-header">
-          <text class="kp-name">{{item.name}}</text>
-          <text class="kp-score {{item.score >= 4 ? 'high' : (item.score >= 2.5 ? 'mid' : 'low')}}">{{item.score}} 分</text>
+    <!-- 做题记录内容 -->
+    <view class="analysis-content" wx:if="{{!loading}}">
+      <view class="record-overview">
+        <view class="record-card primary">
+          <text class="record-value">{{submissionData.totalCount || 0}}</text>
+          <text class="record-label">总做题数</text>
         </view>
-        
-        <!-- 进度条背景 -->
-        <view class="progress-bg">
-          <!-- 进度条前景 -->
-          <view 
-            class="progress-bar {{item.score >= 4 ? 'bg-green' : (item.score >= 2.5 ? 'bg-orange' : 'bg-red')}}" 
-            style="width: {{item.score_percent}}%"
-          ></view>
-        </view>
-        
-        <view class="kp-footer">
-          <text class="kp-desc">基于 {{item.count}} 次练习分析</text>
-          <text class="kp-level">
-            {{item.score >= 4.5 ? '精通' : (item.score >= 3.5 ? '熟练' : (item.score >= 2.5 ? '掌握' : '入门'))}}
-          </text>
+        <view class="record-card secondary">
+          <text class="record-value">{{submissionData.avgAccuracy_formatted || 0}}%</text>
+          <text class="record-label">平均正确率</text>
         </view>
       </view>
-    </block>
-    
-    <block wx:else>
-      <view class="empty-state">
-        <image class="empty-img" src="/images/empty_chart.png" mode="aspectFit" wx:if="{{false}}"></image>
-        <text>暂无数据，快去刷题积累数据吧！</text>
-        <navigator url="/pages/question/show/show" class="go-btn">去刷题</navigator>
-      </view>
-    </block>
-  </scroll-view>
-  
-  <!-- 底部链接：查看详细提交记录 -->
-  <view class="footer-link">
-    <navigator url="/pages/user/mySubmissions/mySubmissions" class="link-text">
-      查看详细做题历史 >
-    </navigator>
+
+      <block wx:if="{{submissionData.submissions && submissionData.submissions.length > 0}}">
+        <view class="submission-list">
+          <view
+            class="submission-item"
+            wx:for="{{submissionData.submissions}}"
+            wx:key="id"
+            bindtap="goToSubmissionDetail"
+            data-id="{{item.id}}"
+          >
+            <view class="submission-header">
+              <text class="submission-title">{{item.question_title || '未知题目'}}</text>
+              <view class="submission-status status-{{item.statusClass}}">
+                {{item.statusText}}
+              </view>
+            </view>
+            <view class="submission-meta">
+              <text class="submission-time">{{item.created_at || '未知时间'}}</text>
+              <text class="submission-score">{{item.score || 0}} 分</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 加载更多提示 -->
+        <view class="load-more" wx:if="{{loadingMore}}">
+          <text>加载中...</text>
+        </view>
+        <view class="load-more" wx:elif="{{!hasMore}}">
+          <text>没有更多了</text>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="empty-list">
+          <text class="empty-list-text">暂无做题记录</text>
+        </view>
+      </block>
+    </view>
   </view>
 </view>

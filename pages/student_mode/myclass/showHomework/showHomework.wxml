@@ -1,148 +1,154 @@
-<!-- pages/classHomework/classHomework.wxml -->
-<!-- 班级信息头部 -->
-<view class="class-header">
-  <view class="class-name">{{classInfo.name}}</view>
-  <view class="class-code">{{classInfo.code}}</view>
-</view>
-
-<!-- 班级基本信息 -->
-<view class="class-info-card">
-  <view class="info-row">
-    <text class="info-label">任课老师</text>
-    <text class="info-value">{{classInfo.classInfo.teacher || '未知任课老师'}}</text>
-  </view>
-  <view class="info-row">
-    <text class="info-label">创建时间</text>
-    <text class="info-value">{{classInfo.createTime}}</text>
-  </view>
-  <view class="info-row">
-    <text class="info-label">班级描述</text>
-    <text class="info-value">暂无描述</text>
-  </view>
-</view>
-
-<!-- 作业列表 -->
-<view class="homework-section">
-  <view class="section-header">
-    <text class="section-title">作业列表</text>
-    <text class="homework-count">共{{homeworks.length}}个作业</text>
-  </view>
-
-  <!-- 作业筛选 -->
-  <view class="filter-tabs">
-    <view 
-      class="filter-tab {{currentFilter === 'all' ? 'active' : ''}}" 
-      bindtap="switchFilter" 
-      data-filter="all"
-    >
-      全部
-    </view>
-    <view 
-      class="filter-tab {{currentFilter === 'PENDING' ? 'active' : ''}}" 
-      bindtap="switchFilter" 
-      data-filter="PENDING"
-    >
-      待完成
-    </view>
-    <view 
-      class="filter-tab {{currentFilter === 'SUBMITTED' ? 'active' : ''}}" 
-      bindtap="switchFilter" 
-      data-filter="SUBMITTED"
-    >
-      已提交
-    </view>
-    <view 
-      class="filter-tab {{currentFilter === 'GRADED' ? 'active' : ''}}" 
-      bindtap="switchFilter" 
-      data-filter="GRADED"
-    >
-      已批改
+<view class="page-container">
+  <!-- 班级头部卡片 -->
+  <view class="class-header-card">
+    <view class="header-content">
+      <view class="class-info">
+        <view class="class-name">{{classInfo.name}}</view>
+        <view class="class-code">{{classInfo.code}}</view>
+      </view>
+      <view class="class-meta">
+        <view class="meta-item">
+          <text class="meta-icon">👨‍🏫</text>
+          <text class="meta-text">{{classInfo.teacher || '未知'}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-icon">📅</text>
+          <text class="meta-text">{{classInfo.createTime || '未知'}}</text>
+        </view>
+      </view>
     </view>
   </view>
 
   <!-- 作业列表 -->
-  <view class="homework-list">
-    <view 
-      wx:for="{{filteredHomeworks}}" 
-      wx:key="id" 
-      class="homework-card {{item.status}}"
-      bindtap="viewHomeworkDetail"
-      data-homework="{{item}}"
-    >
-      <view class="homework-header">
-        <view class="homework-title">{{item.title}}</view>
-        <view class="homework-status {{item.status}}">
-          {{item.status_text}}
-        </view>
+  <view class="homework-section">
+    <!-- 筛选标签 -->
+    <view class="filter-tabs">
+      <view
+        class="filter-tab {{currentFilter === 'all' ? 'active' : ''}}"
+        bindtap="switchFilter"
+        data-filter="all"
+      >
+        全部
       </view>
-      
-      <view class="homework-content">
-        <text class="homework-desc">{{item.description}}</text>
+      <view
+        class="filter-tab {{currentFilter === 'PENDING' ? 'active' : ''}}"
+        bindtap="switchFilter"
+        data-filter="PENDING"
+      >
+        待完成
       </view>
-      
-        <view class="meta-item">
-          <text class="meta-icon">📅DDL:</text>
-          <text class="meta-text">{{item.deadline}}</text>
-        </view>
-        <view class="meta-item">
-          <text class="meta-icon">👨‍🏫:</text>
-          <text class="meta-text">{{item.teacher_name}}</text>
-        </view>
-        <view class="meta-item" wx:if="{{item.SUBMITTEDAt}}">
-          <text class="meta-icon">⏰:</text>
-          <text class="meta-text">提交：{{item.SUBMITTEDAt}}</text>
-        </view>
-        <view class="meta-item" wx:if="{{item.score !== null}}">
-          <text class="meta-icon">📝:</text>
-          <text class="meta-text">分数：{{item.score}}分</text>
-        </view>
-
-      <!-- 操作按钮 -->
-      <view class="homework-actions">
-        <button 
-          wx:if="{{item.status === 'PENDING'}}" 
-          class="btn-primary" 
-          bindtap="doHomework"
-          data-id="{{item.id}}"
-        >
-          开始作业
-        </button>
-      
-        <button 
-          wx:if="{{item.status === 'GRADED'}}" 
-          class="btn-secondary" 
-          bindtap="viewSubmission"
-          data-id="{{item.id}}"
-        >
-          查看提交
-        </button>
-        <button 
-          wx:if="{{item.status === 'ACCEPTED'}}" 
-          class="btn-success" 
-          bindtap="viewGrade"
-          data-id="{{item.id}}"
-        >
-          查看成绩
-        </button>
-
-        <button 
-          wx:if="{{item.status === 'expired'}}" 
-          class="btn-disabled" 
-          disabled
-        >
-          已过期
-        </button>
+      <view
+        class="filter-tab {{currentFilter === 'SUBMITTED' ? 'active' : ''}}"
+        bindtap="switchFilter"
+        data-filter="SUBMITTED"
+      >
+        已提交
+      </view>
+      <view
+        class="filter-tab {{currentFilter === 'GRADED' ? 'active' : ''}}"
+        bindtap="switchFilter"
+        data-filter="GRADED"
+      >
+        已批改
       </view>
     </view>
-  </view>
 
-  <!-- 空状态 -->
-  <view wx:if="{{filteredHomeworks.length === 0}}" class="empty-state">
-    <image src="" class="empty-image"></image>
-    <text class="empty-text">
-      {{currentFilter === 'all' ? '暂无作业' : 
-        currentFilter === 'PENDING' ? '暂无待完成作业' :
-        currentFilter === 'SUBMITTED' ? '暂无已提交作业' : '暂无已批改作业'}}
-    </text>
+    <!-- 作业列表 -->
+    <view class="homework-list">
+      <view
+        wx:for="{{filteredHomeworks}}"
+        wx:key="id"
+        class="homework-card"
+        bindtap="viewHomeworkDetail"
+        data-homework="{{item}}"
+      >
+        <view class="card-header">
+          <view class="card-title">{{item.title}}</view>
+          <view class="status-badge {{item.statusClass}}">
+            {{item.statusText}}
+          </view>
+        </view>
+
+        <view class="card-content">
+          <view class="homework-desc">{{item.description}}</view>
+        </view>
+
+        <view class="card-meta">
+          <view class="meta-row">
+            <view class="meta-item">
+              <text class="meta-icon">📅</text>
+              <text class="meta-text">{{item.deadlineFormatted}}</text>
+            </view>
+            <view class="meta-item">
+              <text class="meta-icon">👨‍🏫</text>
+              <text class="meta-text">{{item.teacher_name}}</text>
+            </view>
+          </view>
+          <view wx:if="{{item.SUBMITTEDAt}}" class="meta-row">
+            <view class="meta-item">
+              <text class="meta-icon">⏰</text>
+              <text class="meta-text">提交：{{item.SUBMITTEDAt}}</text>
+            </view>
+          </view>
+          <view wx:if="{{item.score !== null}}" class="meta-row">
+            <view class="meta-item">
+              <text class="meta-icon">📝</text>
+              <text class="meta-text">分数：{{item.score}}分</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="card-actions">
+          <button
+            wx:if="{{item.status === 'PENDING' && !item.isOverdue}}"
+            class="action-btn btn-primary"
+            catchtap="doHomework"
+            data-id="{{item.id}}"
+          >
+            开始作业
+          </button>
+
+          <button
+            wx:if="{{item.status === 'PENDING' && item.isOverdue}}"
+            class="action-btn btn-primary"
+            catchtap="viewHomeworkDetail"
+            data-homework="{{item}}"
+          >
+            查看作业
+          </button>
+
+          <button
+            wx:if="{{item.status === 'GRADED'}}"
+            class="action-btn btn-secondary"
+            bindtap="viewSubmission"
+            data-id="{{item.id}}"
+            catchtap="stopPropagation"
+          >
+            查看提交
+          </button>
+
+          <button
+            wx:if="{{item.status === 'ACCEPTED'}}"
+            class="action-btn btn-success"
+            bindtap="viewGrade"
+            data-id="{{item.id}}"
+            catchtap="stopPropagation"
+          >
+            查看成绩
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{filteredHomeworks.length === 0}}" class="empty-state">
+      <view class="empty-icon">📋</view>
+      <view class="empty-text">
+        {{currentFilter === 'all' ? '暂无作业' :
+          currentFilter === 'PENDING' ? '暂无待完成作业' :
+          currentFilter === 'SUBMITTED' ? '暂无已提交作业' : '暂无已批改作业'}}
+      </view>
+    </view>
   </view>
 </view>

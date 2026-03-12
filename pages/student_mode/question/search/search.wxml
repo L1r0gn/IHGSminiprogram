@@ -30,21 +30,16 @@
     </picker> -->
   </view>
 
-  <!-- 随机练习入口 -->
-  <view class="random-entry" bindtap="goToRandomPractice">
-    <text>🎲 不想挑题？直接开始随机练习</text>
-    <text class="go-icon">></text>
-  </view>
-
   <!-- 题目列表 -->
   <scroll-view scroll-y class="question-list">
     <block wx:if="{{questionList.length > 0}}">
-      <view 
-        class="question-item" 
-        wx:for="{{questionList}}" 
+      <view
+        class="question-item"
+        wx:for="{{questionList}}"
         wx:key="id"
         bindtap="goToQuestion"
         data-id="{{item.id}}"
+        style="animation-delay: {{index * 0.05}}s"
       >
         <view class="q-header">
           <view class="q-tags">
@@ -74,4 +69,10 @@
       </view>
     </block>
   </scroll-view>
+
+  <!-- 随机练习入口 -->
+  <view class="random-entry" bindtap="goToRandomPractice">
+    <text>🎲 不想挑题？直接开始随机练习</text>
+    <text class="go-icon">></text>
+  </view>
 </view>

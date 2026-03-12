@@ -1,7 +1,9 @@
 /* pages/question/show/show.wxss */
 
 page {
-  padding-bottom: 120px; /* 为底部的固定按钮留出空间 */
+  background: #fafbfc;
+  min-height: 100vh;
+  padding-bottom: 0;
 }
 
 /* Katex 公式样式 */
@@ -21,85 +23,109 @@ page {
 
 /* 题目容器样式 */
 .question-container {
-  padding: 20px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  margin: 15px;
-  min-height: 100px;
+  padding: 20px 16px;
+  background: #fff;
+  border-radius: 12px;
+  margin: 16px;
   line-height: 1.6;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.06);
+  animation: fadeInUp 0.4s ease-out;
 }
 
 /* --- 选择题样式 --- */
 .options-container {
+  position: fixed;
+  bottom: 100px;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
   display: flex;
-  padding: 0 20px;
-  margin-top: 20px;
   justify-content: space-around;
-  flex-wrap: wrap;
+  box-shadow: 0 -4px 16px rgba(102, 126, 234, 0.08);
+  z-index: 99;
+  animation: fadeInUp 0.5s ease-out;
 }
+
 .option-item {
-  width: 40px;
-  height: 40px;
-  margin-bottom: 12px;
-  border: 1px solid #e0e0e0;
+  width: 48px;
+  height: 48px;
+  border: 2px solid #e8ecf1;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fafbfc;
 }
+
+.option-item:active {
+  transform: scale(0.92);
+}
+
 .option-selected {
-  background-color: #ebf5ff;
-  border-color: #1890ff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
   transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.35);
 }
+
 .option-id {
-  font-weight: bold;
-  color: #1890ff;
-  font-size: 20px;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.option-selected .option-id {
+  color: #fff;
 }
 
 /* --- 主观题（图片上传）样式 --- */
 .subjective-container {
-  padding: 0 20px;
+  padding: 0 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  animation: fadeInUp 0.5s ease-out;
 }
 .image-preview-container {
   width: 100%;
-  min-height: 150px;
-  border: 2rpx dashed #d9d9d9;
-  border-radius: 8px;
+  min-height: 200px;
+  border: 2px dashed #d0d7de;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
-  background-color: #fafafa;
-  padding: 10px;
+  background-color: #fafbfc;
+  padding: 16px;
 }
 .image-preview {
   max-width: 100%;
   max-height: 400px;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 .upload-button {
-  background-color: #ffffff;
-  color: #1890ff;
-  border: 1px solid #1890ff !important;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 16px;
-  width: 80%;
+  background-color: #fff;
+  color: #667eea;
+  border: 2px solid #667eea !important;
+  border-radius: 12px;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  width: 85%;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
 }
 .upload-button:active {
-  background-color: #f0f8ff;
+  background-color: #f5f6fa;
+  transform: scale(0.98);
 }
 .upload-tip {
-  font-size: 12px;
-  color: #999;
-  margin-top: 10px;
+  font-size: 13px;
+  color: #95a5a6;
+  margin-top: 12px;
 }
 
 /* --- 底部固定按钮样式 --- */
@@ -109,31 +135,65 @@ page {
   left: 0;
   right: 0;
   display: flex;
-  gap: 15px;
-  padding: 15px;
-  background-color: #ffffff;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #fff;
   border-top: 1px solid #f0f0f0;
-  padding-bottom: max(15px, env(safe-area-inset-bottom)); /* 适配 iPhone X 等全面屏底部安全区域 */
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
   z-index: 100;
+  box-shadow: 0 -4px 16px rgba(102, 126, 234, 0.08);
 }
 .submit-button {
-  flex: 1; /* 让两个按钮平分宽度 */
-  background: #1890ff;
+  flex: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  border-radius: 6px;
-  padding: 12px 0;
+  border-radius: 12px;
+  padding: 14px 0;
   text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
+
+.submit-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease-out, height 0.4s ease-out;
+}
+
+.submit-button:active::after {
+  width: 300px;
+  height: 300px;
+}
+
 .submit-button[disabled] {
-  background: #ccc;
-  color: #999;
+  background: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
   box-shadow: none;
+  opacity: 0.6;
 }
+
 .submit-button:active:not([disabled]) {
-  background: #096dd9;
-  transform: scale(0.98);
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.35);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

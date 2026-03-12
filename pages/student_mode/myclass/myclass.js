@@ -6,7 +6,7 @@ Page({
     classCode: ''
   },
 
-  onLoad() {
+  onShow() {
     this.fetchJoinedClasses();
   },
 
@@ -201,10 +201,10 @@ Page({
   getRandomColor() {
     const colors = [
       'linear-gradient(135deg, #5b86e5 0%, #36d1dc 100%)',
-      'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
-      'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
-      'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-      'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'
+      // 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
+      // 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+      // 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+      // 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'
     ];
     return colors[Math.floor(Math.random() * colors.length)];
   }

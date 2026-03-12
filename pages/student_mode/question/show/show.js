@@ -230,7 +230,10 @@ Page({
           header: {
             'Authorization': `Bearer ${token}`,
           },
-          data : post_data,
+          data : {
+            from:'question',
+            ...post_data
+          },
           success: (res) => {
             if (res.statusCode === 401) {
               app.handleTokenExpired();

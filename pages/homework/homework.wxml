@@ -1,0 +1,130 @@
+<view class="page-container">
+  <!-- 加载状态 -->
+  <view wx:if="{{isLoading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 内容区域 -->
+  <view wx:else class="content-wrapper">
+    <!-- 作业头部 -->
+    <view class="homework-header">
+      <view class="header-title">{{homeworkDetail.title || '作业详情'}}</view>
+      <view class="header-meta">
+        <view class="status-badge {{statusClass}}">{{statusText}}</view>
+        <view class="deadline" wx:if="{{homeworkDetail.deadline}}">
+          截止时间: {{homeworkDetail.deadline}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 成绩卡片 (仅在查看成绩模式或有分数时显示) -->
+    <view wx:if="{{mode === 'grade' || score !== null}}" class="score-card">
+      <view class="score-content">
+        <view class="score-icon">📊</view>
+        <view class="score-info">
+          <view class="score-label">本次得分</view>
+          <view class="score-value">{{score !== null ? score : '-'}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 题目卡片 -->
+    <view class="question-card">
+      <view class="card-header">
+        <view class="card-title">题目内容</view>
+        <view class="question-type">{{homeworkDetail.problem_type || '题目'}}</view>
+      </view>
+      <view class="question-content">
+        <rich-text nodes="{{resolvedProblemContent}}"></rich-text>
+      </view>
+    </view>
+
+    <!-- 学生答案卡片 (仅在已有答案时显示) -->
+    <view wx:if="{{(statusClass != 'pending') && (electedAnswer || submitted_image_path || studentAnswerContent)}}" class="answer-card">
+      <view class="card-header">
+        <view class="card-title">我的答案</view>
+      </view>
+
+      <!-- 选择题答案显示 -->
+      <view wx:if="{{homeworkDetail.problem_type === '选择'}}" class="choice-answer">
+        <view wx:if="{{mode === 'do'}}" class="choice-list">
+          <view
+            wx:for="{{options}}"
+            wx:key="id"
+            class="choice-item {{item.selected ? 'choice-selected' : ''}}"
+            bindtap="selectAnswer"
+            data-id="{{item.id}}"
+          >
+            <view class="choice-label">{{item.id}}</view>
+          </view>
+        </view>
+        <view wx:elif="{{selectedAnswer}}" class="choice-display">
+          <text class="choice-text">已选：{{selectedAnswer}}</text>
+        </view>
+      </view>
+
+      <!-- 图片题 -->
+      <view wx:if="{{homeworkDetail.problem_type === '图片' || homeworkDetail.problem_type === '拍照' || homeworkDetail.problem_type === '简答' || homeworkDetail.problem_type === '填空'}}" class="image-answer-area">
+        <view wx:if="{{submitted_image_path}}" class="uploaded-image-container" bindtap="previewImage">
+          <image class="uploaded-image" src="{{submitted_image_path}}" mode="aspectFit"></image>
+          <view class="image-overlay">
+            <text class="overlay-text">点击查看</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 主观题/填空题文本答案 -->
+      <view wx:if="{{homeworkDetail.problem_type === '主观' && studentAnswerContent}}" class="text-answer-display">
+        <text class="answer-text">{{studentAnswerContent}}</text>
+      </view>
+    </view>
+
+    <!-- 做题模式下的答案输入区域 (在待完成状态下显示) -->
+    <view wx:if="{{mode === 'do' && (statusText === '待完成') && !isOverdue}}" class="answer-card">
+      <view class="card-header">
+        <view class="card-title">提交答案</view>
+      </view>
+
+      <!-- 选择题答案选择 -->
+      <view wx:if="{{homeworkDetail.problem_type === '选择'}}" class="choice-answer">
+        <view class="choice-list">
+          <view
+            wx:for="{{options}}"
+            wx:key="id"
+            class="choice-item {{item.selected ? 'choice-selected' : ''}}"
+            bindtap="selectAnswer"
+            data-id="{{item.id}}"
+          >
+            <view class="choice-label">{{item.id}}</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 图片题上传 -->
+      <view wx:if="{{homeworkDetail.problem_type === '图片' || homeworkDetail.problem_type === '拍照' || homeworkDetail.problem_type === '简答' || homeworkDetail.problem_type === '填空'}}" class="image-answer-area">
+        <view class="upload-section">
+          <button class="upload-btn" bindtap="uploadImage">
+            <text class="btn-icon">📷</text>
+            <text class="btn-text">上传答案</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 批改反馈卡片 -->
+    <view wx:if="{{feedback}}" class="feedback-card">
+      <view class="card-header">
+        <view class="card-title">老师反馈</view>
+      </view>
+      <view class="feedback-content">
+        <text class="feedback-text">{{feedback}}</text>
+      </view>
+    </view>
+
+    <!-- 底部操作按钮 (仅待完成状态且未过期显示) -->
+    <view wx:if="{{mode === 'do' && statusText === '待完成' && !isOverdue}}" class="footer-actions">
+      <button class="submit-btn" bindtap="onSubmit">提交作业</button>
+    </view>
+  </view>
+</view>

@@ -31,15 +31,14 @@
 
 
 <view class="submit-container">
+  <button class="submit-button" bindtap='getRandomQuestion'>
+    换一题
+  </button>
   <button 
     class="submit-button" 
     bindtap="submitAnswer" 
     disabled="{{(problem_type === '选择' && !selectedAnswer) || (problem_type !== '选择' && !submitted_image_path)}}"
   >
     提交答案
-  </button>
-  
-  <button class="submit-button" bindtap='getRandomQuestion'>
-    换一题
   </button>
 </view>

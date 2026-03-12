@@ -1,49 +1,86 @@
-<view class="page-container">
-  <view class="user-header">
-    <view class="header-bg"></view>
-    <image class="avatar" src="{{userInfo.wx_avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="widthFix"></image>
-    <view class="user-name">{{userInfo.wx_nickName ||'未设置昵称'}}</view>
-    <navigator url="/pages/user/edit/edit" class="edit-btn">
-      <text>编辑资料</text>
-    </navigator>
+<view class="page-container {{animationClass}}">
+  <!-- 头部用户卡片 -->
+  <view class="user-card">
+    <view class="card-bg"></view>
+    <view class="card-content">
+      <image
+        class="avatar"
+        src="{{userInfo.wx_avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}"
+        mode="aspectFill"
+      ></image>
+      <view class="user-info">
+        <view class="user-name">{{userInfo.wx_nickName || '未设置昵称'}}</view>
+        <view class="user-id">ID: {{userInfo.id || '-'}}</view>
+      </view>
+      <navigator url="/pages/user/edit/edit" class="edit-btn">
+        <text class="icon">✎</text>
+        <text>编辑资料</text>
+      </navigator>
+    </view>
   </view>
 
-  <view class="info-card">
-    <view class="card-title">基本信息</view>
-    <view class="info-list">
-      <view class="info-item">
-        <view class="info-label">手机号</view>
-        <view class="info-value">{{userInfo.phone || '未绑定'}}</view>
+  <!-- 统计卡片 -->
+  <view class="stats-container">
+    <view class="stat-card stat-1">
+      <view class="stat-icon">📅</view>
+      <view class="stat-content">
+        <view class="stat-label">注册天数</view>
+        <view class="stat-value">{{userInfo.registerDays}}</view>
       </view>
+    </view>
+    <view class="stat-card stat-2">
+      <view class="stat-icon">🎯</view>
+      <view class="stat-content">
+        <view class="stat-label">用户身份</view>
+        <view class="stat-value">{{userInfo.attributeText}}</view>
+      </view>
+    </view>
+  </view>
 
-      <view class="info-item">
-        <view class="info-label">性别</view>
-        <view class="info-value">
-          <block wx:if="{{userInfo.gender === 1}}">男</block>
-          <block wx:elif="{{userInfo.gender === 2}}">女</block>
-          <block wx:else>未设置</block>
+  <!-- 基本信息卡片 -->
+  <view class="info-section">
+    <view class="section-header">
+      <view class="section-title">基本信息</view>
+      <view class="section-line"></view>
+    </view>
+    <view class="info-list">
+      <view class="info-item item-1">
+        <view class="item-icon">📱</view>
+        <view class="item-content">
+          <view class="item-label">手机号</view>
+          <view class="item-value">{{userInfo.phone || '未绑定'}}</view>
         </view>
       </view>
-
-      <view class="info-item">
-        <view class="info-label">身份</view>
-        <view class="info-value">
-          <block wx:if="{{userInfo.user_attribute === 1}}">学生</block>
-          <block wx:elif="{{userInfo.user_attribute === 2}}">教师</block>
-          <block wx:elif="{{userInfo.user_attribute === 3}}">管理员</block>
-          <block wx:elif="{{userInfo.user_attribute === 4}}">超级管理员</block>
-          <block wx:else>未设置</block>
+      <view class="info-item item-2">
+        <view class="item-icon">👤</view>
+        <view class="item-content">
+          <view class="item-label">性别</view>
+          <view class="item-value">{{userInfo.genderText}}</view>
+        </view>
+      </view>
+      <view class="info-item item-3">
+        <view class="item-icon">🏫</view>
+        <view class="item-content">
+          <view class="item-label">注册时间</view>
+          <view class="item-value">{{userInfo.date_joined || '未记录'}}</view>
         </view>
       </view>
     </view>
   </view>
 
-  <view class="info-card">
-    <view class="card-title">微信关联信息</view>
+  <!-- 微信关联信息卡片 -->
+  <view class="info-section">
+    <view class="section-header">
+      <view class="section-title">微信关联信息</view>
+      <view class="section-line"></view>
+    </view>
     <view class="info-list">
-      <view class="info-item">
-        <view class="info-label">最后登录</view>
-        <view class="info-value">{{userInfo.last_login_time ? userInfo.last_login_time : '未记录'}}</view>
+      <view class="info-item item-4">
+        <view class="item-icon">⏰</view>
+        <view class="item-content">
+          <view class="item-label">最后登录</view>
+          <view class="item-value">{{userInfo.last_login_time ? userInfo.last_login_time : '未记录'}}</view>
+        </view>
       </view>
     </view>
   </view>

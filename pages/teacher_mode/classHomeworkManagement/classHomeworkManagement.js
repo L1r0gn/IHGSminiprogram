@@ -8,6 +8,37 @@ Page({
   },
 
   /**
+   * 格式化日期
+   */
+  formatDateTime: function(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const isThisYear = date.getFullYear() === now.getFullYear();
+    
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    
+    if (isThisYear) {
+      return `${month}-${day} ${hours}:${minutes}`;
+    } else {
+      return `${date.getFullYear()}-${month}-${day}`;
+    }
+  },
+
+  /**
+   * 判断作业是否过期
+   */
+  isExpired: function(deadline) {
+    if (!deadline) return false;
+    const deadlineTime = new Date(deadline).getTime();
+    const now = new Date().getTime();
+    return now > deadlineTime;
+  },
+
+  /**
    * 页面加载时，获取class_id
    */
   onLoad: function (options) {
@@ -59,8 +90,14 @@ Page({
         if (res.statusCode === 200) {
           // 假设后端返回的数据在 res.data
           console.log('收到后端数据: ',res.data.data);
+          const homeworkList = (res.data.data || []).map(item => ({
+            ...item,
+            created_at: this.formatDateTime(item.created_at),
+            deadline: item.deadline ? this.formatDateTime(item.deadline) : null,
+            isExpired: this.isExpired(item.deadline)
+          }));
           this.setData({
-            homeworkList: res.data.data
+            homeworkList: homeworkList
           });
         } else {
           wx.showToast({

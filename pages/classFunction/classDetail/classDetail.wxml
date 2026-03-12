@@ -1,15 +1,18 @@
 <view class="page-container">
-  <!-- 顶部背景 -->
-  <view class="header-bg" style="background: {{classInfo.color}}">
-    <view class="header-content">
+  <view class="content-wrapper">
+    <view class="page-header">
       <text class="page-title">{{classInfo.name}}</text>
       <text class="page-subtitle">班级码 : {{classInfo.code}}</text>
     </view>
-  </view> 
 
-  <view class="content-wrapper">
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{isLoading}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
+    </view>
+
     <!-- 基本信息卡片 -->
-    <view class="info-card">
+    <view class="info-card" wx:if="{{!isLoading}}">
       <view class="info-item">
         <text class="info-label">任课老师</text>
         <text class="info-value">{{classInfo.teacher_name}}</text>
@@ -18,14 +21,14 @@
         <text class="info-label">创建时间</text>
         <text class="info-value">{{classInfo.create_time}}</text>
       </view>
-      <view class="info-item">
+      <!-- <view class="info-item">
         <text class="info-label">班级描述</text>
         <text class="info-value">{{classInfo.description || '暂无描述'}}</text>
-      </view>
+      </view> -->
     </view>
 
     <!-- 功能菜单 -->
-    <view class="menu-section">
+    <view class="menu-section" wx:if="{{!isLoading}}">
       <view class="menu-title">班级功能</view>
       <view class="menu-grid">
         <view class="menu-item" bindtap="goToHomework">
@@ -36,48 +39,60 @@
           <view class="menu-icon members">👥</view>
           <text class="menu-text">{{isTeacher ? '管理成员' : '班级成员'}}</text>
         </view>
-        <view class="menu-item" bindtap="goToSchedule">
-          <view class="menu-icon schedule">📅</view>
-          <text class="menu-text">课程表（不可用）</text>
-        </view>
-        <view class="menu-item" bindtap="goToAnnouncements">
-          <view class="menu-icon announcements">📢</view>
-          <text class="menu-text">班级通知（不可用）</text>
-        </view>
+      </view>
+      <!-- 教师显示创建作业按钮 -->
+      <view class="create-homework-wrapper" wx:if="{{isTeacher}}">
+        <button class="create-homework-btn" bindtap="createHomework">
+          <text class="create-icon">+</text>
+          <text>布置作业</text>
+        </button>
       </view>
     </view>
 
     <!-- 最近作业 -->
-    <view class="homework-section">
+    <view class="homework-section" wx:if="{{!isLoading}}">
       <view class="section-header">
         <text class="section-title">最近作业</text>
-        <text class="section-more" bindtap="goToHomework">查看更多</text>
+        <view class="section-actions">
+          <text class="section-more" bindtap="goToHomework">查看更多</text>
+        </view>
       </view>
-      <view wx:if="{{recentHomeworks.length > 0}}" class="homework-list">
-        <view class="homework-item" wx:for="{{recentHomeworks}}" wx:key="id" bindtap="viewHomework" data-homework="{{item}}">
+
+      
+
+      <!-- 作业列表 -->
+      <view class="homework-list" wx:if="{{recentHomeworks.length}}">
+        <view class="homework-item" wx:for="{{recentHomeworks}}" wx:key="id" bindtap="viewHomework" wx:if="{{index<3}}" data-homework="{{item}}">
           <view class="homework-header">
             <text class="homework-title">{{item.title}}</text>
-            <view class="homework-status {{item.status}}">
+            <view wx:if="{{item.isOverdue && item.status == 'PENDING'}}" class="homework-status OVERDUE">
+              <text class="status-text">已截止</text>
+            </view>
+            <view wx:elif="item.status == 'GRADED'" class="homework-status ACCEPTED">
+              <text class="status-text">{{item.status_text}}</text>
+            </view>
+            <view wx:else class="homework-status {{item.status}}">
               <text class="status-text">{{item.status_text}}</text>
             </view>
           </view>
           <text class="homework-desc">详情：{{item.description}}</text>
           <view class="homework-meta">
             <text class="meta-item">截止: {{item.deadline}}</text>
-            <text class="meta-item">提交: {{item.submit_count}}/{{item.student_count}}</text>
           </view>
         </view>
       </view>
-      <view wx:else class="empty-homework">
-        <text class="empty-text">暂无作业</text>
+
+      <!-- 空状态 -->
+      <view class="empty-homework" wx:if="{{!recentHomeworks.length}}">
+        <text class="empty-text">{{isTeacher ? '暂无作业，点击上方按钮布置第一份作业吧' : '暂无作业'}}</text>
       </view>
     </view>
 
     <!-- 退出/删除班级按钮 -->
-    <view class="action-section">
-      <button wx:if="{{isTeacher}}" class="quit-btn delete-btn" style="background-color: #ff4d4f; color: white;" bindtap="deleteClass">解散班级</button>
+    <!-- <view class="action-section" wx:if="{{!isLoading}}">
+      <button wx:if="{{isTeacher}}" class="quit-btn delete-btn" bindtap="deleteClass">解散班级</button>
       <button wx:else class="quit-btn" bindtap="showQuitConfirm">退出班级</button>
-    </view>
+    </view> -->
   </view>
 
   <!-- 退出确认弹窗 -->
@@ -94,14 +109,6 @@
         <button class="modal-btn cancel" bindtap="hideQuitConfirm">取消</button>
         <button class="modal-btn confirm quit" bindtap="quitClass">确认退出</button>
       </view>
-    </view>
-  </view>
-
-  <!-- 加载状态 -->
-  <view wx:if="{{isLoading}}" class="loading-mask">
-    <view class="loading-content">
-      <view class="loading-spinner"></view>
-      <text class="loading-text">加载中...</text>
     </view>
   </view>
 </view>

@@ -2,7 +2,7 @@
 
 <view class="homework-list" wx:if="{{homeworkList.length > 0}}">
   <view 
-    class="homework-card" 
+    class="homework-card {{item.isExpired ? 'card-expired' : ''}}" 
     wx:for="{{homeworkList}}" 
     wx:key="id" 
     data-homework-id="{{item.id}}"
@@ -10,23 +10,48 @@
 
     <view class="card-header">
       <view class="card-title">{{item.title}}</view>
+      <view class="card-status {{item.isExpired ? 'status-expired' : 'status-active'}}">
+        {{item.isExpired ? '已截止' : '进行中'}}
+      </view>
     </view>
 
     <view class="card-body">
-      <view class="card-info">发布于: {{item.created_at}}</view>
-      <view class="card-info">截止于: {{item.deadline || '未设置截止时间'}}</view>
+      <view class="card-info">
+        <text class="info-icon">📅</text>
+        <text class="info-label">发布时间:</text>
+        <text class="info-value">{{item.created_at}}</text>
+      </view>
+      <view class="card-info">
+        <text class="info-icon">⏰</text>
+        <text class="info-label">截止时间:</text>
+        <text class="info-value {{item.isExpired ? 'text-expired' : ''}}">{{item.deadline || '未设置截止时间'}}</text>
+      </view>
     </view>
 
     <view class="card-footer">
-      <view class="detail-text">查看详情</view>
+      <view class="submission-info">
+        <text class="submission-icon">📝</text>
+        <text class="submission-text">已提交</text>
+        <text class="submission-count">{{item.submitted_count || 0}}</text>
+        <text class="submission-total">/{{item.total_count || 0}}</text>
+      </view>
+      <view class="detail-btn">
+        <text>查看详情</text>
+        <text class="arrow-icon">›</text>
+      </view>
     </view>
   </view>
 </view>
 
 <view class="empty-container" wx:if="{{!isLoading && homeworkList.length === 0}}">
-  <image class="empty-image" src="" mode="aspectFit" />
+  <view class="empty-icon">📋</view>
   <view class="empty-text">该班级暂无作业</view>
-  <view class="empty-subtext">快去“发布作业”吧</view>
+  <view class="empty-subtext">点击下方按钮开始发布您的第一个作业吧</view>
+</view>
+
+<view class="loading-container" wx:if="{{isLoading}}">
+  <view class="loading-spinner"></view>
+  <view class="loading-text">加载中...</view>
 </view>
 
 </view>

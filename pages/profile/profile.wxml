@@ -1,0 +1,123 @@
+<view class="page-container">
+  <view class="header-bg"></view>
+
+  <view class="content-wrapper">
+    <!-- 用户信息卡片 -->
+    <view class="user-card">
+      <block wx:if="{{isLoggedIn}}">
+        <image 
+          class="user-avatar" 
+          src="{{userInfo.wx_avatar || defaultAvatarUrl}}" 
+          mode="aspectFill"
+        ></image>
+        <view class="user-info">
+          <text class="user-name">{{userInfo.wx_nickName || '用户'}}</text>
+          <text class="user-role">{{isStudent ? '学生' : (isTeacher ? '教师' : '用户')}}</text>
+        </view>
+        <button class="edit-btn" bindtap="editProfile">编辑资料</button>
+      </block>
+      
+      <block wx:else>
+        <view class="not-logged">
+          <image 
+            class="user-avatar" 
+            src="{{defaultAvatarUrl}}" 
+            mode="aspectFill"
+          ></image>
+          <view class="user-info">
+            <text class="user-name">未登录</text>
+            <text class="user-role">请先登录</text>
+          </view>
+          <button class="login-btn" bindtap="handleLogin">登录</button>
+        </view>
+      </block>
+    </view>
+
+    <!-- 学习数据卡片 -->
+    <view class="stats-card" wx:if="{{isLoggedIn}}">
+      <view class="stat-item">
+        <text class="stat-value">{{learningStats.totalQuestions}}</text>
+        <text class="stat-label">总做题数</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value">{{learningStats.accuracy}}%</text>
+        <text class="stat-label">正确率</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value">{{learningStats.studyDays}}</text>
+        <text class="stat-label">学习天数</text>
+      </view>
+    </view>
+
+    <!-- 功能菜单 -->
+    <view class="menu-section" wx:if="{{isLoggedIn}}">
+      <view class="menu-title">个人中心</view>
+      <view class="menu-list">
+        <view class="menu-item" bindtap="manageInfo">
+          <view class="menu-icon">👤</view>
+          <text class="menu-text">信息管理</text>
+          <text class="menu-arrow">→</text>
+        </view>
+        
+        <view class="menu-item" bindtap="viewSubmissionRecord">
+          <view class="menu-icon">📊</view>
+          <text class="menu-text">提交记录</text>
+          <text class="menu-arrow">→</text>
+        </view>
+        
+        <view class="menu-item" bindtap="viewKnowledgeProfile">
+          <view class="menu-icon">🎯</view>
+          <text class="menu-text">知识画像</text>
+          <text class="menu-arrow">→</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-section" wx:if="{{isStudent && isLoggedIn}}">
+      <view class="menu-title">学生功能</view>
+      <view class="menu-list">
+        <view class="menu-item" bindtap="viewMyClass">
+          <view class="menu-icon">📚</view>
+          <text class="menu-text">我的班级</text>
+          <text class="menu-arrow">→</text>
+        </view>
+        
+        <view class="menu-item" bindtap="viewSubmissions">
+          <view class="menu-icon">📝</view>
+          <text class="menu-text">我的提交</text>
+          <text class="menu-arrow">→</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-section" wx:if="{{isTeacher && isLoggedIn}}">
+      <view class="menu-title">教师功能</view>
+      <view class="menu-list">
+        <view class="menu-item" bindtap="manageClass">
+          <view class="menu-icon">🏫</view>
+          <text class="menu-text">班级管理</text>
+          <text class="menu-arrow">→</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-section">
+      <view class="menu-title">系统</view>
+      <view class="menu-list">
+        <view class="menu-item" bindtap="showAbout">
+          <view class="menu-icon">ℹ️</view>
+          <text class="menu-text">关于系统</text>
+          <text class="menu-arrow">→</text>
+        </view>
+        
+        <view class="menu-item logout-item" wx:if="{{isLoggedIn}}" bindtap="handleLogout">
+          <view class="menu-icon">🚪</view>
+          <text class="menu-text">退出登录</text>
+          <text class="menu-arrow">→</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

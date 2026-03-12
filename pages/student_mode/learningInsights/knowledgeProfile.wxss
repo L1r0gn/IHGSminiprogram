@@ -1,54 +1,64 @@
 /* pages/student_mode/learningInsights/knowledgeProfile.wxss */
+page {
+  background-color: #f5f7fa;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
 
 .container {
-  padding: 20rpx;
-  background-color: #f5f7fa;
   min-height: 100vh;
+  padding: 40rpx;
 }
 
 /* 顶部概览卡片 */
 .overview-card {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  width: 80%;
-  border-radius: 20rpx;
-  padding: 30rpx;
-  margin-bottom: 30rpx;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  margin-bottom: 32rpx;
   color: white;
-  box-shadow: 0 10rpx 30rpx rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3);
+  animation: fadeIn 0.6s ease-out;
+  width: 80%;
 }
 
 .overview-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30rpx;
+  margin-bottom: 32rpx;
 }
 
 .overview-title {
   font-size: 36rpx;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .refresh-btn {
   font-size: 32rpx;
-  padding: 10rpx;
+  padding: 12rpx;
+  opacity: 0.8;
 }
 
 .stats-grid {
   display: flex;
   justify-content: space-between;
+  gap: 32rpx;
 }
 
 .stat-item {
   text-align: center;
   flex: 1;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20rpx;
+  padding: 24rpx;
+  backdrop-filter: blur(10rpx);
 }
 
 .stat-number {
   display: block;
   font-size: 48rpx;
   font-weight: 700;
-  margin-bottom: 10rpx;
+  margin-bottom: 8rpx;
 }
 
 .stat-label {
@@ -56,87 +66,55 @@
   opacity: 0.9;
 }
 
-/* 分类筛选 */
-.category-filter {
-  background: white;
-  border-radius: 16rpx;
-  padding: 20rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
-  width: 90%;
-}
-
-.filter-label {
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 20rpx;
-}
-
-.category-scroll {
-  white-space: nowrap;
-}
-
-.category-list {
-  display: flex;
-}
-
-.category-item {
-  padding: 15rpx 30rpx;
-  margin-right: 20rpx;
-  background: #f0f2f5;
-  border-radius: 50rpx;
-  font-size: 26rpx;
-  color: #666;
-  transition: all 0.3s;
-}
-
-.category-item.active {
-  background: #1890ff;
-  color: white;
-}
-
 /* 知识点列表 */
 .knowledge-list {
-  margin-bottom: 30rpx;
-  width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  margin-bottom: 32rpx;
 }
 
 .knowledge-item {
   background: white;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
-  transition: all 0.2s;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  animation: fadeInUp 0.5s ease-out both;
 }
 
 .knowledge-item:active {
-  transform: scale(0.98);
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  transform: translateY(-4rpx);
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.12);
 }
+
+.knowledge-item:nth-child(1) { animation-delay: 0.1s; }
+.knowledge-item:nth-child(2) { animation-delay: 0.2s; }
+.knowledge-item:nth-child(3) { animation-delay: 0.3s; }
+.knowledge-item:nth-child(4) { animation-delay: 0.4s; }
+.knowledge-item:nth-child(5) { animation-delay: 0.5s; }
 
 .item-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .knowledge-name {
   font-size: 32rpx;
   font-weight: 600;
-  color: #333;
+  color: #1a1a1a;
   flex: 1;
   margin-right: 20rpx;
 }
 
 .mastery-badge {
   padding: 8rpx 20rpx;
-  border-radius: 50rpx;
+  border-radius: 20rpx;
   font-size: 24rpx;
-  font-weight: 500;
-  color: white;
+  font-weight: 600;
   min-width: 120rpx;
   text-align: center;
 }
@@ -148,7 +126,7 @@
 .progress-container {
   width: 100%;
   height: 12rpx;
-  background: #f0f2f5;
+  background: #e2e8f0;
   border-radius: 6rpx;
   overflow: hidden;
   margin-bottom: 20rpx;
@@ -157,95 +135,106 @@
 .progress-bar {
   height: 100%;
   border-radius: 6rpx;
-  transition: width 1s ease-out;
+  transition: width 0.6s ease-out;
 }
-.bg-green { background: #52c41a; }
-.bg-orange { background: #fa8c16; }
-.bg-red { background: #f5222d; }
+
+.bg-green { background: linear-gradient(90deg, #34d399, #10b981); }
+.bg-orange { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+.bg-red { background: linear-gradient(90deg, #f87171, #ef4444); }
 
 .item-meta {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 24rpx;
-  color: #999;
+  color: #64748b;
 }
 
 .attempts {
-  color: #666;
+  color: #64748b;
 }
 
 .category-tag {
-  background: #e6f7ff;
-  color: #1890ff;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
+  background: #d1fae5;
+  color: #059669;
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+  font-weight: 500;
 }
 
 /* 空状态 */
 .empty-state {
-  text-align: center;
-  padding: 100rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 60rpx;
   background: white;
-  border-radius: 16rpx;
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 40rpx rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.6s ease-out;
 }
 
 .empty-icon {
-  font-size: 80rpx;
+  font-size: 120rpx;
   display: block;
-  margin-bottom: 20rpx;
+  margin-bottom: 24rpx;
 }
 
 .empty-text {
-  font-size: 28rpx;
-  color: #999;
+  font-size: 32rpx;
+  color: #1a1a1a;
+  font-weight: 600;
+  margin-bottom: 12rpx;
 }
 
 /* 学习建议 */
 .suggestions-section {
+  width: 100%;
   background: white;
-  border-radius: 16rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  border-radius: 24rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  width: 95%;
+  animation: fadeIn 0.6s ease-out;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+  padding: 32rpx;
+  border-bottom: 1rpx solid #e2e8f0;
 }
 
 .section-title {
   font-size: 32rpx;
   font-weight: 600;
-  color: #333;
+  color: #1a1a1a;
 }
 
 .toggle-icon {
   font-size: 28rpx;
-  color: #999;
+  color: #64748b;
 }
 
 .suggestions-content {
-  padding: 30rpx;
+  padding: 32rpx;
 }
 
 .suggestion-item {
   padding: 20rpx;
-  margin-bottom: 15rpx;
-  background: #f9f9f9;
-  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  background: #f5f7fa;
+  border-radius: 16rpx;
   font-size: 28rpx;
-  color: #666;
-  line-height: 1.5;
+  color: #1e293b;
+  line-height: 1.6;
 }
 
 .no-suggestions {
   text-align: center;
-  color: #999;
+  color: #64748b;
   font-size: 28rpx;
   padding: 40rpx 0;
 }
@@ -254,27 +243,32 @@
 .quick-actions {
   display: flex;
   gap: 20rpx;
+  margin-bottom: 40rpx;
 }
 
 .action-btn {
   flex: 1;
-  padding: 30rpx;
-  border-radius: 16rpx;
-  font-size: 28rpx;
-  font-weight: 500;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: 600;
   border: none;
+  transition: all 0.3s ease;
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  box-shadow: 0 6rpx 20rpx rgba(79, 172, 254, 0.3);
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.3);
+  padding-top: 0px;
 }
 
 .action-btn.secondary {
   background: white;
-  color: #1890ff;
-  border: 2rpx solid #1890ff;
+  color: #667eea;
+  border: 2rpx solid #667eea;
+  padding-top: 0px;
 }
 
 .action-btn:active {
@@ -288,24 +282,41 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background: #f5f7fa;
 }
 
 .loading-spinner {
-  width: 80rpx;
-  height: 80rpx;
-  border: 6rpx solid #f3f3f3;
-  border-top: 6rpx solid #1890ff;
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e2e8f0;
+  border-top-color: #667eea;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 30rpx;
+  margin-bottom: 24rpx;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
 
 .loading-text {
   font-size: 28rpx;
-  color: #999;
+  color: #64748b;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -143,8 +143,9 @@ Page({
     const statusMap = {
       'GRADED': 'correct',
       'ACCEPTED': 'correct',
-      'RUNTIME_ERROR': 'incorrect',
-      'WRONG_ANSWER': 'incorrect',
+      'PARTIALLY_CORRECT': 'partial',
+      'RUNTIME_ERROR': 'wrong',
+      'WRONG_ANSWER': 'wrong',
       'PENDING': 'pending'
     };
     return statusMap[status] || 'pending';
@@ -154,9 +155,10 @@ Page({
   getStatusText(status) {
     const textMap = {
       'GRADED': '已评分',
-      'ACCEPTED': '已通过',
+      'ACCEPTED': '正确',
+      'PARTIALLY_CORRECT': '部分正确',
       'RUNTIME_ERROR': '运行错误',
-      'WRONG_ANSWER': '答案错误',
+      'WRONG_ANSWER': '错误',
       'PENDING': '待批改'
     };
     return textMap[status] || status || '未知状态';

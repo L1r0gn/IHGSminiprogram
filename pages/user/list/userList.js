@@ -1,10 +1,18 @@
-// pages/user/list/userList.js
+const app = getApp();
+
 Page({
   data: {
-    userInfo: {}
+    userInfo: {},
+    loading: true
   },
-  
-  onShow: function () {
+
+  onLoad() {
+    this.setData({
+      animationClass: 'fade-in'
+    });
+  },
+
+  onShow() {
     const userId = wx.getStorageSync('userId');
     if (userId) {
       this.getUserDetail(userId);
@@ -18,12 +26,11 @@ Page({
       });
     }
   },
+
   getUserDetail(userId) {
     const token = wx.getStorageSync('accessToken');
-    const app = getApp();
-    // 发起请求
     wx.request({
-      url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,  
+      url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,
       method: 'GET',
       header: {
         'Authorization': `Bearer ${token}`
@@ -33,15 +40,47 @@ Page({
           app.handleTokenExpired();
           return;
         }
-        //保存数据
-        console.log('收到用户数据:',res.data.data);
+        console.log('收到用户数据:', res.data.data);
+
+        const userInfo = res.data.data || {};
+
+        // 预处理数据
+        const attrMap = {
+          0: '未定义',
+          1: '学生',
+          2: '老师',
+          3: '管理员',
+          4: '超级管理员'
+        };
+
+        const genderMap = {
+          1: '男',
+          2: '女'
+        };
+
+        // 计算注册天数
+        let registerDays = '-';
+        if (userInfo.date_joined) {
+          const joinDate = new Date(userInfo.date_joined);
+          const now = new Date();
+          const diffTime = Math.abs(now - joinDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          registerDays = diffDays > 0 ? diffDays : 1;
+        }
+
         this.setData({
-          userInfo:res.data.data,
-        })
-        console.log('缓存的用户数据:',this.data.userInfo);
+          userInfo: {
+            ...userInfo,
+            attributeText: attrMap[userInfo.user_attribute] || '未定义',
+            genderText: genderMap[userInfo.gender] || '未设置',
+            registerDays: registerDays
+          },
+          loading: false
+        });
       },
       fail: () => {
         wx.showToast({ title: '网络错误', icon: 'none' });
+        this.setData({ loading: false });
       }
     });
   }
