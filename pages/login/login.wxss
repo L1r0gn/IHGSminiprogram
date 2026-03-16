@@ -1,71 +1,78 @@
 /** login.wxss **/
 page {
-  background-color: #f7f8fa; /* 浅灰背景 */
+  background-color: #f5f7fa;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
-    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC',
+               'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* 页面容器 */
+.page-container {
   min-height: 100vh;
-  padding: 0 40rpx;
-}
-
-/* --- 1. 头部样式 --- */
-.header-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 60rpx;
-  margin-top: 60rpx;
-  animation: fadeInDown 0.8s ease;
 }
 
-.app-logo {
-  width: 140rpx;
-  height: 140rpx;
-  margin-bottom: 20rpx;
+.content-wrapper {
+  flex: 1;
+  width: 100%;
+  padding: 60rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 页面头部 */
+.page-header {
+  margin-bottom: 60rpx;
+  padding: 20rpx 0;
+  animation: fadeIn 0.6s ease-out;
+  text-align: center;
 }
 
 .app-title {
-  font-size: 40rpx;
-  font-weight: bold;
-  color: #333;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: block;
   margin-bottom: 12rpx;
   letter-spacing: 2rpx;
 }
 
-.app-slogan {
-  font-size: 24rpx;
-  color: #999;
+.app-subtitle {
+  font-size: 28rpx;
+  color: #64748b;
+  display: block;
   letter-spacing: 6rpx;
-  text-transform: uppercase;
 }
 
-/* --- 2. 卡片样式 --- */
-.login-card {
+/* 卡片样式 */
+.card {
   width: 100%;
+  max-width: 600rpx;
   background: #ffffff;
   border-radius: 24rpx;
   padding: 50rpx 40rpx;
-  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: fadeInUp 0.8s ease;
+  animation: fadeInUp 0.8s ease-out;
 }
 
-/* 头像包装器 */
+.card:active {
+  transform: translateY(-4rpx);
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, 0.12);
+}
+
+/* 头像区域 */
 .avatar-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 50rpx;
-  position: relative;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 .avatar-wrapper {
@@ -73,41 +80,38 @@ page {
   width: 140rpx !important;
   height: 140rpx !important;
   border-radius: 50%;
-  background: #f0f2f5;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+  /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 16rpx;
   position: relative;
+  overflow: hidden;
+}
+
+.avatar-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 136rpx;
+  height: 136rpx;
+  border-radius: 50%;
+  background: #fff;
+  top: 2rpx;
+  left: 2rpx;
 }
 
 .avatar-img {
-  width: 100%;
-  height: 100%;
+  width: 136rpx;
+  height: 136rpx;
   border-radius: 50%;
-}
-
-/* 编辑小图标 */
-.edit-icon {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: #07c160;
-  color: #fff;
-  width: 40rpx;
-  height: 40rpx;
-  font-size: 24rpx;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 4rpx solid #fff;
+  position: relative;
+  z-index: 1;
 }
 
 .tip-text {
-  font-size: 24rpx;
-  color: #999;
+  font-size: 26rpx;
+  color: #94a3b8;
 }
 
 /* 输入框组 */
@@ -115,24 +119,25 @@ page {
   width: 100%;
   display: flex;
   align-items: center;
-  background: #f7f8fa;
+  background: #f5f7fa;
   border-radius: 16rpx;
   padding: 24rpx 30rpx;
   margin-bottom: 60rpx;
   box-sizing: border-box;
-  border: 1px solid transparent;
-  transition: all 0.3s;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
 .input-group:focus-within {
   background: #fff;
-  border-color: #07c160;
-  box-shadow: 0 0 0 4rpx rgba(7, 193, 96, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 0 0 4rpx rgba(102, 126, 234, 0.1);
 }
 
 .input-label {
   font-size: 28rpx;
-  color: #333;
+  color: #1e293b;
   font-weight: 600;
   margin-right: 30rpx;
   min-width: 60rpx;
@@ -141,54 +146,46 @@ page {
 .nickname-input {
   flex: 1;
   font-size: 28rpx;
-  color: #333;
+  color: #1a1a1a;
   height: 100%;
 }
 
 .placeholder-style {
-  color: #ccc;
+  color: #94a3b8;
 }
 
-/* 按钮区域 */
-.btn-area {
-  width: 100%;
-}
-
-.btn-primary, .btn-login {
+/* 主按钮 */
+.btn-primary {
   width: 100% !important;
   height: 88rpx;
-  line-height: 56rpx; /* 调整行高配合padding */
-  background: linear-gradient(135deg, #07c160, #10ad56);
-  color: #fff;
+  line-height: 88rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 44rpx;
   font-size: 32rpx;
   font-weight: 600;
-  border-radius: 44rpx;
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 20rpx rgba(7, 193, 96, 0.3);
-  margin-bottom: 24rpx;
-  border: none;
+  animation: fadeInUp 0.8s ease-out 0.4s both;
 }
 
-/* 登录按钮的特殊样式（如果需要区分） */
-.btn-login {
-  background: #333; /* 黑色风格，或者用上面的绿色 */
-  background: linear-gradient(135deg, #07c160, #10ad56); 
-  margin-top: 20rpx;
+.btn-primary:active {
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
 }
 
-.btn-hover {
-  opacity: 0.9;
-  transform: scale(0.98);
-}
-
-/* 已登录状态样式 */
+/* 已登录状态 */
 .logged-in-view {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 .userinfo-avatar-large {
@@ -196,34 +193,55 @@ page {
   height: 160rpx;
   border-radius: 50%;
   margin-bottom: 30rpx;
-  border: 6rpx solid #f0f2f5;
-  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.1);
+  border: 6rpx solid #f5f7fa;
+  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.2);
+  animation: breathe 2s ease-in-out infinite;
 }
 
 .welcome-text {
   font-size: 32rpx;
-  color: #333;
-  font-weight: bold;
+  color: #1a1a1a;
+  font-weight: 600;
   margin-bottom: 60rpx;
 }
 
-/* --- 3. 底部样式 --- */
+/* 底部 */
 .footer {
-  margin-top: 80rpx;
+  padding: 40rpx;
+  text-align: center;
 }
 
 .footer text {
-  font-size: 20rpx;
-  color: #ccc;
+  font-size: 24rpx;
+  color: #94a3b8;
 }
 
-/* 动画关键帧 */
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
 }

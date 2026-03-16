@@ -55,11 +55,11 @@ Page({
     const currentNickName = this.data.userInfo.nickName;
     const hasUserInfo = currentNickName && avatarUrl && avatarUrl !== defaultAvatarUrl;
     this.setData({
-      ['userInfo.wx_avatar']: avatarUrl, 
+      ['userInfo.avatarUrl']: avatarUrl,
+      ['userInfo.wx_avatar']: avatarUrl,
       hasUserInfo: hasUserInfo,
       loginFailed: false
     });
-    // this.uploadAvatar(avatarUrl);
   },
   uploadAvatar(tempPath) {
     const app = getApp();
@@ -128,6 +128,7 @@ Page({
     }
     this.loginToServer(this.data.userInfo);
   },
+  
   loginToServer(userInfo) {
     wx.showLoading({ title: '登录中...' });
     wx.login({

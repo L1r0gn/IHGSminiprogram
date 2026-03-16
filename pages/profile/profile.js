@@ -105,7 +105,18 @@ Page({
         if (res.data.data) {
           const submissions = res.data.data || [];
           const totalQuestions = submissions.length;
-          const correctCount = submissions.filter(s => s.is_correct).length;
+
+          // 使用得分率计算正确数，与做题记录页面逻辑保持一致
+          let correctCount = 0;
+          submissions.forEach(item => {
+            const studentScore = item.student_score || item.score || 0;
+            const questionScore = item.question_score || 10;
+            const scoreRatio = questionScore > 0 ? (studentScore / questionScore) : 0;
+            if (scoreRatio >= 1) {
+              correctCount++;
+            }
+          });
+
           const accuracy = totalQuestions > 0 ? (correctCount / totalQuestions * 100).toFixed(1) : 0;
 
           this.setData({
