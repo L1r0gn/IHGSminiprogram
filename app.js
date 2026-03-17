@@ -2,8 +2,8 @@
 App({
   globalData: {
     userInfo: null,
-    // globalUrl:'http://119.29.152.140:8000'
-    globalUrl: 'http://127.0.0.1:8000',
+    globalUrl:'http://119.29.152.140:8000',
+    // globalUrl: 'http://127.0.0.1:8000',
     currentTab: 'home'
   },
   onLaunch() {

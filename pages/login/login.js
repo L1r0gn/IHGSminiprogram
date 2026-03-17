@@ -144,6 +144,13 @@ Page({
           },
           success: (res) => {
             wx.hideLoading();
+
+            if (res.statusCode === 401) {
+              wx.showToast({ title: '授权已失效，请重新授权', icon: 'none' });
+              this.setData({ loginFailed: true });
+              return;
+            }
+
             if (res.statusCode === 200 && res.data.access) {
               if (!res.data.user_id) {
                 console.error("Login response missing user_id", res.data);
