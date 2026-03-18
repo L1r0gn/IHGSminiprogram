@@ -264,12 +264,6 @@ Page({
           url: `${app.globalData.globalUrl}/grading/wx/submit/`,
           filePath: this.data.submitted_image_path,
           name: 'submitted_image', // 注意这里的 key 
-<<<<<<< HEAD
-          header: { 'Authorization': `Bearer ${token}` },
-          formData: {
-            questionId: this.data.questionId,
-            userId: userId,
-=======
           header: {
              'Authorization': `Bearer ${token}`,
           },
@@ -277,7 +271,6 @@ Page({
             questionId: this.data.questionId,
             userId: userId,
             from:'question',
->>>>>>> L1r0gn
           },
           success: (res) => {
             try {
