@@ -69,11 +69,19 @@
           </view>
         </navigator>
 
-        <navigator url="/pages/user/list/userList" class="quick-item">
+        <navigator url="/pages/user/list/userList" class="quick-item" wx:if="{{isLoggedIn}}">
           <view class="quick-icon icon-cyan">👤</view>
           <view class="quick-info">
             <text class="quick-name">信息管理</text>
             <text class="quick-desc">个人资料设置</text>
+          </view>
+        </navigator>
+
+        <navigator url="/pages/login/login" class="quick-item" wx:if="{{!isLoggedIn}}">
+          <view class="quick-icon icon-cyan">👤</view>
+          <view class="quick-info">
+            <text class="quick-name">前往登录</text>
+            <text class="quick-desc">登录/注册系统</text>
           </view>
         </navigator>
 

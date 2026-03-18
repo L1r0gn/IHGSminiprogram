@@ -47,4 +47,54 @@
   <view class="footer">
     <text>© 2026 Intelligent Homework System</text>
   </view>
+
+  <!-- 个人信息补充弹窗 -->
+  <view class="modal-mask" wx:if="{{showProfileModal}}" bindtap="closeProfileModal">
+    <view class="modal-container" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">完善个人信息</text>
+        <text class="modal-close" bindtap="closeProfileModal">✕</text>
+      </view>
+
+      <view class="modal-body">
+        <view class="form-item">
+          <view class="form-label">
+            <text class="label-icon">👤</text>
+            <text>性别</text>
+          </view>
+          <picker mode="selector" range="{{genderOptions}}" value="{{genderIndex}}" bindchange="onGenderChange">
+            <view class="picker-input">
+              <text>{{genderIndex >= 0 ? genderOptions[genderIndex] : '请选择性别'}}</text>
+              <text class="arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <view class="form-label">
+            <text class="label-icon">🎓</text>
+            <text>身份</text>
+          </view>
+          <picker mode="selector" range="{{roleOptions}}" value="{{roleIndex}}" bindchange="onRoleChange">
+            <view class="picker-input">
+              <text>{{roleIndex >= 0 ? roleOptions[roleIndex] : '请选择身份'}}</text>
+              <text class="arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <view class="form-label">
+            <text class="label-icon">📱</text>
+            <text>手机号</text>
+          </view>
+          <input class="input-field" type="number" value="{{phone}}" placeholder="请输入手机号" bindinput="onPhoneInput" maxlength="11" />
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <button class="modal-btn confirm-btn" bindtap="submitProfile">保存</button>
+      </view>
+    </view>
+  </view>
 </view>

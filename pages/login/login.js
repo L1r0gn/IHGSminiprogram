@@ -12,36 +12,46 @@ Page({
     canIUseGetUserProfile: wx.canIUse('getUserProfile'),
     canIUseNicknameComp: wx.canIUse('input.type.nickname'),
     loginFailed: false,
+    showProfileModal: false,
+    genderOptions: ['男', '女'],
+    genderIndex: -1,
+    roleOptions: ['学生', '教师'],
+    roleIndex: -1,
+    phone: '',
+    isFromLogin: false
   },
 
   onLoad() {
     const savedUserInfo = wx.getStorageSync('userInfo');
-    if (savedUserInfo) {
+    if (savedUserInfo && savedUserInfo.nickName) {
       console.log('用户有本地保存数据，可自动登录');
 
       // 检查头像是否为临时路径 (以 http://tmp, wxfile://, http://127.0.0.1 开头)
       // 如果是临时路径，则视为已过期，重置为默认头像
-      let validAvatar = savedUserInfo.avatarUrl;
-      const isTempPath = validAvatar && (
-        validAvatar.startsWith('http://tmp') ||
-        validAvatar.startsWith('wxfile://') ||
-        validAvatar.includes('127.0.0.1') ||
-        validAvatar.startsWith('blob:')
+      const avatarUrl = savedUserInfo.avatarUrl || defaultAvatarUrl;
+      const isTempPath = typeof avatarUrl === 'string' && (
+        avatarUrl.startsWith('http://tmp') ||
+        avatarUrl.startsWith('wxfile://') ||
+        avatarUrl.includes('127.0.0.1') ||
+        avatarUrl.startsWith('blob:')
       );
 
+      let finalUserInfo = { ...savedUserInfo };
       if (isTempPath) {
         console.log('检测到缓存的头像为临时路径，已重置');
-        validAvatar = defaultAvatarUrl;
+        finalUserInfo.avatarUrl = defaultAvatarUrl;
         // 更新本地缓存，避免下次继续报错
-        savedUserInfo.avatarUrl = defaultAvatarUrl;
-        wx.setStorageSync('userInfo', savedUserInfo);
+        wx.setStorageSync('userInfo', finalUserInfo);
       }
 
+      // 计算 hasUserInfo: 需要同时有昵称且头像不为默认头像
+      const hasUserInfo = savedUserInfo.nickName &&
+        finalUserInfo.avatarUrl &&
+        finalUserInfo.avatarUrl !== defaultAvatarUrl;
+
       this.setData({
-        userInfo: savedUserInfo,
-        hasUserInfo: savedUserInfo.nickName &&
-          validAvatar &&
-          validAvatar !== defaultAvatarUrl
+        userInfo: finalUserInfo,
+        hasUserInfo
       });
       this.autoLogin(); // 自动登录（可选）
     } else {
@@ -157,22 +167,13 @@ Page({
                 wx.showToast({ title: '登录异常: 无用户ID', icon: 'none' });
                 return;
               }
-              wx.showToast({
-                title: '登录成功',
-                icon: 'success'
-              });
               wx.setStorageSync('accessToken', res.data.access);
               wx.setStorageSync('refreshToken', res.data.refresh);
               wx.setStorageSync('isLoggedIn', true);
               wx.setStorageSync('userId', res.data.user_id);
 
-              // 登录成功后跳转
-              const pages = getCurrentPages();
-              if (pages.length > 1) {
-                wx.navigateBack();
-              } else {
-                wx.switchTab({ url: '/pages/home/home' });
-              }
+              // 检查用户是否需要补充个人信息
+              this.checkUserProfile(res.data.user_id);
             } else {
               wx.showToast({ title: '登录失败', icon: 'none' });
               this.setData({ loginFailed: true });
@@ -198,5 +199,145 @@ Page({
     if (userInfo) {
       this.loginToServer(userInfo);
     }
+  },
+
+  // 检查用户是否需要补充个人信息
+  checkUserProfile(userId) {
+    const app = getApp();
+    const token = wx.getStorageSync('accessToken');
+
+    wx.request({
+      url: `${app.globalData.globalUrl}/user/wx/list/${userId}/`,
+      method: 'GET',
+      header: { 'Authorization': `Bearer ${token}` },
+      success: (res) => {
+        if (res.statusCode === 401) {
+          app.handleTokenExpired();
+          return;
+        }
+        if (res.statusCode === 200 && res.data.data) {
+          const user = res.data.data;
+          // 检查是否有性别和属性
+          if (!user.gender || !user.user_attribute) {
+            // 需要补充信息，显示弹窗
+            this.setData({
+              showProfileModal: true,
+              isFromLogin: true
+            });
+          } else {
+            // 已有信息，直接跳转
+            this.navigateAfterLogin();
+          }
+        }
+      },
+      fail: () => {
+        // 请求失败时也直接跳转
+        this.navigateAfterLogin();
+      }
+    });
+  },
+
+  // 登录成功后的跳转
+  navigateAfterLogin() {
+    wx.showToast({
+      title: '登录成功',
+      icon: 'success'
+    });
+    const pages = getCurrentPages();
+    if (pages.length > 1) {
+      wx.navigateBack();
+    } else {
+      wx.switchTab({ url: '/pages/home/home' });
+    }
+  },
+
+  stopPropagation() {
+    // 阻止冒泡
+  },
+
+  // 性别选择
+  onGenderChange(e) {
+    const idx = Number(e.detail.value);
+    this.setData({
+      genderIndex: idx
+    });
+  },
+
+  // 属性选择
+  onRoleChange(e) {
+    const idx = Number(e.detail.value);
+    this.setData({
+      roleIndex: idx
+    });
+  },
+
+  // 手机号输入
+  onPhoneInput(e) {
+    this.setData({
+      phone: e.detail.value
+    });
+  },
+
+  // 提交个人信息
+  submitProfile() {
+    const { genderIndex, roleIndex, phone, isFromLogin } = this.data;
+
+    if (genderIndex < 0) {
+      wx.showToast({ title: '请选择性别', icon: 'none' });
+      return;
+    }
+
+    if (roleIndex < 0) {
+      wx.showToast({ title: '请选择身份', icon: 'none' });
+      return;
+    }
+
+    if (!phone) {
+      wx.showToast({ title: '请输入手机号', icon: 'none' });
+      return;
+    }
+
+    if (!/^1[3-9]\d{9}$/.test(phone)) {
+      wx.showToast({ title: '手机号格式不正确', icon: 'none' });
+      return;
+    }
+
+    const app = getApp();
+    const userId = wx.getStorageSync('userId');
+    const token = wx.getStorageSync('accessToken');
+
+    wx.showLoading({ title: '保存中...' });
+
+    wx.request({
+      url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,
+      method: 'POST',
+      header: { 'Authorization': `Bearer ${token}` },
+      data: {
+        gender: genderIndex + 1,
+        user_attribute: roleIndex + 1,
+        phone: phone
+      },
+      success: (res) => {
+        wx.hideLoading();
+        if (res.statusCode === 401) {
+          app.handleTokenExpired();
+          return;
+        }
+        if (res.statusCode === 200) {
+          wx.showToast({ title: '保存成功', icon: 'success' });
+          this.setData({ showProfileModal: false });
+          if (isFromLogin) {
+            this.navigateAfterLogin();
+          }
+        } else {
+          wx.showToast({ title: '保存失败', icon: 'none' });
+        }
+      },
+      fail: (err) => {
+        wx.hideLoading();
+        console.error('保存失败', err);
+        wx.showToast({ title: '网络错误', icon: 'none' });
+      }
+    });
   }
 });
