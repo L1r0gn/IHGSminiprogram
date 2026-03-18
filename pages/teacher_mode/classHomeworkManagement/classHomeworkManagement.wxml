@@ -35,9 +35,15 @@
         <text class="submission-count">{{item.submitted_count || 0}}</text>
         <text class="submission-total">/{{item.total_count || 0}}</text>
       </view>
-      <view class="detail-btn">
-        <text>查看详情</text>
-        <text class="arrow-icon">›</text>
+      <view class="footer-btns">
+        <view class="edit-btn" data-homework-id="{{item.id}}" catchtap="navigateToEdit">
+          <text>编辑作业</text>
+          <text class="arrow-icon">›</text>
+        </view>
+        <view class="detail-btn">
+          <text>查看详情</text>
+          <text class="arrow-icon">›</text>
+        </view>
       </view>
     </view>
   </view>
