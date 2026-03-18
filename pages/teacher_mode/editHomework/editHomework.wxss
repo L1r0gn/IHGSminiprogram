@@ -6,7 +6,7 @@ page {
 
 .container {
   padding: 24rpx;
-  /* padding-bottom: 160rpx; */
+  padding-bottom: 200rpx;  /* 增加底部留空，避免被固定按钮遮挡 */
 }
 
 .card {
@@ -324,3 +324,5 @@ page {
   opacity: 0.9;
   transform: scale(0.98);
 }
+
+/* 自定义提示词样式 - 已统一使用普通textarea样式 */

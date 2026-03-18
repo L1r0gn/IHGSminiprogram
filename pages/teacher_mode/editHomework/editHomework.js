@@ -17,7 +17,8 @@ Page({
       knowledge_points: [],
       points: 10,
       answer: '',
-      explanation: ''
+      explanation: '',
+      custom_prompt: ''  // 自定义评分提示词
     },
     date: '',
     time: '',
@@ -160,7 +161,8 @@ Page({
               knowledge_points: knowledgePointIds,
               points: data.points || 10,
               answer: data.answer || '',
-              explanation: data.explanation || ''
+              explanation: data.explanation || '',
+              custom_prompt: data.custom_prompt || ''  // 加载自定义提示词
             },
             selectedKnowledgePoints: selectedKnowledgePoints,
             date: date,
@@ -361,7 +363,8 @@ Page({
       knowledge_points: formData.knowledge_points,
       points: formData.points,
       answer: formData.answer,
-      explanation: formData.explanation
+      explanation: formData.explanation,
+      custom_prompt: formData.custom_prompt  // 添加自定义评分提示词
     };
 
     // 根据模式选择不同的接口

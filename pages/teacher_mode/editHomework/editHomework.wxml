@@ -202,6 +202,20 @@
       />
       <view class="word-count">{{formData.explanation.length || 0}}/1000</view>
     </view>
+
+    <view class="form-item-vertical">
+      <view class="label-title">自定义评分提示词</view>
+      <textarea
+        class="textarea"
+        placeholder="可输入对AI评分的特殊要求，如关注特定得分点、评分偏重等..."
+        value="{{formData.custom_prompt}}"
+        data-field="custom_prompt"
+        bindinput="onInputChange"
+        maxlength="500"
+      />
+      <view class="word-count">{{formData.custom_prompt.length || 0}}/500</view>
+
+    </view>
   </view>
 
   <!-- 底部按钮 -->
