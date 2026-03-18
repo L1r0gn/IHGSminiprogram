@@ -61,21 +61,23 @@ Page({
         homeworkId: options.homework_id,
         classId: options.class_id
       });
-      this.fetchHomeworkDetail();
+      // 编辑模式：先获取元数据，再获取作业详情
+      this.fetchProblemMetadata(() => {
+        this.fetchHomeworkDetail();
+      });
     } else if (options.class_id) {
       // 新建模式
       this.setData({
         isEditMode: false,
         classId: options.class_id
       });
+      // 新建模式：只需要获取元数据
+      this.fetchProblemMetadata();
     }
-
-    // 获取元数据
-    this.fetchProblemMetadata();
   },
 
   // 获取题目元数据
-  fetchProblemMetadata() {
+  fetchProblemMetadata(callback) {
     const token = wx.getStorageSync('accessToken');
     wx.request({
       url: `${app.globalData.globalUrl}/assignment/wx/get_problem_meta_data/`,
@@ -104,6 +106,11 @@ Page({
               problemTypeIndex: 0
             });
           }
+
+          // 执行回调
+          if (callback && typeof callback === 'function') {
+            callback();
+          }
         }
       },
       fail: () => {
@@ -116,6 +123,9 @@ Page({
   fetchHomeworkDetail() {
     const token = wx.getStorageSync('accessToken');
     const url = `${app.globalData.globalUrl}/assignment/wx/teacher_get_assignments_detail/${this.data.classId}/${this.data.homeworkId}/`;
+    
+    console.log('加载作业详情URL:', url);
+    console.log('classId:', this.data.classId, 'homeworkId:', this.data.homeworkId);
 
     wx.showLoading({ title: '加载中...' });
 
@@ -125,8 +135,10 @@ Page({
       header: { 'Authorization': `Bearer ${token}` },
       success: (res) => {
         wx.hideLoading();
+        console.log('加载作业详情响应:', res);
         if (res.statusCode === 200) {
           const data = res.data.data;
+          console.log('作业详情数据:', data);
 
           // 处理截止时间
           let date = '', time = '';
@@ -322,7 +334,7 @@ Page({
 
   // 提交作业
   submitHomework() {
-    const { formData, date, time } = this.data;
+    const { formData, date, time, isEditMode } = this.data;
 
     // 校验必填项
     if (!formData.title.trim()) {
@@ -331,6 +343,10 @@ Page({
     if (!date || !time) {
       return wx.showToast({ title: '请选择截止时间', icon: 'none' });
     }
+
+    const fullDeadline = `${date} ${time}:59`;
+
+    // 编辑模式和新建模式都需要验证关键字段
     if (!formData.problem_type) {
       return wx.showToast({ title: '请选择题目类型', icon: 'none' });
     }
@@ -347,71 +363,154 @@ Page({
       return wx.showToast({ title: '请输入正确答案', icon: 'none' });
     }
 
-    const fullDeadline = `${date} ${time}:59`;
+    // 编辑模式
+    if (isEditMode) {
+      wx.showLoading({ title: '保存中...' });
 
-    wx.showLoading({ title: this.data.isEditMode ? '保存中...' : '发布中...' });
+      const requestData = {
+        title: formData.title,
+        description: formData.description,
+        deadline: fullDeadline,
+        custom_prompt: formData.custom_prompt,
+        // 题目详细信息
+        content: formData.content,
+        answer: formData.answer,
+        explanation: formData.explanation,
+        knowledge_points: formData.knowledge_points,
+        difficulty: formData.difficulty,
+        points: formData.points,
+        subject: formData.subject,
+        problem_type: formData.problem_type
+      };
 
-    const requestData = {
-      class_id: this.data.classId,
-      title: formData.title,
-      description: formData.description,
-      deadline: fullDeadline,
-      content: formData.content,
-      problem_type: formData.problem_type,
-      subject: formData.subject,
-      difficulty: formData.difficulty,
-      knowledge_points: formData.knowledge_points,
-      points: formData.points,
-      answer: formData.answer,
-      explanation: formData.explanation,
-      custom_prompt: formData.custom_prompt  // 添加自定义评分提示词
-    };
+      const url = `${app.globalData.globalUrl}/assignment/wx/update_assignment/${this.data.homeworkId}/`;
 
-    // 根据模式选择不同的接口
-    const url = this.data.isEditMode
-      ? `${app.globalData.globalUrl}/assignment/wx/update_assignment/${this.data.homeworkId}/`
-      : `${app.globalData.globalUrl}/assignment/wx/push_assignment/`;
+      console.log('编辑作业请求URL:', url);
+      console.log('编辑作业请求数据:', requestData);
+      
+      wx.request({
+        url: url,
+        method: 'POST',
+        header: {
+          'Authorization': `Bearer ${wx.getStorageSync('accessToken')}`,
+          'Content-Type': 'application/json'
+        },
+        data: requestData,
+        success: (res) => {
+          wx.hideLoading();
+          console.log('编辑作业响应:', res);
+          if (res.statusCode === 200 && res.data.success) {
+            wx.showToast({
+              title: '修改成功',
+              icon: 'success'
+            });
 
-    wx.request({
-      url: url,
-      method: 'POST',
-      header: {
-        'Authorization': `Bearer ${wx.getStorageSync('accessToken')}`,
-        'Content-Type': 'application/json'
-      },
-      data: requestData,
-      success: (res) => {
-        wx.hideLoading();
-        if (res.statusCode === 200) {
-          wx.showToast({
-            title: this.data.isEditMode ? '修改成功' : '发布成功',
-            icon: 'success'
-          });
-
-          setTimeout(() => {
-            // 刷新上一页数据
-            const pages = getCurrentPages();
-            const prevPage = pages[pages.length - 2];
-            if (prevPage) {
-              if (prevPage.fetchHomeworkList) {
-                prevPage.fetchHomeworkList();
-              } else if (prevPage.getHomeworkDetail) {
-                prevPage.getHomeworkDetail(this.data.homeworkId);
+            setTimeout(() => {
+              // 刷新上一页数据
+              const pages = getCurrentPages();
+              const prevPage = pages[pages.length - 2];
+              if (prevPage) {
+                if (prevPage.fetchHomeworkList) {
+                  prevPage.fetchHomeworkList();
+                } else if (prevPage.getHomeworkDetail) {
+                  prevPage.getHomeworkDetail(this.data.homeworkId);
+                }
               }
-            }
-            wx.navigateBack();
-          }, 1500);
-        } else {
-          wx.showToast({
-            title: res.data.message || '操作失败',
-            icon: 'none'
-          });
+              wx.navigateBack();
+            }, 1500);
+          } else {
+            wx.showToast({
+              title: res.data.message || '修改失败',
+              icon: 'none'
+            });
+          }
+        },
+        fail: () => {
+          wx.hideLoading();
+          wx.showToast({ title: '网络请求失败', icon: 'none' });
         }
-      },
-      fail: () => {
-        wx.hideLoading();
-        wx.showToast({ title: '网络请求失败', icon: 'none' });
+      });
+    } else {
+      // 新建模式：验证所有必填项
+      if (!formData.problem_type) {
+        return wx.showToast({ title: '请选择题目类型', icon: 'none' });
       }
-    });
+      if (!formData.subject) {
+        return wx.showToast({ title: '请选择科目', icon: 'none' });
+      }
+      if (formData.knowledge_points.length === 0) {
+        return wx.showToast({ title: '请至少选择一个知识点', icon: 'none' });
+      }
+      if (!formData.content.trim()) {
+        return wx.showToast({ title: '请输入题目内容', icon: 'none' });
+      }
+      if (!formData.answer.trim()) {
+        return wx.showToast({ title: '请输入正确答案', icon: 'none' });
+      }
+
+      const fullDeadline = `${date} ${time}:59`;
+
+      wx.showLoading({ title: '发布中...' });
+
+      const requestData = {
+        class_id: this.data.classId,
+        title: formData.title,
+        description: formData.description,
+        deadline: fullDeadline,
+        content: formData.content,
+        problem_type: formData.problem_type,
+        subject: formData.subject,
+        difficulty: formData.difficulty,
+        knowledge_points: formData.knowledge_points,
+        points: formData.points,
+        answer: formData.answer,
+        explanation: formData.explanation,
+        custom_prompt: formData.custom_prompt
+      };
+
+      const url = `${app.globalData.globalUrl}/assignment/wx/push_assignment/`;
+
+      wx.request({
+        url: url,
+        method: 'POST',
+        header: {
+          'Authorization': `Bearer ${wx.getStorageSync('accessToken')}`,
+          'Content-Type': 'application/json'
+        },
+        data: requestData,
+        success: (res) => {
+          wx.hideLoading();
+          if (res.statusCode === 200) {
+            wx.showToast({
+              title: '发布成功',
+              icon: 'success'
+            });
+
+            setTimeout(() => {
+              // 刷新上一页数据
+              const pages = getCurrentPages();
+              const prevPage = pages[pages.length - 2];
+              if (prevPage) {
+                if (prevPage.fetchHomeworkList) {
+                  prevPage.fetchHomeworkList();
+                } else if (prevPage.getHomeworkDetail) {
+                  prevPage.getHomeworkDetail(this.data.homeworkId);
+                }
+              }
+              wx.navigateBack();
+            }, 1500);
+          } else {
+            wx.showToast({
+              title: res.data.message || '发布失败',
+              icon: 'none'
+            });
+          }
+        },
+        fail: () => {
+          wx.hideLoading();
+          wx.showToast({ title: '网络请求失败', icon: 'none' });
+        }
+      });
+    }
   }
 });

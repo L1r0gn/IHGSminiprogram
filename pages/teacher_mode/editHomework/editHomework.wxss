@@ -326,3 +326,50 @@ page {
 }
 
 /* 自定义提示词样式 - 已统一使用普通textarea样式 */
+
+/* 编辑模式禁用样式 */
+.form-item.disabled {
+  opacity: 0.6;
+}
+
+.form-item.disabled .picker-box {
+  background: #e2e8f0;
+  color: #718096;
+}
+
+.form-item-vertical.disabled {
+  opacity: 0.6;
+}
+
+.textarea-disabled {
+  background: #e2e8f0 !important;
+  color: #718096 !important;
+}
+
+.section-disabled {
+  opacity: 0.7;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+}
+
+.tag-readonly {
+  cursor: default;
+}
+
+.tag-readonly:active {
+  transform: none;
+}
+
+/* 编辑提示样式 */
+.edit-hint {
+  font-size: 24rpx;
+  color: #e53e3e;
+  margin-left: 16rpx;
+  font-weight: normal;
+}
+
+.disabled-hint {
+  font-size: 24rpx;
+  color: #a0aec0;
+  margin-left: auto;
+  font-weight: normal;
+}

@@ -214,7 +214,6 @@
         maxlength="500"
       />
       <view class="word-count">{{formData.custom_prompt.length || 0}}/500</view>
-
     </view>
   </view>
 
