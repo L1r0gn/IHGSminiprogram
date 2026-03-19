@@ -34,6 +34,9 @@
   <button class="submit-button" bindtap='getRandomQuestion'>
     换一题
   </button>
+
+  <!-- 重做题目按钮-->
+  <button class="submit-button" bindtap="onRedoProblem" type="warn" style="color: white;">重做题目</button>
   <button 
     class="submit-button" 
     bindtap="submitAnswer" 

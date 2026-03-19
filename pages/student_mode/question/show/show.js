@@ -26,6 +26,37 @@ Page({
     }
   },
 
+  //新增重做题目
+  onRedoProblem() {
+    const token = wx.getStorageSync('accessToken');
+    const userId = wx.getStorageSync('userId');
+    const questionId = this.data.questionId;
+  
+    wx.request({
+      url: `${app.globalData.globalUrl}/grading/wx/redo-problem/`,
+      method: 'POST',
+      header: {
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      data: { problem_id: questionId, userId: userId },
+      success: (res) => {
+        if (res.data.code === 200) {
+          wx.showToast({ title: '可重新作答', icon: 'success' });
+          // 清空答案状态
+          this.setData({
+            selectedAnswer: '',
+            submitted_image_path: '',
+            options: this.data.options.map(item => ({...item, selected: false}))
+          });
+        } else {
+          wx.showToast({ title: res.data.error || '重做失败', icon: 'none' });
+        }
+      },
+      fail: () => wx.showToast({ title: '网络错误', icon: 'none' })
+    });
+  },
+
   // 新增：获取指定ID题目
   getSpecificQuestion(id) {
     const token = wx.getStorageSync('accessToken');
