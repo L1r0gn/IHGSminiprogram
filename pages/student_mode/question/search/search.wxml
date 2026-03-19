@@ -1,36 +1,74 @@
-<!-- pages/question/search/search.wxml -->
 <view class="container">
-  <!-- 顶部搜索区 -->
+  <!-- 顶部搜索区：8:2布局（搜索框+筛选按钮） -->
   <view class="search-header">
-    <view class="search-bar">
-      <icon type="search" size="16"></icon>
-      <input 
-        class="search-input" 
-        placeholder="搜索题目内容或知识点" 
-        confirm-type="search" 
-        bindconfirm="onSearch"
-        bindinput="onInput"
-        value="{{keyword}}"
-      />
-      <icon type="clear" size="16" wx:if="{{keyword}}" bindtap="clearKeyword"></icon>
-    </view>
-    
-    <!-- 知识点筛选 Picker -->
-      <!-- 暂时不用，用输入搜索 -->
-    <!-- <picker 
-      mode="selector" 
-      range="{{knowledgePoints}}" 
-      range-key="name" 
-      bindchange="onKpChange"
-    >
-      <view class="filter-btn {{selectedKp ? 'active' : ''}}">
-        {{selectedKp ? selectedKp.name : '按知识点筛选'}}
-        <text class="arrow">▼</text>
+    <view class="search-bar-wrap">
+      <view class="search-bar">
+        <icon type="search" size="16"></icon>
+        <input 
+          class="search-input" 
+          placeholder="搜索题目内容或知识点" 
+          confirm-type="search" 
+          bindconfirm="onSearch"
+          bindinput="onInput"
+          value="{{keyword}}"
+        />
+        <icon type="clear" size="16" wx:if="{{keyword}}" bindtap="clearKeyword"></icon>
       </view>
-    </picker> -->
+      
+      <!-- 筛选按钮（占2格） -->
+      <button class="filter-btn" bindtap="showFilter">筛选</button>
+    </view>
   </view>
 
-  <!-- 题目列表 -->
+  <!-- 完整可编译的筛选弹窗 -->
+  <view class="filter-modal" wx:if="{{showFilterModal}}">
+    <view class="modal-mask" bindtap="hideFilter"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">筛选条件</text>
+        <button class="clear-all-btn" bindtap="clearAllFilter">清空全部</button>
+      </view>
+
+      <!-- 题型筛选 -->
+      <view class="filter-section">
+        <text class="section-title">题型</text>
+        <view class="option-group">
+          <label class="option-item {{selectedType.single ? 'active' : ''}}" bindtap="onTypeChange" data-key="single">选择</label>
+          <label class="option-item {{selectedType.fill ? 'active' : ''}}" bindtap="onTypeChange" data-key="fill">填空</label>
+          <label class="option-item {{selectedType.qa ? 'active' : ''}}" bindtap="onTypeChange" data-key="qa">问答</label>
+          <label class="option-item {{selectedType.multi ? 'active' : ''}}" bindtap="onTypeChange" data-key="multi">多选</label>
+        </view>
+      </view>
+
+      <!-- 难度筛选 -->
+      <view class="filter-section">
+        <text class="section-title">难度</text>
+        <view class="option-group">
+          <label class="option-item {{selectedDiff.easy ? 'active' : ''}}" bindtap="onDifficultyChange" data-key="easy">简单</label>
+          <label class="option-item {{selectedDiff.medium ? 'active' : ''}}" bindtap="onDifficultyChange" data-key="medium">中等</label>
+          <label class="option-item {{selectedDiff.hard ? 'active' : ''}}" bindtap="onDifficultyChange" data-key="hard">困难</label>
+        </view>
+      </view>
+
+      <!-- 科目筛选 -->
+      <view class="filter-section">
+        <text class="section-title">科目</text>
+        <view class="option-group">
+          <label class="option-item {{selectedSubj.chinese ? 'active' : ''}}" bindtap="onSubjectChange" data-key="chinese">语文</label>
+          <label class="option-item {{selectedSubj.math ? 'active' : ''}}" bindtap="onSubjectChange" data-key="math">数学</label>
+          <label class="option-item {{selectedSubj.english ? 'active' : ''}}" bindtap="onSubjectChange" data-key="english">英语</label>
+          <label class="option-item {{selectedSubj.physics ? 'active' : ''}}" bindtap="onSubjectChange" data-key="physics">物理</label>
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="hideFilter">取消</button>
+        <button class="confirm-btn" bindtap="confirmFilter">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 题目列表（修复版） -->
   <scroll-view scroll-y class="question-list">
     <block wx:if="{{questionList.length > 0}}">
       <view
@@ -43,17 +81,20 @@
       >
         <view class="q-header">
           <view class="q-tags">
+            <!-- 题型：直接显示 -->
             <text class="tag type">{{item.problem_type}}</text>
+            <!-- 难度：简化显示 -->
             <text class="tag diff">{{item.difficulty}}</text>
           </view>
           <text class="q-id">#{{item.id}}</text>
         </view>
         
+        <!-- 题干：简化显示 -->
         <view class="q-title">{{item.title}}</view>
-        <view class="q-preview">{{item.content_preview}}</view>
+        <view class="q-preview">{{item.title}}</view>
         
-        <view class="q-footer" wx:if="{{item.knowledge_points.length > 0}}">
-          <image src="/images/icon_kp.png" class="kp-icon" wx:if="{{false}}"></image> <!-- 可选图标 -->
+        <!-- 知识点：直接显示（去掉 map） -->
+        <view class="q-footer" wx:if="{{item.knowledge_points}}">
           <text class="kp-text">考点: {{item.knowledge_points}}</text>
         </view>
       </view>
@@ -61,7 +102,6 @@
       <view class="loading-tip">已加载 {{questionList.length}} 条相关题目</view>
     </block>
     
-    <!-- 空状态 -->
     <block wx:else>
       <view class="empty-state">
         <text>🔍 暂无搜索结果</text>
