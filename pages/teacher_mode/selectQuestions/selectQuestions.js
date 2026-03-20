@@ -8,8 +8,12 @@ Page({
     selectedKp: null,    // 当前选中的知识点对象
     questionList: [],
     loading: false,
-    selectedQuestions: [], // 选中的题目ID列表
-    class_id: ''
+    selectedQuestions: [], // 选中的题目对象列表
+    class_id: '',
+    page: 1,
+    pageSize: 20,
+    hasMore: true,
+    total: 0
   },
 
   onLoad(options) {
@@ -54,7 +58,9 @@ Page({
     const kp = this.data.knowledgePoints[index];
 
     this.setData({
-      selectedKp: kp.id ? kp : null
+      selectedKp: kp.id ? kp : null,
+      page: 1,
+      questionList: []
     }, () => {
       this.doSearch();
     });
@@ -62,6 +68,10 @@ Page({
 
   // 执行搜索
   onSearch() {
+    this.setData({
+      page: 1,
+      questionList: []
+    });
     this.doSearch();
   },
 
@@ -71,7 +81,10 @@ Page({
 
     this.setData({ loading: true });
 
-    const params = {};
+    const params = {
+      page: this.data.page,
+      pageSize: this.data.pageSize
+    };
     if (this.data.keyword) params.keyword = this.data.keyword;
     if (this.data.selectedKp) params.kp_id = this.data.selectedKp.id;
 
@@ -88,12 +101,31 @@ Page({
               checked: this.data.selectedQuestions.some(sq => sq.id === item.id)
             };
           });
-          this.setData({ questionList: list });
+
+          // 如果是第一页，替换列表；否则追加
+          const newList = this.data.page === 1 ? list : [...this.data.questionList, ...list];
+
+          this.setData({
+            questionList: newList,
+            total: res.data.total || 0,
+            hasMore: newList.length < (res.data.total || 0)
+          });
         }
       },
       complete: () => {
         this.setData({ loading: false });
       }
+    });
+  },
+
+  // 加载更多
+  loadMore() {
+    if (!this.data.hasMore || this.data.loading) return;
+
+    this.setData({
+      page: this.data.page + 1
+    }, () => {
+      this.doSearch();
     });
   },
 
@@ -137,12 +169,27 @@ Page({
     }
 
     // 传递选中ID和班级ID
-    // 由于ID列表可能很长，建议放入 globalData 或者 storage，或者 just encodeURIComponent if short.
-    // 这里使用 Storage 传递较安全
     wx.setStorageSync('temp_selected_questions', this.data.selectedQuestions);
 
     wx.navigateTo({
       url: `/pages/teacher_mode/batchAssign/batchAssign?class_id=${this.data.class_id}`
     });
+  },
+
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.setData({
+      page: 1,
+      questionList: []
+    });
+    this.doSearch();
+    setTimeout(() => {
+      wx.stopPullDownRefresh();
+    }, 1000);
+  },
+
+  // 上拉加载更多
+  onReachBottom() {
+    this.loadMore();
   }
 });

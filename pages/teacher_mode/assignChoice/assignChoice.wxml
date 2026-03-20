@@ -2,52 +2,45 @@
 <view class="container">
   <view class="header">
     <text class="title">布置作业</text>
-    <text class="subtitle">请选择布置作业的方式</text>
+    <text class="subtitle">{{className}} - 请选择布置作业的方式</text>
   </view>
   
-  <view class="options-container">
-    <view class="option-card ai-card" bindtap="navigateToAIScan">
-      <view class="card-left">
+  <!-- 发布方式选择 -->
+  <view class="section">
+    <view class="section-title">选择发布方式</view>
+    <view class="options-grid">
+      <view class="option-card primary" bindtap="navigateToManualInput">
+        <view class="option-icon">✍️</view>
         <view class="option-content">
-          <text class="option-title">拍照AI识别(未开放)</text>
-          <text class="option-desc">拍摄作业题目，系统将自动识别并转换为可编辑的文本格式</text>
+          <text class="option-title">手动输入题目</text>
+          <text class="option-desc">创建全新题目，支持文本、图片、公式等多种格式</text>
         </view>
+        <view class="option-arrow">›</view>
+      </view>
+      
+      <view class="option-card secondary" bindtap="navigateToSelectQuestions">
+        <view class="option-icon">📚</view>
+        <view class="option-content">
+          <text class="option-title">从题库选择</text>
+          <text class="option-desc">从现有题库中选择题目，支持搜索和批量布置</text>
+        </view>
+        <view class="option-arrow">›</view>
       </view>
     </view>
-    
-    <view class="option-card manual-card" bindtap="navigateToManualInput">
-      <view class="card-left">
+  </view>
+  
+  
+  <!-- 作业管理 -->
+  <view class="section">
+    <view class="section-title">作业管理</view>
+    <view class="options-grid">
+      <view class="option-card tertiary" bindtap="navigateToClassHomeworkManagement">
+        <view class="option-icon">📋</view>
         <view class="option-content">
-          <text class="option-title">手动输入题目（测试中）</text>
-          <text class="option-desc">手动输入作业题目，支持文本、图片、公式等多种格式</text>
+          <text class="option-title">班级作业管理</text>
+          <text class="option-desc">查看和管理班级所有作业</text>
         </view>
-      </view>
-      <view class="arrow">
-        <image src="" class="arrow-image"></image>
-      </view>
-    </view>
-
-    <view class="option-card manual-card" bindtap="navigateToClassHomeworkManagement">
-      <view class="card-left">
-        <view class="option-content">
-          <text class="option-title">班级作业管理（测试中）</text>
-          <text class="option-desc">管理某班级作业</text>
-        </view>
-      </view>
-      <view class="arrow">
-        <image src="" class="arrow-image"></image>
-      </view>
-    </view>
-
-    <view class="option-card manual-card" bindtap="navigateToSelectQuestions">
-      <view class="card-left">
-        <view class="option-content">
-          <text class="option-title">从题库选择题目（测试中）</text>
-          <text class="option-desc">搜索并选择现有题目布置作业，支持批量布置</text>
-        </view>
-      </view>
-      <view class="arrow">
-        <image src="" class="arrow-image"></image>
+        <view class="option-arrow">›</view>
       </view>
     </view>
   </view>

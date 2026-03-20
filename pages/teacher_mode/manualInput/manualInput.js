@@ -52,17 +52,29 @@ Page({
   loadMetaData: function () {
     const token = wx.getStorageSync('accessToken');
     wx.request({
-      url: `${app.globalData.globalUrl}/assignment/wx/get_problem_meta_data/`,
+      url: `${app.globalData.globalUrl}/question/wx/get_problem_meta_data/`,
       method: 'GET',
       header: { 'Authorization': `Bearer ${token}` },
       success: (res) => {
-        if (res.statusCode === 200) {
+        if (res.statusCode === 200 && res.data.success) {
           this.setData({
             problemTypes: res.data.data.problemTypes,
             subjects: res.data.data.subjects,
             tags: res.data.data.tags,
           });
+        } else {
+          wx.showToast({
+            title: '加载元数据失败',
+            icon: 'none'
+          });
         }
+      },
+      fail: (err) => {
+        console.error('加载元数据失败:', err);
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
       }
     });
   },
@@ -159,9 +171,9 @@ Page({
     const token = wx.getStorageSync('accessToken');
     wx.showLoading({ title: '上传中...' });
 
-    // 使用通用上传接口或专门的作业图片上传接口
+    // 使用新的上传接口
     wx.uploadFile({
-      url: `${app.globalData.globalUrl}/common/wx/upload/image/`, // 假设的上传接口
+      url: `${app.globalData.globalUrl}/grading/wx/upload/image/`,
       filePath: filePath,
       name: 'file',
       header: { 'Authorization': `Bearer ${token}` },
@@ -170,11 +182,12 @@ Page({
         if (res.statusCode === 200) {
           try {
             const data = JSON.parse(res.data);
-            if (data.url) {
+            if (data.success && data.url) {
               const images = [...this.data.contentImages, data.url];
               this.setData({ contentImages: images });
+              wx.showToast({ title: '上传成功', icon: 'success' });
             } else {
-              wx.showToast({ title: '上传失败', icon: 'none' });
+              wx.showToast({ title: data.error || '上传失败', icon: 'none' });
             }
           } catch (e) {
             console.error('解析响应失败', e);
@@ -184,8 +197,9 @@ Page({
           wx.showToast({ title: '上传失败', icon: 'none' });
         }
       },
-      fail: () => {
+      fail: (err) => {
         wx.hideLoading();
+        console.error('上传失败:', err);
         wx.showToast({ title: '网络错误', icon: 'none' });
       }
     });
@@ -244,66 +258,78 @@ Page({
   // --- 提交逻辑 ---
   validateForm: function () {
     const { title, classIndex, deadlineDate, deadlineTime, subjectIndex, problemTypeIndex, content } = this.data;
-    if (!title) return '请输入标题';
+
+    // 基础信息验证
+    if (!title || title.trim().length === 0) return '请输入作业标题';
+    if (title.trim().length > 100) return '作业标题不能超过100个字符';
+
     if (classIndex < 0) return '请选择目标班级';
+
     if (!deadlineDate || !deadlineTime) return '请选择截止时间';
+
+    // 验证截止时间是否在当前时间之后
+    const now = new Date();
+    const deadline = new Date(`${deadlineDate} ${deadlineTime}`);
+    if (deadline <= now) return '截止时间必须晚于当前时间';
+
     if (subjectIndex < 0) return '请选择科目';
     if (problemTypeIndex < 0) return '请选择题型';
-    if (!content) return '请输入题目描述';
 
+    if (!content || content.trim().length === 0) return '请输入题目描述';
+    if (content.trim().length > 2000) return '题目描述不能超过2000个字符';
+
+    // 选择题验证
     if (this.data.isChoice) {
       if (this.data.answerIndex < 0) return '请选择正确答案';
+
       // 检查选项是否为空
+      let hasEmptyOption = false;
+      let emptyOptionKey = '';
       for (let opt of this.data.options) {
-        if (!opt.value.trim()) return `请填写选项${opt.key}的内容`;
+        if (!opt.value.trim()) {
+          hasEmptyOption = true;
+          emptyOptionKey = opt.key;
+          break;
+        }
       }
+      if (hasEmptyOption) return `请填写选项${emptyOptionKey}的内容`;
+
+      // 检查选项数量（至少2个）
+      if (this.data.options.length < 2) return '至少需要2个选项';
+
+      // 检查选项内容是否重复
+      const optionValues = this.data.options.map(opt => opt.value.trim().toLowerCase());
+      const uniqueValues = [...new Set(optionValues)];
+      if (uniqueValues.length !== optionValues.length) return '选项内容不能重复';
     } else {
-      // 非选择题可以允许参考答案为空，视业务需求而定，这里暂不校验
+      // 非选择题验证
+      if (this.data.answer && this.data.answer.trim().length > 500) {
+        return '参考答案不能超过500个字符';
+      }
     }
+
+    // 分值验证
+    if (this.data.points !== undefined && this.data.points !== null) {
+      const points = Number(this.data.points);
+      if (isNaN(points) || points < 0 || points > 100) return '分值必须在0-100之间';
+    }
+
+    // 难度验证
+    if (this.data.difficulty !== undefined && this.data.difficulty !== null) {
+      const difficulty = Number(this.data.difficulty);
+      if (isNaN(difficulty) || difficulty < 1 || difficulty > 5) return '难度必须在1-5之间';
+    }
+
+    // 预计时间验证
+    if (this.data.estimated_time !== undefined && this.data.estimated_time !== null) {
+      const estimatedTime = Number(this.data.estimated_time);
+      if (isNaN(estimatedTime) || estimatedTime < 1 || estimatedTime > 180) return '预计时间必须在1-180分钟之间';
+    }
+
     return null;
   },
 
-  collectFormData: function (status) {
-    const {
-      title, classList, classIndex, deadlineDate, deadlineTime,
-      problemTypes, problemTypeIndex, content, contentImages,
-      options, isChoice, answerIndex, answer
-    } = this.data;
-
-    const contentData = {
-      images: contentImages
-    };
-
-    if (isChoice) {
-      contentData.options = options;
-    }
-
-    const payload = {
-      class_id: classList[classIndex].id,
-      title: title,
-      status: status,
-      problem_type: problemTypes[problemTypeIndex].id,
-      subject: subjects[subjectIndex].id,
-      content: content,
-      content_data: contentData, // 结构化数据
-      deadline: `${deadlineDate} ${deadlineTime}:00`, // 拼接时间
-      difficulty: this.data.difficulty,
-      points: this.data.points,
-      estimated_time: this.data.estimated_time,
-      tags: [], // 暂无标签选择
-      knowledge_points: [], // 暂无知识点选择
-      explanation: '无' // 暂无解析输入
-    };
-
-    if (isChoice) {
-      payload.answer = options[answerIndex].key;
-    } else {
-      payload.answer = answer;
-    }
-
-    return payload;
-  },
-
+  // 提交表单
   submit: function (status) {
     const error = this.validateForm();
     if (error) {
@@ -311,11 +337,32 @@ Page({
       return;
     }
 
-    const payload = this.collectFormData(status);
+    // 构建请求数据
+    const payload = {
+      class_id: this.data.classList[this.data.classIndex].id,
+      title: this.data.title,
+      deadline: `${this.data.deadlineDate} ${this.data.deadlineTime}:00`,
+      subject: this.data.subjects[this.data.subjectIndex].id,
+      problem_type: this.data.problemTypes[this.data.problemTypeIndex].id,
+      content: this.data.content,
+      difficulty: this.data.difficulty || 3,
+      points: this.data.points || 10,
+      estimated_time: this.data.estimated_time || 10,
+      answer: this.data.isChoice ? this.data.options[this.data.answerIndex].value : this.data.answer,
+      explanation: '',
+      knowledge_points: [],
+      tags: [], // 添加空标签列表
+      custom_prompt: '' // 添加自定义提示词字段
+    };
+
+    // 如果有图片，添加到内容中
+    if (this.data.contentImages.length > 0) {
+      payload.content += '\n\n图片：\n' + this.data.contentImages.join('\n');
+    }
+
     const token = wx.getStorageSync('accessToken');
-    const url = this.data.assignmentId
-      ? `${app.globalData.globalUrl}/assignment/wx/update_assignment/${this.data.assignmentId}/`
-      : `${app.globalData.globalUrl}/assignment/wx/push_assignment/`;
+    // 修复API路径：从 /grading/wx/push_assignment/ 改为 /assignment/wx/push_assignment/
+    const url = `${app.globalData.globalUrl}/assignment/wx/push_assignment/`;
 
     wx.showLoading({ title: '提交中...' });
 
@@ -326,12 +373,13 @@ Page({
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      data: payload,
+      data: payload, // 直接发送对象，不要JSON.stringify
       success: (res) => {
         wx.hideLoading();
-        if (res.statusCode === 200 || res.statusCode === 201) {
+        console.log('API响应:', res);
+        if (res.statusCode === 200 && res.data.success) {
           wx.showToast({
-            title: status === 'PUBLISHED' ? '发布成功' : '已存草稿',
+            title: '作业发布成功',
             icon: 'success'
           });
           setTimeout(() => {
@@ -339,13 +387,14 @@ Page({
           }, 1500);
         } else {
           wx.showToast({
-            title: res.data.message || '提交失败',
+            title: res.data.error || '提交失败',
             icon: 'none'
           });
         }
       },
-      fail: () => {
+      fail: (err) => {
         wx.hideLoading();
+        console.error('提交失败:', err);
         wx.showToast({ title: '网络错误', icon: 'none' });
       }
     });
