@@ -14,7 +14,7 @@ page {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 24rpx;
   padding: 40rpx;
-  margin-bottom: 32rpx;
+  margin-bottom: 48rpx;
   color: white;
   box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3);
   animation: fadeIn 0.6s ease-out;
@@ -70,18 +70,19 @@ page {
 .knowledge-list {
   display: flex;
   flex-direction: column;
-  gap: 24rpx;
+  gap: 32rpx;
   margin-bottom: 32rpx;
 }
 
 .knowledge-item {
   background: white;
   border-radius: 24rpx;
-  padding: 32rpx;
+  padding: 36rpx;
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   overflow: hidden;
   animation: fadeInUp 0.5s ease-out both;
+  margin-bottom: 12px;
 }
 
 .knowledge-item:active {

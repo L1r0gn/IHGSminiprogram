@@ -127,6 +127,16 @@ Page({
     });
   },
 
+  // 查看作业详情（根据角色自动选择）
+  viewHomework(e) {
+    const homework = e.currentTarget.dataset.homework;
+    if (this.data.isTeacher) {
+      this.teacherViewHomework(e);
+    } else {
+      this.studentViewHomework(e);
+    }
+  },
+
   // 跳转到作业列表
   goToHomework() {
     console.log('发送给下一个页面的数据：', this.data.classInfo);

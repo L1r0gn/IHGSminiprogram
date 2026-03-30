@@ -82,12 +82,12 @@
   </scroll-view>
 
   <!-- 学习建议 -->
-  <view class="suggestions-section">
+  <!-- <view class="suggestions-section">
     <view class="section-header" bindtap="toggleSuggestions">
       <text class="section-title">学习建议</text>
       <text class="toggle-icon">{{showSuggestions ? '▲' : '▼'}}</text>
     </view>
-    
+
     <view class="suggestions-content" wx:if="{{showSuggestions}}">
       <block wx:if="{{profileData.suggestions && profileData.suggestions.length > 0}}">
         <view class="suggestion-item" wx:for="{{profileData.suggestions}}" wx:key="index">
@@ -98,7 +98,7 @@
         <text class="no-suggestions">暂无学习建议</text>
       </block>
     </view>
-  </view>
+  </view> -->
 
   <!-- 快捷操作 -->
   <view class="quick-actions">

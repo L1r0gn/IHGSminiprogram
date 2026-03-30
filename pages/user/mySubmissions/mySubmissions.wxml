@@ -1,48 +1,52 @@
-<view class="container">
-  <view class="header">
-    <text class="title">我的做题记录</text>
-  </view>
-
-  <view class="record-list">
-    <block wx:for="{{mySubmissions}}" wx:key="id">
-      <view class="record-item {{item.statusClass}}">
-        <!-- 问题标题 -->
-        <view class="problem-title">提交记录 #{{item.id}}</view>
-
-        <!-- 提交时间 -->
-        <view class="meta">
-          <text class="time">提交时间：{{item.formatted_time}}</text>
-          <text class="status {{item.statusClass}}">{{item.statusText}}</text>
-        </view>
-
-        <!-- 得分 -->
-        <view class="score-section">
-          <text wx:if="{{item.score !== null && item.score !== undefined}}" class="score">得分：{{item.score}} 分</text>
-          <text wx:else class="no-score">暂无评分</text>
-        </view>
-
-         <!-- 提交情况 -->
-         <view class="score-section">
-          <text wx:if="{{item.status!== null && item.status !== undefined}}" class="status">批改情况：{{item.status}}</text>
-          <text wx:else class="no-score">暂无批改情况</text>
-        </view>
-
-        <!-- 查看详情按钮 -->
-        <button class="detail-btn" size="mini" bindtap="goToDetail"  data-id="{{item.id}}">
-          查看详情
-        </button>
-      </view>
-    </block>
+<view class="page-container">
+  <view class="content-wrapper">
+    <!-- 页面头部 -->
+    <view class="page-header">
+      <text class="page-title">我的做题记录</text>
+      <text class="page-subtitle">查看所有提交的答题记录</text>
+    </view>
 
     <!-- 加载状态 -->
-    <view class="loading-footer" style="text-align: center; padding: 20rpx; color: #999; font-size: 24rpx;" wx:if="{{mySubmissions.length > 0}}">
-      <view wx:if="{{isLoading}}">加载中...</view>
-      <view wx:elif="{{!hasMore}}">没有更多数据了</view>
+    <view class="loading-state" wx:if="{{isLoading && mySubmissions.length === 0}}">
+      <view class="loading-spinner"></view>
+      <text class="loading-text">加载中...</text>
     </view>
 
     <!-- 空状态 -->
-    <view wx:if="{{mySubmissions.length === 0 && !isLoading}}" class="empty">
-      <text>暂无做题记录</text>
+    <view class="empty-state" wx:if="{{empty && !isLoading}}">
+      <text class="empty-icon">📝</text>
+      <text class="empty-text">暂无做题记录</text>
+      <text class="empty-desc">开始答题后即可查看您的提交记录</text>
+      <button class="start-btn" bindtap="goToPractice">开始答题</button>
+    </view>
+
+    <!-- 提交记录列表 -->
+    <view class="submission-list" wx:if="{{!empty && !isLoading || mySubmissions.length > 0}}">
+      <block wx:for="{{mySubmissions}}" wx:key="id">
+        <view
+          class="submission-item"
+          bindtap="goToDetail"
+          data-id="{{item.id}}"
+        >
+          <view class="submission-header">
+            <text class="submission-title">{{item.question_title || '提交记录 #' + item.id}}</text>
+            <view class="submission-status status-{{item.statusClass}}">
+              {{item.statusText}}
+            </view>
+          </view>
+
+          <view class="submission-meta">
+            <text class="submission-time">提交时间：{{item.formatted_time || '未知'}}</text>
+            <text class="submission-score">{{item.score || 0}} 分</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 加载更多提示 -->
+      <view class="load-more" wx:if="{{mySubmissions.length > 0}}">
+        <text wx:if="{{isLoading}}">加载中...</text>
+        <text wx:elif="{{!hasMore}}">没有更多数据了</text>
+      </view>
     </view>
   </view>
 </view>

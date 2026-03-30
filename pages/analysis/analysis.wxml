@@ -64,7 +64,6 @@
               class="knowledge-item"
               wx:for="{{bktData.knowledgePoints}}"
               wx:key="id"
-              bindtap="viewKnowledgeDetail"
               data-item="{{item}}"
             >
               <view class="knowledge-header">

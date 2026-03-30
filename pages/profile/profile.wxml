@@ -61,11 +61,11 @@
           <text class="menu-arrow">→</text>
         </view>
         
-        <view class="menu-item" bindtap="viewSubmissionRecord">
+        <!-- <view class="menu-item" bindtap="viewSubmissionRecord">
           <view class="menu-icon">📊</view>
           <text class="menu-text">提交记录</text>
           <text class="menu-arrow">→</text>
-        </view>
+        </view> -->
         
         <view class="menu-item" bindtap="viewKnowledgeProfile">
           <view class="menu-icon">🎯</view>
@@ -80,7 +80,7 @@
       <view class="menu-list">
         <view class="menu-item" bindtap="viewMyClass">
           <view class="menu-icon">📚</view>
-          <text class="menu-text">我的班级</text>
+          <text class="menu-text">我的课程</text>
           <text class="menu-arrow">→</text>
         </view>
         

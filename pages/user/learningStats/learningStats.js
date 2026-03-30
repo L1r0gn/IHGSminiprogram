@@ -22,14 +22,7 @@ Page({
   },
 
   onShow() {
-    const appInstance = getApp();
-    if (appInstance.globalData.currentTab !== 'learningStats') {
-      appInstance.globalData.currentTab = 'learningStats';
-      wx.reLaunch({
-        url: '/pages/user/learningStats/learningStats'
-      });
-      return;
-    }
+    // 移除 reLaunch 逻辑，非 tabBar 页面不需要强制重载
   },
 
   onPullDownRefresh() {
@@ -57,6 +50,7 @@ Page({
       url: `${app.globalData.globalUrl}/grading/wx/submissions/`,
       method: 'GET',
       header: { 'Authorization': `Bearer ${token}` },
+      timeout: 10000,
       data: {
         page: 1,
         limit: this.data.pageSize,
@@ -145,6 +139,7 @@ Page({
       url: `${app.globalData.globalUrl}/grading/wx/submissions/`,
       method: 'GET',
       header: { 'Authorization': `Bearer ${token}` },
+      timeout: 10000,
       data: {
         page: nextPage,
         limit: this.data.pageSize,

@@ -3,7 +3,8 @@ Page({
     classList: [],
     isLoading: false,
     showJoinModal: false,
-    classCode: ''
+    classCode: '',
+    empty: false
   },
 
   onShow() {
@@ -137,14 +138,17 @@ Page({
           const enhancedClassList = classList.map(item => {
             return {
               ...item,
-              color: this.getRandomColor()
+              studentCount: item.studentCount || 0
             };
           });
-          this.setData({ classList: enhancedClassList });
+          this.setData({
+            classList: enhancedClassList,
+            empty: enhancedClassList.length === 0
+          });
         } else {
-          wx.showToast({
-            title: '数据格式错误',
-            icon: 'none'
+          this.setData({
+            classList: [],
+            empty: true
           });
         }
       },
@@ -195,17 +199,5 @@ Page({
   onPullDownRefresh() {
     this.fetchJoinedClasses();
     wx.stopPullDownRefresh();
-  },
-
-  // 辅助函数：生成随机颜色
-  getRandomColor() {
-    const colors = [
-      'linear-gradient(135deg, #5b86e5 0%, #36d1dc 100%)',
-      // 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)',
-      // 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
-      // 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-      // 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)'
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
   }
 });
