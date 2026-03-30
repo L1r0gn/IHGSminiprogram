@@ -18,13 +18,17 @@ Page({
     roleOptions: ['学生', '教师'],
     roleIndex: -1,
     phone: '',
-    isFromLogin: false
+    isFromLogin: false,
+    cachedAvatarUrl: null
   },
 
   onLoad() {
     const savedUserInfo = wx.getStorageSync('userInfo');
     if (savedUserInfo && savedUserInfo.nickName) {
       console.log('用户有本地保存数据，可自动登录');
+
+      // 从缓存加载头像
+      this.loadAvatarFromCache();
 
       // 检查头像是否为临时路径 (以 http://tmp, wxfile://, http://127.0.0.1 开头)
       // 如果是临时路径，则视为已过期，重置为默认头像
@@ -68,7 +72,85 @@ Page({
       ['userInfo.avatarUrl']: avatarUrl,
       ['userInfo.wx_avatar']: avatarUrl,
       hasUserInfo: hasUserInfo,
-      loginFailed: false
+      loginFailed: false,
+      cachedAvatarUrl: avatarUrl // 更新缓存的临时头像
+    });
+
+    // 保存头像到缓存
+    this.saveAvatarToCache(avatarUrl);
+  },
+
+  // 从缓存加载头像
+  loadAvatarFromCache() {
+    const avatarCache = wx.getStorageSync('avatarCache');
+    const now = Date.now();
+
+    if (avatarCache && avatarCache.expires > now) {
+      // 缓存有效
+      console.log('使用缓存的头像:', avatarCache.avatarUrl);
+      this.setData({
+        cachedAvatarUrl: avatarCache.avatarUrl
+      });
+    } else if (avatarCache && avatarCache.expires <= now) {
+      // 缓存过期，清除
+      console.log('头像缓存已过期');
+      wx.removeStorageSync('avatarCache');
+      this.setData({
+        cachedAvatarUrl: null
+      });
+    }
+  },
+
+  // 保存头像到本地缓存
+  saveAvatarToCache(tempPath) {
+    const that = this;
+    const userInfo = wx.getStorageSync('userInfo') || {};
+    const timestamp = Date.now();
+
+    // 检查是否为临时路径
+    const isTempPath = typeof tempPath === 'string' && (
+      tempPath.startsWith('http://tmp') ||
+      tempPath.startsWith('wxfile://') ||
+      tempPath.includes('127.0.0.1') ||
+      tempPath.startsWith('blob:')
+    );
+
+    if (!isTempPath) {
+      // 如果是网络地址，直接保存URL和过期时间
+      const cacheData = {
+        avatarUrl: tempPath,
+        timestamp: timestamp,
+        expires: timestamp + (30 * 24 * 60 * 60 * 1000) // 30天后过期
+      };
+      wx.setStorageSync('avatarCache', cacheData);
+      console.log('头像URL已缓存:', tempPath);
+      this.setData({
+        cachedAvatarUrl: tempPath
+      });
+      return;
+    }
+
+    // 如果是临时路径，保存到本地文件系统
+    wx.saveFile({
+      tempFilePath: tempPath,
+      success(res) {
+        const savedFilePath = res.savedFilePath;
+        console.log('头像已保存到本地文件:', savedFilePath);
+
+        // 保存缓存信息
+        const cacheData = {
+          avatarUrl: savedFilePath,
+          timestamp: timestamp,
+          expires: timestamp + (30 * 24 * 60 * 60 * 1000) // 30天后过期
+        };
+        wx.setStorageSync('avatarCache', cacheData);
+        that.setData({
+          cachedAvatarUrl: savedFilePath
+        });
+      },
+      fail(err) {
+        console.error('保存头像到本地失败:', err);
+      }
     });
   },
   uploadAvatar(tempPath) {
@@ -171,6 +253,8 @@ Page({
               wx.setStorageSync('refreshToken', res.data.refresh);
               wx.setStorageSync('isLoggedIn', true);
               wx.setStorageSync('userId', res.data.user_id);
+              // 保存用户信息到本地
+              wx.setStorageSync('userInfo', userInfo);
 
               // 检查用户是否需要补充个人信息
               this.checkUserProfile(res.data.user_id);

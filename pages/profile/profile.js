@@ -12,7 +12,8 @@ Page({
       totalQuestions: 0,
       accuracy: 0,
       studyDays: 0
-    }
+    },
+    cachedAvatarUrl: null
   },
 
   onShow() {
@@ -38,7 +39,54 @@ Page({
     this.setData({ isLoggedIn, userId });
 
     if (isLoggedIn) {
+      // 先从缓存加载头像
+      this.loadAvatarFromCache();
       this.fetchUserInfo();
+    }
+  },
+
+  // 从缓存加载头像
+  loadAvatarFromCache() {
+    const avatarCache = wx.getStorageSync('avatarCache');
+    const now = Date.now();
+
+    if (avatarCache && avatarCache.expires > now) {
+      // 缓存有效
+      console.log('使用缓存的头像:', avatarCache.avatarUrl);
+      this.setData({
+        cachedAvatarUrl: avatarCache.avatarUrl
+      });
+    } else if (avatarCache && avatarCache.expires <= now) {
+      // 缓存过期，清除
+      console.log('头像缓存已过期');
+      wx.removeStorageSync('avatarCache');
+      this.setData({
+        cachedAvatarUrl: null
+      });
+    }
+  },
+
+  // 保存头像到缓存
+  saveAvatarToCache(avatarUrl) {
+    if (!avatarUrl || avatarUrl === defaultAvatarUrl) {
+      return;
+    }
+
+    const timestamp = Date.now();
+    const avatarCache = wx.getStorageSync('avatarCache') || {};
+
+    // 如果新头像与缓存不同，更新缓存
+    if (!avatarCache.avatarUrl || avatarCache.avatarUrl !== avatarUrl) {
+      const cacheData = {
+        avatarUrl: avatarUrl,
+        timestamp: timestamp,
+        expires: timestamp + (30 * 24 * 60 * 60 * 1000) // 30天后过期
+      };
+      wx.setStorageSync('avatarCache', cacheData);
+      console.log('头像已更新到缓存:', avatarUrl);
+      this.setData({
+        cachedAvatarUrl: avatarUrl
+      });
     }
   },
 
@@ -64,6 +112,8 @@ Page({
           });
           this.updateUserRole();
           this.fetchLearningStats();
+          // 保存最新头像到缓存
+          this.saveAvatarToCache(res.data.data.wx_avatar);
         }
       }
     });
@@ -208,6 +258,7 @@ Page({
           wx.removeStorageSync('userId');
           wx.removeStorageSync('isLoggedIn');
           wx.removeStorageSync('userInfo');
+          wx.removeStorageSync('avatarCache');
           
           this.setData({
             userInfo: null,

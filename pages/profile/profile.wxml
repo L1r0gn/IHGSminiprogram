@@ -7,7 +7,7 @@
       <block wx:if="{{isLoggedIn}}">
         <image 
           class="user-avatar" 
-          src="{{userInfo.wx_avatar || defaultAvatarUrl}}" 
+          src="{{cachedAvatarUrl || userInfo.wx_avatar || defaultAvatarUrl}}" 
           mode="aspectFill"
         ></image>
         <view class="user-info">
