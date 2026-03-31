@@ -142,5 +142,16 @@ Page({
       // TODO: 确认你的作业详情页路径
       url: `/pages/teacher_mode/homeworkDetail/homeworkDetail?assignment_id=${homeworkId}&class_id=${this.data.class_id}`
     });
+  },
+
+  /**
+   * 跳转到编辑作业页
+   */
+  navigateToEdit: function (e) {
+    const homeworkId = e.currentTarget.dataset.homeworkId;
+    console.log('跳转到assignment_id为',homeworkId,'的编辑作业页')
+    wx.navigateTo({
+      url: `/pages/teacher_mode/editHomework/editHomework?homework_id=${homeworkId}&class_id=${this.data.class_id}`
+    });
   }
 });

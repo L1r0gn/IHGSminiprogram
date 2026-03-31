@@ -183,6 +183,40 @@ page {
   transform: translateX(4rpx);
 }
 
+/* 底部按钮组 */
+.footer-btns {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.edit-btn {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #48bb78;
+  font-weight: 500;
+  padding: 8rpx 20rpx;
+  border-radius: 30rpx;
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.1) 0%, rgba(56, 161, 105, 0.1) 100%);
+  transition: all 0.2s ease;
+}
+
+.edit-btn .arrow-icon {
+  font-size: 32rpx;
+  margin-left: 4rpx;
+  transition: transform 0.2s ease;
+}
+
+.edit-btn:active {
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.2) 0%, rgba(56, 161, 105, 0.2) 100%);
+  transform: scale(0.98);
+}
+
+.edit-btn:active .arrow-icon {
+  transform: translateX(4rpx);
+}
+
 /* 空状态 */
 .empty-container {
   display: flex;
