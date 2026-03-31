@@ -7,7 +7,7 @@
         wx:else
         class="nav-avatar" 
         bindtap="handleAvatarTap" 
-        src="{{userInfo.wx_avatar || defaultAvatarUrl}}" 
+        src="{{cachedAvatarUrl || userInfo.wx_avatar || defaultAvatarUrl}}" 
         mode="aspectFill"
       ></image>
     </view>
@@ -48,7 +48,7 @@
         <navigator url="/pages/user/learningStats/learningStats" class="quick-item" wx:if="{{isStudent}}">
           <view class="quick-icon icon-orange">📊</view>
           <view class="quick-info">
-            <text class="quick-name">学习数据</text>
+            <text class="quick-name">提交记录</text>
             <text class="quick-desc">查看学习报告</text>
           </view>
         </navigator>

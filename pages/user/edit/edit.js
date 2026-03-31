@@ -5,7 +5,8 @@ Page({
     userInfo: {},
     genderOptions: ['男', '女'],
     genderIndex: -1,
-    loading: true
+    loading: true,
+    cachedAvatarUrl: null
   },
 
   onLoad() {
@@ -21,6 +22,9 @@ Page({
       wx.navigateBack();
       return;
     }
+
+    // 先从缓存加载头像
+    this.loadAvatarFromCache();
 
     wx.request({
       url: `${app.globalData.globalUrl}/user/wx/edit/${userId}`,
@@ -49,6 +53,11 @@ Page({
           genderIndex: genderIndex >= 0 ? genderIndex : -1,
           loading: false
         });
+
+        // 保存头像到缓存
+        if (user.wx_avatar) {
+          this.saveAvatarToCache(user.wx_avatar);
+        }
       },
       fail: (err) => {
         console.error('获取用户信息失败', err);
@@ -56,6 +65,51 @@ Page({
         this.setData({ loading: false });
       }
     });
+  },
+
+  // 从缓存加载头像
+  loadAvatarFromCache() {
+    const avatarCache = wx.getStorageSync('avatarCache');
+    const now = Date.now();
+
+    if (avatarCache && avatarCache.expires > now) {
+      // 缓存有效
+      console.log('使用缓存的头像:', avatarCache.avatarUrl);
+      this.setData({
+        cachedAvatarUrl: avatarCache.avatarUrl
+      });
+    } else if (avatarCache && avatarCache.expires <= now) {
+      // 缓存过期，清除
+      console.log('头像缓存已过期');
+      wx.removeStorageSync('avatarCache');
+      this.setData({
+        cachedAvatarUrl: null
+      });
+    }
+  },
+
+  // 保存头像到缓存
+  saveAvatarToCache(avatarUrl) {
+    if (!avatarUrl || avatarUrl === 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0') {
+      return;
+    }
+
+    const timestamp = Date.now();
+    const avatarCache = wx.getStorageSync('avatarCache') || {};
+
+    // 如果新头像与缓存不同，更新缓存
+    if (!avatarCache.avatarUrl || avatarCache.avatarUrl !== avatarUrl) {
+      const cacheData = {
+        avatarUrl: avatarUrl,
+        timestamp: timestamp,
+        expires: timestamp + (30 * 24 * 60 * 60 * 1000) // 30天后过期
+      };
+      wx.setStorageSync('avatarCache', cacheData);
+      console.log('头像已更新到缓存:', avatarUrl);
+      this.setData({
+        cachedAvatarUrl: avatarUrl
+      });
+    }
   },
 
   saveToServer() {
@@ -129,9 +183,11 @@ Page({
   onChooseAvatar(e) {
     const { avatarUrl } = e.detail;
     this.setData({
-      ['userInfo.wx_avatar']: avatarUrl
+      ['userInfo.wx_avatar']: avatarUrl,
+      cachedAvatarUrl: avatarUrl
     });
     this.uploadAvatar(avatarUrl);
+    this.saveAvatarToCache(avatarUrl);
   },
 
   uploadAvatar(tempPath) {

@@ -1,4 +1,4 @@
-/* pages/myClass/myClass.wxss - 简约风格 */
+/* pages/student_mode/myclass/myclass.wxss - 简约风格 */
 page {
   background-color: #f5f7fa;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
@@ -32,210 +32,43 @@ page {
   display: block;
 }
 
-/* 加入班级区域 */
-.join-section {
-  background: #fff;
-  border-radius: 28rpx;
-  padding: 32rpx;
+/* 创建课程按钮 */
+.create-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
   display: flex;
   align-items: center;
-  margin-bottom: 32rpx;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  animation: fadeInUp 0.6s ease-out 0.2s both;
+  color: white;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.3);
 }
 
-.join-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.btn-icon {
+  font-size: 44rpx;
+  margin-right: 20rpx;
 }
 
-.join-section:active {
-  transform: translateY(-8rpx) scale(1.02);
-  box-shadow: 0 16rpx 40rpx rgba(102, 126, 234, 0.2);
-}
-
-.join-section:active::before {
-  opacity: 1;
-}
-
-.join-text {
+.btn-text {
   flex: 1;
 }
 
-.join-title {
-  font-size: 36rpx;
+.btn-title {
+  font-size: 32rpx;
   font-weight: 600;
-  color: #1e293b;
   display: block;
   margin-bottom: 8rpx;
 }
 
-.join-desc {
-  font-size: 26rpx;
-  color: #64748b;
-  display: block;
-}
-
-.join-arrow {
-  font-size: 48rpx;
-  color: #cbd5e1;
-  margin-left: 24rpx;
-  transition: all 0.3s ease;
-}
-
-.join-section:active .join-arrow {
-  transform: translateX(10rpx);
-  color: #667eea;
-}
-
-/* 班级列表 */
-.class-section {
-  margin-bottom: 40rpx;
-}
-
-.section-title {
-  font-size: 36rpx;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 32rpx;
-  display: block;
-}
-
-.class-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 32rpx;
-}
-
-.class-card {
-  background: #fff;
-  border-radius: 28rpx;
-  padding: 32rpx;
-  display: flex;
-  align-items: center;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-/* 交错淡入动画 */
-.class-card:nth-child(1) {
-  animation: fadeInUp 0.6s ease-out 0.1s both;
-}
-
-.class-card:nth-child(2) {
-  animation: fadeInUp 0.6s ease-out 0.2s both;
-}
-
-.class-card:nth-child(3) {
-  animation: fadeInUp 0.6s ease-out 0.3s both;
-}
-
-.class-card:nth-child(4) {
-  animation: fadeInUp 0.6s ease-out 0.4s both;
-}
-
-.class-card:nth-child(5) {
-  animation: fadeInUp 0.6s ease-out 0.5s both;
-}
-
-.class-card:nth-child(n+6) {
-  animation: fadeInUp 0.6s ease-out 0.6s both;
-}
-
-.class-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.class-card:active {
-  transform: translateY(-8rpx) scale(1.02);
-  box-shadow: 0 16rpx 40rpx rgba(102, 126, 234, 0.2);
-}
-
-.class-card:active::before {
-  opacity: 1;
-}
-
-.class-icon {
-  width: 120rpx;
-  height: 120rpx;
-  border-radius: 24rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 32rpx;
-  flex-shrink: 0;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.class-card:active .class-icon {
-  transform: scale(1.1) rotate(5deg);
-  box-shadow: 0 8rpx 20rpx rgba(0, 0, 0, 0.2);
-}
-
-.icon-text {
-  font-size: 48rpx;
-  font-weight: 700;
-  color: #fff;
-}
-
-.class-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.class-name {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: #1e293b;
-  display: block;
-  margin-bottom: 16rpx;
-  line-height: 1.4;
-  transition: color 0.3s ease;
-}
-
-.class-card:active .class-name {
-  color: #667eea;
-}
-
-.class-code {
-  font-size: 26rpx;
-  color: #64748b;
-  display: block;
-  margin-bottom: 8rpx;
-}
-
-.class-meta {
-  display: flex;
-  gap: 12rpx;
-}
-
-.meta-item {
+.btn-desc {
   font-size: 24rpx;
-  color: #94a3b8;
-  background: #f5f7fa;
-  padding: 8rpx 16rpx;
-  border-radius: 20rpx;
+  opacity: 0.9;
+  display: block;
+}
+
+.btn-arrow {
+  font-size: 36rpx;
+  font-weight: bold;
 }
 
 /* 空状态 */
@@ -263,7 +96,13 @@ page {
   margin-bottom: 40rpx;
 }
 
-.empty-btn {
+.empty-tip {
+  font-size: 24rpx;
+  color: #999;
+  display: block;
+}
+
+.join-btn {
   width: 300rpx;
   height: 88rpx;
   line-height: 88rpx;
@@ -277,13 +116,108 @@ page {
   transition: all 0.3s ease;
 }
 
-.empty-btn::after {
+.join-btn::after {
   border: none;
 }
 
-.empty-btn:active {
+.join-btn:active {
   transform: scale(0.95);
   box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
+}
+
+/* 课程列表 */
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+/* 学生端课程卡片 */
+.course-item.student-card {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+  background: white;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-left: none;
+}
+
+.course-item.student-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.course-item.student-card:active {
+  transform: translateY(-8rpx) scale(1.02);
+  box-shadow: 0 16rpx 40rpx rgba(102, 126, 234, 0.2);
+}
+
+.course-item.student-card:active::before {
+  opacity: 1;
+}
+
+.course-item.student-card .course-arrow {
+  font-size: 40rpx;
+  color: #cbd5e1;
+  margin-left: 24rpx;
+  transition: transform 0.3s ease;
+}
+
+.course-item.student-card:active .course-arrow {
+  transform: translateX(10rpx);
+  color: #667eea;
+}
+
+.course-item.student-card .course-name {
+  color: #1e293b;
+  transition: color 0.3s ease;
+}
+
+.course-item.student-card:active .course-name {
+  color: #667eea;
+}
+
+.course-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.course-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.course-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.teacher,
+.count {
+  font-size: 26rpx;
+  color: #64748b;
+}
+
+.course-arrow {
+  font-size: 40rpx;
+  color: #cbd5e1;
 }
 
 /* 加载状态 */
@@ -319,24 +253,140 @@ page {
   color: #64748b;
 }
 
-/* 基础动画 */
+/* 模态框样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 20rpx;
+  width: 85%;
+  max-width: 600rpx;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 36rpx;
+  color: #999;
+  padding: 10rpx;
+}
+
+.modal-body {
+  padding: 30rpx;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.form-group {
+  margin-bottom: 30rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 15rpx;
+}
+
+.form-input {
+  border: 2rpx solid #e8e8e8;
+  border-radius: 10rpx;
+  padding: 30rpx;
+  font-size: 26rpx;
+  background: #fafafa;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 20rpx;
+  padding: 0 30rpx 30rpx;
+}
+
+.modal-btn {
+  flex: 1;
+  border: none;
+  border-radius: 10rpx;
+  padding: 24rpx 0;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.modal-btn::after {
+  border: none;
+}
+
+.cancel-btn {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.cancel-btn:active {
+  background: #e8e8e8;
+}
+
+.confirm-btn {
+  background: #1890ff;
+  color: white;
+}
+
+.confirm-btn:active {
+  background: #096dd9;
+}
+
+.confirm-btn[disabled] {
+  background: #e2e8f0;
+  color: #94a3b8;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -347,157 +397,4 @@ page {
   50% {
     transform: scale(1.05);
   }
-}
-
-/* 加入班级弹窗样式 */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  padding: 40rpx;
-  box-sizing: border-box;
-}
-
-.modal-container {
-  background: white;
-  border-radius: 28rpx;
-  width: 100%;
-  max-width: 600rpx;
-  overflow: hidden;
-  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.2);
-  animation: modalSlideIn 0.3s ease-out;
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-50rpx);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 32rpx;
-  border-bottom: 1rpx solid #e2e8f0;
-}
-
-.modal-title {
-  font-size: 36rpx;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-.modal-close {
-  font-size: 48rpx;
-  color: #94a3b8;
-  padding: 16rpx;
-  margin: -16rpx;
-  line-height: 1;
-  transition: color 0.3s ease;
-}
-
-.modal-close:active {
-  color: #667eea;
-}
-
-.modal-body {
-  padding: 32rpx;
-}
-
-.form-group {
-  margin-bottom: 24rpx;
-}
-
-.form-label {
-  display: block;
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #1e293b;
-  margin-bottom: 20rpx;
-}
-
-.form-input {
-  width: 100%;
-  height: 88rpx;
-  border: 2rpx solid #e2e8f0;
-  border-radius: 16rpx;
-  padding: 0 24rpx;
-  font-size: 28rpx;
-  background: #fafafa;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
-}
-
-.form-input:focus {
-  border-color: #667eea;
-  background: #fff;
-  box-shadow: 0 0 0 4rpx rgba(102, 126, 234, 0.1);
-}
-
-.tip-text {
-  font-size: 24rpx;
-  color: #94a3b8;
-  line-height: 1.5;
-}
-
-.modal-footer {
-  display: flex;
-  gap: 20rpx;
-  padding: 0 32rpx 32rpx;
-}
-
-.modal-btn {
-  flex: 1;
-  border: none;
-  border-radius: 16rpx;
-  padding: 24rpx 0;
-  font-size: 28rpx;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  height: 88rpx;
-  line-height: 40rpx;
-}
-
-.modal-btn::after {
-  border: none;
-}
-
-.modal-btn.cancel {
-  background: #f5f7fa;
-  color: #64748b;
-}
-
-.modal-btn.cancel:active {
-  background: #e2e8f0;
-  transform: scale(0.98);
-}
-
-.modal-btn.confirm {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.3);
-}
-
-.modal-btn.confirm:active {
-  transform: scale(0.95);
-  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.4);
-}
-
-.modal-btn.confirm[disabled] {
-  background: #e2e8f0;
-  color: #94a3b8;
-  box-shadow: none;
 }

@@ -5,13 +5,19 @@ Page({
   data: {
     mySubmissions: [],
     page: 1,
-    pageSize: 10,
+    pageSize: 20,
     hasMore: true,
-    isLoading: false
+    isLoading: false,
+    empty: false
   },
 
   onLoad() {
     this.fetchSubmissions({ page: 1, refresh: true });
+  },
+
+  onShow() {
+    // 如果需要每次显示都刷新，可以取消注释
+    // this.fetchSubmissions({ page: 1, refresh: true });
   },
 
   // 下拉刷新
@@ -28,7 +34,7 @@ Page({
   // 触底加载更多
   onReachBottom() {
     if (this.data.isLoading || !this.data.hasMore) return;
-    
+
     this.setData({
       page: this.data.page + 1
     });
@@ -45,8 +51,8 @@ Page({
     const { page = this.data.page, limit = this.data.pageSize } = params;
 
     if (!userId) {
-      wx.showToast({ title: '用户未登录', icon: 'none' });
-      this.setData({ isLoading: false });
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      this.setData({ isLoading: false, empty: true });
       return;
     }
 
@@ -69,16 +75,19 @@ Page({
             icon: 'none'
           });
           wx.removeStorageSync('accessToken');
-          wx.navigateTo({
-            url: '/pages/login/login'
-          });
+          wx.removeStorageSync('userId');
+          setTimeout(() => {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            });
+          }, 1500);
           return;
         }
-        
+
         if (res.statusCode === 200) {
-          // 适配新旧接口结构 (优先使用新结构 res.data.data, 兼容旧结构 res.data.mySubmissions)
+          // 适配新旧接口结构
           const rawList = res.data.data || res.data.mySubmissions || [];
-          
+
           // 处理数据，添加显示用的属性
           const processedList = rawList.map(item => {
             // 格式化时间
@@ -94,10 +103,9 @@ Page({
 
             return {
               ...item,
-              // 关键修正：映射 record_id 到 id，确保 WXML 中的 item.id 和 data-id 能取到值
               id: item.record_id || item.id,
-              // 确保 formatted_time 存在
               formatted_time: formattedTime,
+              question_title: item.question_title || '未知题目',
               statusClass: this.getStatusClass(item.status),
               statusText: this.getStatusText(item.status)
             };
@@ -106,12 +114,14 @@ Page({
           if (params.refresh) {
             this.setData({
               mySubmissions: processedList,
-              hasMore: rawList.length >= limit
+              hasMore: rawList.length >= limit,
+              empty: processedList.length === 0
             });
           } else {
             this.setData({
               mySubmissions: [...this.data.mySubmissions, ...processedList],
-              hasMore: rawList.length >= limit
+              hasMore: rawList.length >= limit,
+              empty: false
             });
           }
 
@@ -119,8 +129,6 @@ Page({
           if (typeof res.data.has_more !== 'undefined') {
             this.setData({ hasMore: res.data.has_more });
           }
-          
-          console.log('当前做题记录列表：', this.data.mySubmissions);
         }
       },
       fail: (err) => {
@@ -138,7 +146,7 @@ Page({
     });
   },
 
-  // 状态分类函数 (同步 submissionDetail.js 的逻辑)
+  // 状态分类函数
   getStatusClass(status) {
     const statusMap = {
       'GRADED': 'correct',
@@ -164,15 +172,22 @@ Page({
     return textMap[status] || status || '未知状态';
   },
 
+  // 查看详情
   goToDetail(e) {
     const id = e.currentTarget.dataset.id;
-    console.log('点击了id为',id,'的查看详情按钮');
     if (!id) {
       wx.showToast({ title: '记录ID无效', icon: 'none' });
       return;
     }
     wx.navigateTo({
       url: `/pages/user/submissionDetail/submissionDetail?submissionId=${id}`
+    });
+  },
+
+  // 开始答题
+  goToPractice() {
+    wx.switchTab({
+      url: '/pages/home/home'
     });
   }
 });

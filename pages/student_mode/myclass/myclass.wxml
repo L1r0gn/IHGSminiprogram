@@ -1,45 +1,46 @@
 <view class="page-container">
   <view class="content-wrapper">
     <view class="page-header">
-      <text class="page-title">我的班级</text>
-      <text class="page-subtitle">已加入 {{classList.length}} 个班级</text>
+      <text class="page-title">我的课程</text>
+      <text class="page-subtitle">查看您正在学习的课程</text>
     </view>
 
-    <!-- 加入班级按钮 -->
-    <view class="join-section" bindtap="showJoinModal">
-      <view class="join-text">
-        <text class="join-title">加入班级</text>
-        <text class="join-desc">输入班级码加入新班级</text>
+    <!-- 加入课程按钮 -->
+    <view class="create-btn" bindtap="showJoinModal">
+      <view class="btn-icon">📚</view>
+      <view class="btn-text">
+        <text class="btn-title">加入课程</text>
+        <text class="btn-desc">输入课程码加入新课程</text>
       </view>
-      <view class="class-arrow">→</view>
+      <view class="btn-arrow">›</view>
     </view>
 
     <!-- 空状态 -->
     <view class="empty-state" wx:if="{{empty && !isLoading}}">
       <text class="empty-icon">📚</text>
-      <text class="empty-text">暂未加入任何班级</text>
-      <button class="empty-btn" bindtap="showJoinModal">立即加入</button>
+      <text class="empty-text">还没有加入任何课程</text>
+      <button class="join-btn" bindtap="showJoinModal">加入课程</button>
+      <text class="empty-tip">点击上方"加入课程"开始学习</text>
     </view>
 
-    <!-- 班级列表 -->
-    <view class="class-list" wx:if="{{!empty}}">
+    <!-- 课程列表 -->
+    <view class="course-list" wx:if="{{!empty}}">
       <view
-        class="class-card"
+        class="course-item student-card"
         wx:for="{{classList}}"
         wx:key="id"
         bindtap="viewClassDetail"
         data-class="{{item}}"
       >
-        <view class="class-icon" style="background: {{item.color}}">
-          <text class="icon-text">{{item.name[0]}}</text>
-        </view>
-        <view class="class-info">
-          <view class="class-name">{{item.name}}</view>
-          <view class="class-desc">
-            <text class="class-code">班级码: {{item.code}}</text>
+        <view class="course-info">
+          <view class="course-name">{{item.name}}</view>
+          <view class="course-desc">
+            <text class="teacher">教师：{{item.created_by_name || '未知'}}</text>
+            <text class="count">学生：{{item.studentCount || 0}}人</text>
           </view>
         </view>
-        <view class="class-arrow">→</view>
+
+        <view class="course-arrow">→</view>
       </view>
     </view>
 
@@ -50,30 +51,32 @@
     </view>
   </view>
 
-  <!-- 加入班级弹窗 -->
-  <view wx:if="{{showJoinModal}}" class="modal-overlay" bindtap="hideJoinModal">
-    <view class="modal-container" catchtap="stopPropagation">
+  <!-- 加入课程弹窗 -->
+  <view class="modal" wx:if="{{showJoinModal}}">
+    <view class="modal-mask" bindtap="hideJoinModal"></view>
+    <view class="modal-content">
       <view class="modal-header">
-        <text class="modal-title">加入班级</text>
-        <text class="modal-close" bindtap="hideJoinModal">×</text>
+        <text class="modal-title">加入课程</text>
+        <view class="modal-close" bindtap="hideJoinModal">×</view>
       </view>
+
       <view class="modal-body">
         <view class="form-group">
-          <text class="form-label">班级码</text>
+          <text class="form-label">课程码</text>
           <input
             class="form-input"
-            type="text"
-            placeholder="请输入班级码"
+            placeholder="请输入课程码"
             value="{{classCode}}"
             bindinput="onClassCodeInput"
             maxlength="20"
           />
         </view>
-        <text class="tip-text">向老师或同学获取班级码，输入后即可加入班级</text>
+        <text class="tip-text">向老师或同学获取课程码，输入后即可加入课程</text>
       </view>
+
       <view class="modal-footer">
-        <button class="modal-btn cancel" bindtap="hideJoinModal">取消</button>
-        <button class="modal-btn confirm" bindtap="joinClass" disabled="{{!classCode}}">加入</button>
+        <button class="modal-btn cancel-btn" bindtap="hideJoinModal">取消</button>
+        <button class="modal-btn confirm-btn" bindtap="joinClass" disabled="{{!classCode}}">加入</button>
       </view>
     </view>
   </view>

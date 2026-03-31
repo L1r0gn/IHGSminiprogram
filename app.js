@@ -31,6 +31,7 @@ App({
     wx.removeStorageSync('refreshToken');
     wx.removeStorageSync('userId');
     wx.removeStorageSync('isLoggedIn');
+    wx.removeStorageSync('avatarCache');
     setTimeout(() => {
       wx.navigateTo({
         url: '/pages/login/login'

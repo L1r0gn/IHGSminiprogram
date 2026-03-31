@@ -151,6 +151,22 @@ Page({
     });
   },
 
+  // 学生端查看班级详情
+  viewClassDetail(e) {
+    const classInfo = e.currentTarget.dataset.class;
+    if (!classInfo || !classInfo.id) {
+      wx.showToast({
+        title: '课程信息异常',
+        icon: 'none'
+      });
+      return;
+    }
+
+    wx.navigateTo({
+      url: `/pages/classFunction/classDetail/classDetail?classId=${classInfo.id}&className=${classInfo.name}&isTeacher=false`
+    });
+  },
+
   // 管理学生
   manageStudents(e) {
     const courseInfo = e.currentTarget.dataset.course;
